@@ -22,3 +22,7 @@ yarn-error.log
 /.nova
 /.vscode
 /.zed
+
+# Auto-generated type declarations
+auto-imports.d.ts
+components.d.ts
