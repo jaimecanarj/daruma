@@ -1,7 +1,9 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { es } from '@nuxt/ui/locale';
+</script>
 
 <template>
-    <UApp>
+    <UApp :locale="es">
         <slot />
     </UApp>
 </template>

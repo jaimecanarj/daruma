@@ -34,7 +34,7 @@ const isDarkMode = computed({
                     <!--Activo en caso de empezar por la ruta, excepto / que tiene que ser exacto-->
                     <ULink
                         :to="link.path"
-                        :actve="(link.path === '/' && route === '/') || (link.path !== '/' && route.startsWith(link.path))"
+                        :active="(link.path === '/' && route === '/') || (link.path !== '/' && route.startsWith(link.path))"
                         active-class="text-primary font-bold"
                         class="flex flex-col items-center"
                     >
