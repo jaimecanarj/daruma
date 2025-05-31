@@ -9,6 +9,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Manga extends Model
 {
+    protected $guarded = [];
+
     public function tags(): BelongsToMany
     {
         return $this->belongsToMany(Tag::class);
@@ -46,6 +48,6 @@ class Manga extends Model
 
     public function mangasRelated(): BelongsToMany
     {
-        return $this->belongsToMany(Manga::class, 'manga_related', 'manga_id', 'manga_id', 'related_manga_id')->withPivot('relation');
+        return $this->belongsToMany(Manga::class, 'manga_related', 'manga_id', 'related_manga_id')->withPivot('relation');
     }
 }

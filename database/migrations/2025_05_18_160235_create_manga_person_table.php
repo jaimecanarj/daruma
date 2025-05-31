@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -15,7 +14,7 @@ return new class extends Migration
             $table->foreignId('manga_id')->constrained('mangas')->onDelete('cascade');
             $table->foreignId('person_id')->constrained('people')->onDelete('cascade');
             $table->enum('job', ['writer', 'illustrator']);
-            $table->primary(['manga_id', 'person_id']);
+            $table->primary(['manga_id', 'person_id', 'job']);
         });
     }
 

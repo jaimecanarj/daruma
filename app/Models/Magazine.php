@@ -7,6 +7,10 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Magazine extends Model
 {
+    protected $guarded = [];
+
+    public $timestamps = false;
+
     public function mangas(): HasMany
     {
         return $this->hasMany(Manga::class);
