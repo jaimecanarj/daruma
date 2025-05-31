@@ -25,7 +25,7 @@ const isDarkMode = computed({
         <UContainer class="flex items-center justify-between py-3">
             <!--Logo-->
             <div class="flex items-center gap-2">
-                <img :src="logo" class="h-11 w-11" />
+                <img :src="logo" class="h-11 w-11" alt="logo" />
                 <p class="text-2xl font-semibold">Daruma</p>
             </div>
             <!--Enlaces-->

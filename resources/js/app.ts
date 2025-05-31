@@ -1,6 +1,6 @@
 import '../css/app.css';
 
-import DefaultLayout from '@/layouts/DefaultLayout.vue';
+import MainLayout from '@/layouts/MainLayout.vue';
 import { createInertiaApp } from '@inertiajs/vue3';
 import ui from '@nuxt/ui/vue-plugin';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
@@ -28,7 +28,7 @@ createInertiaApp({
     resolve: (name) => {
         const page = resolvePageComponent(`./pages/${name}.vue`, import.meta.glob<DefineComponent>('./pages/**/*.vue'));
         page.then((module) => {
-            module.default.layout = module.default.layout || DefaultLayout;
+            module.default.layout = module.default.layout || MainLayout;
         });
         return page;
     },
