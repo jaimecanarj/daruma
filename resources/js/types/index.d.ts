@@ -20,3 +20,59 @@ export interface User {
     created_at: string;
     updated_at: string;
 }
+
+//Formularios
+export interface CreatePageProps {
+    mangas?: { name: string; id: number }[];
+    people?: { name: string; surname: string; id: number }[];
+    magazines?: { name: string; id: number }[];
+    tags?: { name: string; id: number; type: string }[];
+}
+
+export interface MagazineCreateForm {
+    name?: string;
+    publisher?: string;
+    demography: 'shounen' | 'shoujo' | 'seinen' | 'josei' | undefined;
+    date?: CalendarDate;
+    frequency: 'weekly' | 'biweekly' | 'monthly' | 'bimonthly' | 'quarterly' | 'irregular' | undefined;
+    [key: string]: any;
+}
+
+export interface PersonCreateForm {
+    name?: string;
+    kanjiName?: string;
+    surname?: string;
+    kanjiSurname?: string;
+    [key: string]: any;
+}
+
+export interface MangaCreateForm {
+    cover?: File;
+    name?: string;
+    startDate?: CalendarDate;
+    endDate?: CalendarDate;
+    volumes?: number;
+    tankoubon?: number;
+    chapters?: number;
+    sinopsis?: string;
+    readingDirection?: boolean;
+    language?: 'es' | 'en' | 'jp';
+    finished?: boolean;
+    alternativeNames?: MultiValues[];
+    authors?: MultiValues[];
+    tags?: MultiValues[];
+    magazine?: number;
+    relatedMangas?: MultiValues[];
+    mal?: number;
+    listadoManga?: number;
+    [key: string]: any;
+}
+
+//Utilidades
+
+export type MultiValues = {
+    label: string;
+    value?: number;
+    category?: string;
+    color?: string;
+};
