@@ -52,7 +52,7 @@ const form = useForm<MangaCreateForm>({
     readingDirection: false,
     language: 'es',
     finished: false,
-    magazine: undefined,
+    magazineId: undefined,
     relatedMangas: [],
     mal: undefined,
     listadoManga: undefined,
@@ -186,10 +186,10 @@ const onSubmit = async () => {
             </UFormField>
             <USeparator :ui="{ border: 'border-accented' }" />
             <div class="grid grid-cols-3 gap-4">
-                <UFormField label="Revista" name="magazine">
+                <UFormField label="Revista" name="magazineId">
                     <Deferred data="magazines">
                         <template #fallback><USelect disabled class="w-full" /></template>
-                        <USelect v-model="form.magazine" :items="magazines" placeholder="Selecciona una revista" class="w-full" />
+                        <USelect v-model="form.magazineId" :items="magazines" placeholder="Selecciona una revista" class="w-full" />
                     </Deferred>
                 </UFormField>
                 <UFormField label="MAL" name="mal">

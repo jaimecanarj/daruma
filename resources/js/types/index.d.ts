@@ -61,7 +61,7 @@ export interface MangaCreateForm {
     alternativeNames?: MultiValues[];
     authors?: MultiValues[];
     tags?: MultiValues[];
-    magazine?: number;
+    magazineId?: number;
     relatedMangas?: MultiValues[];
     mal?: number;
     listadoManga?: number;

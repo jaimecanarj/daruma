@@ -23,18 +23,13 @@ class PersonController extends Controller
         // Validar los datos recibidos
         $validatedData = $request->validate([
             'name' => 'required|string',
-            'kanjiName' => 'string|nullable',
+            'kanji_name' => 'string|nullable',
             'surname' => 'string|nullable',
-            'kanjiSurname' => 'string|nullable',
+            'kanji_surname' => 'string|nullable',
         ]);
 
         // Almacenar en la base de datos
-        Person::create([
-            'name' => $validatedData['name'],
-            'kanji_name' => $validatedData['kanjiName'],
-            'surname' => $validatedData['surname'],
-            'kanji_surname' => $validatedData['kanjiSurname'],
-        ]);
+        Person::create($validatedData);
 
         return to_route('admin.create');
     }

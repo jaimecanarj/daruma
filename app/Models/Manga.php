@@ -9,7 +9,22 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Manga extends Model
 {
-    protected $guarded = [];
+    protected $fillable = [
+        'name',
+        'cover',
+        'sinopsis',
+        'volumes',
+        'tankoubon',
+        'chapters',
+        'start_date',
+        'end_date',
+        'reading_direction',
+        'finished',
+        'mal',
+        'listado_manga',
+        'language',
+        'magazine_id',
+    ];
 
     public function tags(): BelongsToMany
     {
