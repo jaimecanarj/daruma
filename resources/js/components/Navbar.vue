@@ -21,7 +21,7 @@ const isDarkMode = computed({
 </script>
 
 <template>
-    <nav class="border-default sticky border-b backdrop-blur">
+    <nav class="border-default bg-default/60 sticky top-0 z-50 border-b backdrop-blur">
         <UContainer class="flex items-center justify-between py-3">
             <!--Logo-->
             <div class="flex items-center gap-2">
