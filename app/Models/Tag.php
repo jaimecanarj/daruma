@@ -7,6 +7,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Tag extends Model
 {
+    protected $guarded = [];
+
+    public $timestamps = false;
+
     public function mangas(): BelongsToMany
     {
         return $this->belongsToMany(Manga::class);

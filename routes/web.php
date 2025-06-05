@@ -4,6 +4,8 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\MagazineController;
 use App\Http\Controllers\MangaController;
 use App\Http\Controllers\PersonController;
+use App\Http\Controllers\TagController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -20,5 +22,7 @@ Route::prefix('admin')->group(function () {
 Route::post('/person/store', [PersonController::class, 'store']);
 Route::post('/magazine/store', [MagazineController::class, 'store']);
 Route::post('/manga/store', [MangaController::class, 'store']);
+Route::post('/store', [UserController::class, 'store'])->name('user.store');
+Route::post('/store', [TagController::class, 'store'])->name('tag.store');
 
 require __DIR__ . '/auth.php';

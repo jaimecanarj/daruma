@@ -17,6 +17,23 @@ export const magazineSchema = z.object({
     frequency: z.enum(['weekly', 'biweekly', 'monthly', 'bimonthly', 'quarterly', 'irregular'], { required_error: 'Obligatorio' }),
 });
 
+export const tagSchema = z.object({
+    name: z.string({ required_error: 'Obligatorio' }),
+    type: z.enum(['genre', 'theme'], { required_error: 'Obligatorio' }),
+});
+
+export const userSchema = z
+    .object({
+        name: z.string({ required_error: 'Obligatorio' }),
+        email: z.string({ required_error: 'Obligatorio' }),
+        password: z.string({ required_error: 'Obligatorio' }).min(8, 'Debe tener al menos 8 caracteres'),
+        passwordConfirmation: z.string({ required_error: 'Obligatorio' }),
+    })
+    .refine((data) => data.password === data.passwordConfirmation, {
+        message: 'Las contraseñas no coinciden',
+        path: ['passwordConfirmation'],
+    });
+
 export const mangaSchema = z.object({
     name: z.string({ required_error: 'Obligatorio' }),
     alternativeNames: z.array(multiItemSchema),

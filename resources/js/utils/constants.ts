@@ -37,3 +37,8 @@ export const relatedMangasOptions = [
     { label: 'Spin-off', value: 'spin-off', color: 'neutral' },
     { label: 'Historia principal', value: 'main story', color: 'tertiary' },
 ];
+
+export const tagTypeOptions = [
+    { value: 'genre', label: 'Género' },
+    { value: 'theme', label: 'Tema' },
+];

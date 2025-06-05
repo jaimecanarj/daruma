@@ -46,6 +46,20 @@ export interface PersonCreateForm {
     [key: string]: any;
 }
 
+export interface TagCreateForm {
+    name?: string;
+    type?: 'genre' | 'theme';
+    [key: string]: any;
+}
+
+export interface UserCreateForm {
+    name?: string;
+    email?: string;
+    password?: string;
+    passwordConfirmation?: string;
+    [key: string]: any;
+}
+
 export interface MangaCreateForm {
     cover?: File;
     name?: string;
