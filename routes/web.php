@@ -22,8 +22,12 @@ Route::prefix('admin')->group(function () {
 
 // Rutas para almacenar recursos
 Route::post('/person/store', [PersonController::class, 'store']);
-Route::post('/magazine/store', [MagazineController::class, 'store']);
 Route::post('/manga/store', [MangaController::class, 'store']);
+
+Route::prefix('magazine')->group(function () {
+    Route::get('/', [MagazineController::class, 'index'])->name('magazine.index');
+    Route::post('/store', [MagazineController::class, 'store'])->name('magazine.store');
+});
 
 Route::prefix('user')->group(function () {
     Route::get('/', [UserController::class, 'index'])->name('user.index');

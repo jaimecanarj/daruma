@@ -21,6 +21,15 @@ export interface User {
     updated_at: string;
 }
 
+export interface Magazine {
+    id: number;
+    name: string;
+    publisher: string;
+    demography: 'shounen' | 'shoujo' | 'seinen' | 'josei';
+    date: string;
+    frequency: 'weekly' | 'biweekly' | 'monthly' | 'bimonthly' | 'quarterly' | 'irregular';
+}
+
 export interface Tag {
     id: number;
     name: string;

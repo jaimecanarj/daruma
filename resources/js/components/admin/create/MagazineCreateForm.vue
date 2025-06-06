@@ -18,7 +18,7 @@ const form = useForm<MagazineCreateForm>({
 
 //Métodos
 const onSubmit = async () => {
-    form.transform((data) => ({ ...data, date: data.date?.toString() })).post('/magazine/store', {
+    form.transform((data) => ({ ...data, date: data.date?.toString() })).post(route('magazine.store'), {
         preserveState: true,
         preserveScroll: true,
         onSuccess: () => {

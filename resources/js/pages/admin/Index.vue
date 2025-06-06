@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import MagazinesTable from '@/components/admin/index/MagazinesTable.vue';
 import TagsTable from '@/components/admin/index/TagsTable.vue';
 import UsersTable from '@/components/admin/index/UsersTable.vue';
 
@@ -44,7 +45,7 @@ const tabItems = [
     <UTabs :items="tabItems" class="mt-8" variant="link">
         <template #mangas>Hola</template>
         <template #people>Hola</template>
-        <template #magazines>Hola</template>
+        <template #magazines><MagazinesTable /></template>
         <template #users><UsersTable /></template>
         <template #tags><TagsTable /></template>
     </UTabs>

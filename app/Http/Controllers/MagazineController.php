@@ -13,7 +13,7 @@ class MagazineController extends Controller
      */
     public function index()
     {
-        //
+        return Magazine::all();
     }
 
     /**
@@ -49,14 +49,34 @@ class MagazineController extends Controller
      */
     public function update(Request $request, Magazine $magazine)
     {
-        //
+        $validatedData = $request->validate([
+            'name' => 'required|string',
+        ]);
+
+        $magazine->update([
+            'name' => $validatedData['name'],
+        ]);
+
+        return to_route('admin.index');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Magazine $magazine)
+    public function destroy(Request $request)
     {
-        //
+        $validatedData = $request->validate([
+            'id' => 'required|integer',
+        ]);
+
+        $magazine = Magazine::find($validatedData['id']);
+
+        if (!$magazine) {
+            return response()->json(['message' => 'Revista no encontrada'], 404);
+        }
+
+        $magazine->delete();
+
+        return to_route('admin.index');
     }
 }
