@@ -12,6 +12,11 @@ use Inertia\Response;
 
 class AdminController extends Controller
 {
+    public function index(): Response
+    {
+        return Inertia::render('admin/Index');
+    }
+
     public function create(): Response
     {
         return Inertia::render('admin/Create', [

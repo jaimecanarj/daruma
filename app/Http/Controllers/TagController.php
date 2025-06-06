@@ -11,7 +11,10 @@ class TagController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index() {}
+    public function index()
+    {
+        return Tag::all();
+    }
 
     /**
      * Store a newly created resource in storage.
@@ -33,10 +36,38 @@ class TagController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Tag $tag) {}
+    public function update(Request $request, Tag $tag)
+    {
+        $validatedData = $request->validate([
+            'name' => 'required|string',
+            'type' => ['required', 'string', Rule::in(['genre', 'theme'])],
+        ]);
+
+        $tag->update([
+            'name' => $validatedData['name'],
+            'type' => $validatedData['type'],
+        ]);
+
+        return to_route('admin.index');
+    }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Request $request) {}
+    public function destroy(Request $request)
+    {
+        $validatedData = $request->validate([
+            'id' => 'required|integer',
+        ]);
+
+        $tag = Tag::find($validatedData['id']);
+
+        if (!$tag) {
+            return response()->json(['message' => 'Tag no encontrado'], 404);
+        }
+
+        $tag->delete();
+
+        return to_route('admin.index');
+    }
 }

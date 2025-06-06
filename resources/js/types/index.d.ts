@@ -21,6 +21,12 @@ export interface User {
     updated_at: string;
 }
 
+export interface Tag {
+    id: number;
+    name: string;
+    type: 'genre' | 'theme';
+}
+
 //Formularios
 export interface CreatePageProps {
     mangas?: { name: string; id: number }[];
