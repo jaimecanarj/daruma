@@ -268,7 +268,7 @@ const deleteMagazine = () => {
     <UModal
         v-model:open="deleteFormOpen"
         title="Borrar usuario"
-        description="Estás a punto de borrar el usuario, ¿estás seguro?"
+        description="Estás a punto de borrar la revista, ¿estás seguro?"
         :ui="{ footer: 'justify-end' }"
     >
         <template #footer>
