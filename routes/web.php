@@ -24,7 +24,13 @@ Route::prefix('admin')->group(function () {
 Route::post('/person/store', [PersonController::class, 'store']);
 Route::post('/magazine/store', [MagazineController::class, 'store']);
 Route::post('/manga/store', [MangaController::class, 'store']);
-Route::post('/store', [UserController::class, 'store'])->name('user.store');
+
+Route::prefix('user')->group(function () {
+    Route::get('/', [UserController::class, 'index'])->name('user.index');
+    Route::post('/store', [UserController::class, 'store'])->name('user.store');
+    Route::post('/update', [UserController::class, 'update'])->name('user.update');
+    Route::post('/delete', [UserController::class, 'destroy'])->name('user.destroy');
+});
 
 Route::prefix('tag')->group(function () {
     Route::get('/', [TagController::class, 'index'])->name('tag.index');

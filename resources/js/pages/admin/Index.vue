@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import TagsTable from '@/components/admin/index/TagsTable.vue';
+import UsersTable from '@/components/admin/index/UsersTable.vue';
 
 const breadcrumbItems = [
     {
@@ -44,7 +45,7 @@ const tabItems = [
         <template #mangas>Hola</template>
         <template #people>Hola</template>
         <template #magazines>Hola</template>
-        <template #users>Hola</template>
+        <template #users><UsersTable /></template>
         <template #tags><TagsTable /></template>
     </UTabs>
 </template>

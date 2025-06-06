@@ -10,7 +10,10 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index() {}
+    public function index()
+    {
+        return User::all();
+    }
 
     /**
      * Store a newly created resource in storage.
@@ -29,5 +32,41 @@ class UserController extends Controller
         User::create($validatedData);
 
         return to_route('admin.create');
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, User $user)
+    {
+        $validatedData = $request->validate([
+            'name' => 'required|string',
+        ]);
+
+        $user->update([
+            'name' => $validatedData['name'],
+        ]);
+
+        return to_route('admin.index');
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(Request $request)
+    {
+        $validatedData = $request->validate([
+            'id' => 'required|integer',
+        ]);
+
+        $user = User::find($validatedData['id']);
+
+        if (!$user) {
+            return response()->json(['message' => 'Usuario no encontrado'], 404);
+        }
+
+        $user->delete();
+
+        return to_route('admin.index');
     }
 }
