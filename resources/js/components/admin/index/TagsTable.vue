@@ -86,22 +86,7 @@ const columns: TableColumn<Tag>[] = [
     },
     {
         accessorKey: 'type',
-        header: ({ column }) => {
-            const isSorted = column.getIsSorted();
-
-            return h(UButton, {
-                color: 'neutral',
-                variant: 'ghost',
-                label: 'Tipo',
-                icon: isSorted
-                    ? isSorted === 'asc'
-                        ? 'i-lucide-arrow-up-narrow-wide'
-                        : 'i-lucide-arrow-down-wide-narrow'
-                    : 'i-lucide-arrow-up-down',
-                class: '-mx-2.5',
-                onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
-            });
-        },
+        header: 'Tipo',
         cell: ({ row }) => {
             const color = {
                 genre: 'primary' as const,

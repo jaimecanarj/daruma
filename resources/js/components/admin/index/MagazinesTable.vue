@@ -78,63 +78,18 @@ const columns: TableColumn<Magazine>[] = [
     },
     {
         accessorKey: 'publisher',
-        header: ({ column }) => {
-            const isSorted = column.getIsSorted();
-
-            return h(UButton, {
-                color: 'neutral',
-                variant: 'ghost',
-                label: 'Editorial',
-                icon: isSorted
-                    ? isSorted === 'asc'
-                        ? 'i-lucide-arrow-up-narrow-wide'
-                        : 'i-lucide-arrow-down-wide-narrow'
-                    : 'i-lucide-arrow-up-down',
-                class: '-mx-2.5',
-                onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
-            });
-        },
+        header: 'Editorial',
     },
     {
         accessorKey: 'demography',
-        header: ({ column }) => {
-            const isSorted = column.getIsSorted();
-
-            return h(UButton, {
-                color: 'neutral',
-                variant: 'ghost',
-                label: 'Demografía',
-                icon: isSorted
-                    ? isSorted === 'asc'
-                        ? 'i-lucide-arrow-up-narrow-wide'
-                        : 'i-lucide-arrow-down-wide-narrow'
-                    : 'i-lucide-arrow-up-down',
-                class: '-mx-2.5',
-                onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
-            });
-        },
+        header: 'Demografía',
         cell: ({ row }) => {
             return h('p', [(row.getValue('demography') as string).charAt(0).toUpperCase(), (row.getValue('demography') as string).slice(1)]);
         },
     },
     {
         accessorKey: 'frequency',
-        header: ({ column }) => {
-            const isSorted = column.getIsSorted();
-
-            return h(UButton, {
-                color: 'neutral',
-                variant: 'ghost',
-                label: 'Periodicidad',
-                icon: isSorted
-                    ? isSorted === 'asc'
-                        ? 'i-lucide-arrow-up-narrow-wide'
-                        : 'i-lucide-arrow-down-wide-narrow'
-                    : 'i-lucide-arrow-up-down',
-                class: '-mx-2.5',
-                onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
-            });
-        },
+        header: 'Periodicidad',
         cell: ({ row }) => {
             let label = '';
             switch (row.getValue('frequency')) {
@@ -179,11 +134,13 @@ const columns: TableColumn<Magazine>[] = [
             });
         },
         cell: ({ row }) => {
-            return new Date(row.getValue('date')).toLocaleString('es-ES', {
-                day: 'numeric',
-                month: 'long',
-                year: 'numeric',
-            });
+            return row.getValue('date')
+                ? new Date(row.getValue('date')).toLocaleString('es-ES', {
+                      day: 'numeric',
+                      month: 'long',
+                      year: 'numeric',
+                  })
+                : '';
         },
     },
     {

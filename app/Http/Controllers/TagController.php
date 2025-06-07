@@ -63,7 +63,7 @@ class TagController extends Controller
         $tag = Tag::find($validatedData['id']);
 
         if (!$tag) {
-            return response()->json(['message' => 'Etiqueta no encontrado'], 404);
+            return response()->json(['message' => 'Etiqueta no encontrada'], 404);
         }
 
         $tag->delete();
