@@ -12,7 +12,7 @@ class PersonController extends Controller
      */
     public function index()
     {
-        //
+        return Person::all();
     }
 
     /**
@@ -47,14 +47,34 @@ class PersonController extends Controller
      */
     public function update(Request $request, Person $person)
     {
-        //
+        $validatedData = $request->validate([
+            'name' => 'required|string',
+        ]);
+
+        $person->update([
+            'name' => $validatedData['name'],
+        ]);
+
+        return to_route('admin.index');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Person $person)
+    public function destroy(Request $request)
     {
-        //
+        $validatedData = $request->validate([
+            'id' => 'required|integer',
+        ]);
+
+        $person = Person::find($validatedData['id']);
+
+        if (!$person) {
+            return response()->json(['message' => 'Persona no encontrada'], 404);
+        }
+
+        $person->delete();
+
+        return to_route('admin.index');
     }
 }

@@ -21,6 +21,14 @@ export interface User {
     updated_at: string;
 }
 
+export interface Person {
+    id: number;
+    name: string;
+    surname: string;
+    kanjiName: string;
+    kanjiSurname: string;
+}
+
 export interface Magazine {
     id: number;
     name: string;

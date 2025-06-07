@@ -21,12 +21,20 @@ Route::prefix('admin')->group(function () {
 });
 
 // Rutas para almacenar recursos
-Route::post('/person/store', [PersonController::class, 'store']);
 Route::post('/manga/store', [MangaController::class, 'store']);
+
+Route::prefix('person')->group(function () {
+    Route::get('/', [PersonController::class, 'index'])->name('person.index');
+    Route::post('/store', [PersonController::class, 'store'])->name('person.store');
+    Route::post('/update', [PersonController::class, 'update'])->name('person.update');
+    Route::post('/delete', [PersonController::class, 'destroy'])->name('person.destroy');
+});
 
 Route::prefix('magazine')->group(function () {
     Route::get('/', [MagazineController::class, 'index'])->name('magazine.index');
     Route::post('/store', [MagazineController::class, 'store'])->name('magazine.store');
+    Route::post('/update', [MagazineController::class, 'update'])->name('magazine.update');
+    Route::post('/delete', [MagazineController::class, 'destroy'])->name('magazine.destroy');
 });
 
 Route::prefix('user')->group(function () {

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import MagazinesTable from '@/components/admin/index/MagazinesTable.vue';
+import PeopleTable from '@/components/admin/index/PeopleTable.vue';
 import TagsTable from '@/components/admin/index/TagsTable.vue';
 import UsersTable from '@/components/admin/index/UsersTable.vue';
 
@@ -44,7 +45,7 @@ const tabItems = [
     <UBreadcrumb :items="breadcrumbItems" :ui="{ linkLeadingIcon: 'size-8' }" />
     <UTabs :items="tabItems" class="mt-8" variant="link">
         <template #mangas>Hola</template>
-        <template #people>Hola</template>
+        <template #people><PeopleTable /></template>
         <template #magazines><MagazinesTable /></template>
         <template #users><UsersTable /></template>
         <template #tags><TagsTable /></template>
