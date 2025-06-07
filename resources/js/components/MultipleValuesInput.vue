@@ -61,7 +61,7 @@ const removeInputValue = (index: number) => {
                 </template>
             </USelectMenu>
         </div>
-        <UButton icon="lucide:plus" color="neutral" class="h-12 w-12 justify-center md:h-auto md:w-auto" @click="addInputValue" />
+        <UButton icon="lucide:plus" color="neutral" class="h-10 w-10 justify-center md:h-auto md:w-auto" @click="addInputValue" />
     </div>
     <div class="mt-2 flex flex-wrap gap-2">
         <div v-for="(item, index) in inputValues" :key="index">

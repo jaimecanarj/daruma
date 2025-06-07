@@ -1,51 +1,23 @@
 <script setup lang="ts">
+import DeleteModal from '@/components/admin/index/DeleteModal.vue';
+import FiltersHeader from '@/components/admin/index/FiltersHeader.vue';
+import { useFetchTable } from '@/composables/useFetchTable';
 import { Manga } from '@/types';
-import { router, useForm } from '@inertiajs/vue3';
+import { actionsCell, sortableHeader, sortablePinnableHeader } from '@/utils/tableColumns';
 import { TableColumn } from '@nuxt/ui';
-import axios from 'axios';
-import { h, ref, resolveComponent } from 'vue';
-
-const toast = useToast();
+import { h, ref, resolveComponent, useTemplateRef } from 'vue';
 
 const UDropdownMenu = resolveComponent('UDropdownMenu');
 const UButton = resolveComponent('UButton');
 const UIcon = resolveComponent('UIcon');
 
-const mangas = ref<Manga[]>([]);
+const deleteModal = useTemplateRef('deleteModal');
 
-const fetching = ref(false);
-
-const fetchMangas = () => {
-    fetching.value = true;
-    axios
-        .get(route('manga.index'))
-        .then((response) => {
-            mangas.value = response.data;
-        })
-        .finally(() => {
-            fetching.value = false;
-        });
-};
-
-fetchMangas();
+//Ejecutar al crear el componente
+const { fetchData, data, fetching } = useFetchTable<Manga>('manga.index');
+fetchData();
 
 const globalFilter = ref('');
-
-const deleteFormOpen = ref(false);
-const deleteForm = useForm<{ id: number | undefined }>({ id: undefined });
-
-const deleteManga = () => {
-    deleteForm.post(route('manga.destroy'), {
-        preserveScroll: true,
-        preserveState: true,
-        onSuccess: () => {
-            deleteFormOpen.value = false;
-            deleteForm.reset();
-            toast.add({ title: 'Manga borrado correctamente' });
-            fetchMangas();
-        },
-    });
-};
 
 const columns: TableColumn<Manga>[] = [
     {
@@ -55,79 +27,16 @@ const columns: TableColumn<Manga>[] = [
     },
     {
         accessorKey: 'name',
-        header: ({ column }) => {
-            const isSorted = column.getIsSorted();
-            const isPinned = column.getIsPinned();
-
-            return h(
-                'div',
-                { class: 'flex gap-1' },
-
-                [
-                    h(UButton, {
-                        color: 'neutral',
-                        variant: 'ghost',
-                        label: 'Nombre',
-                        icon: isSorted
-                            ? isSorted === 'asc'
-                                ? 'i-lucide-arrow-up-narrow-wide'
-                                : 'i-lucide-arrow-down-wide-narrow'
-                            : 'i-lucide-arrow-up-down',
-                        class: '-ml-2.5',
-                        onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
-                    }),
-                    h(UButton, {
-                        color: 'neutral',
-                        variant: 'ghost',
-                        size: 'icon',
-                        icon: isPinned ? 'i-lucide-pin-off' : 'i-lucide-pin',
-                        class: 'px-2',
-                        onClick() {
-                            column.pin(isPinned === 'left' ? false : 'left');
-                        },
-                    }),
-                ],
-            );
-        },
+        header: ({ column }) => sortablePinnableHeader(column, 'Nombre', UButton),
     },
     {
         accessorKey: 'volumes',
-        header: ({ column }) => {
-            const isSorted = column.getIsSorted();
-
-            return h(UButton, {
-                color: 'neutral',
-                variant: 'ghost',
-                label: 'Tomos',
-                icon: isSorted
-                    ? isSorted === 'asc'
-                        ? 'i-lucide-arrow-up-narrow-wide'
-                        : 'i-lucide-arrow-down-wide-narrow'
-                    : 'i-lucide-arrow-up-down',
-                class: '-ml-2.5',
-                onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
-            });
-        },
+        header: ({ column }) => sortableHeader(column, 'Tomos', UButton),
     },
     {
         id: 'date',
         accessorKey: 'startDate',
-        header: ({ column }) => {
-            const isSorted = column.getIsSorted();
-
-            return h(UButton, {
-                color: 'neutral',
-                variant: 'ghost',
-                label: 'Fechas',
-                icon: isSorted
-                    ? isSorted === 'asc'
-                        ? 'i-lucide-arrow-up-narrow-wide'
-                        : 'i-lucide-arrow-down-wide-narrow'
-                    : 'i-lucide-arrow-up-down',
-                class: '-ml-2.5',
-                onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
-            });
-        },
+        header: ({ column }) => sortableHeader(column, 'Fechas', UButton),
         cell: ({ row }) => {
             let startDate = '';
             let endDate = '';
@@ -202,79 +111,21 @@ const columns: TableColumn<Manga>[] = [
     },
     {
         id: 'actions',
-        cell: ({ row }) => {
-            return h(
-                'div',
-                { class: 'text-right' },
-                h(
-                    UDropdownMenu,
-                    {
-                        content: {
-                            align: 'end',
-                        },
-                        items: [
-                            {
-                                label: 'Editar',
-                                icon: 'lucide:square-pen',
-                                onSelect() {
-                                    router.visit(route('admin.edit', { tab: 'manga', id: row.getValue('id') }));
-                                },
-                            },
-                            {
-                                type: 'separator',
-                            },
-                            {
-                                label: 'Eliminar',
-                                icon: 'lucide:trash-2',
-                                color: 'error',
-                                onSelect() {
-                                    deleteFormOpen.value = true;
-                                    deleteForm.id = row.getValue('id');
-                                },
-                            },
-                        ],
-                        'aria-label': 'Actions dropdown',
-                    },
-                    () =>
-                        h(UButton, {
-                            icon: 'i-lucide-ellipsis-vertical',
-                            color: 'neutral',
-                            variant: 'ghost',
-                            class: 'ml-auto',
-                            'aria-label': 'Actions dropdown',
-                        }),
-                ),
-            );
-        },
+        cell: ({ row }) => actionsCell(row, UDropdownMenu, UButton, deleteModal, 'manga'),
     },
 ];
 </script>
 
 <template>
-    <div class="mt-8 flex justify-between">
-        <UInput class="w-60" v-model="globalFilter" placeholder="Buscar..." leading-icon="lucide:search" type="search" />
-        <ULink to="admin/create/manga">
-            <UButton trailing-icon="lucide:square-plus" size="xl" class="cursor-pointer">Crear</UButton>
-        </ULink>
-    </div>
+    <FiltersHeader tab="tag" v-model="globalFilter"></FiltersHeader>
     <UTable
         sticky
         :loading="fetching"
-        :data="mangas"
+        :data="data"
         :columns="columns"
         :sorting="[{ id: 'name', desc: false }]"
         :global-filter="globalFilter"
         class="mt-6 h-[620px] flex-1"
     />
-    <UModal
-        v-model:open="deleteFormOpen"
-        title="Borrar usuario"
-        description="Estás a punto de borrar la persona, ¿estás seguro?"
-        :ui="{ footer: 'justify-end' }"
-    >
-        <template #footer>
-            <UButton label="Cancelar" color="neutral" variant="outline" @click="deleteFormOpen = false" />
-            <UButton label="Borrar" color="error" :disabled="deleteForm.processing" @click="deleteManga" />
-        </template>
-    </UModal>
+    <DeleteModal ref="deleteModal" delete-route="manga.destroy" delete-desc="este manga" delete-success-message="Manga borrado correctamente" />
 </template>

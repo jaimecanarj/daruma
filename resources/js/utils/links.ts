@@ -7,21 +7,21 @@ export const links = [
     {
         label: 'Mangas',
         icon: 'lucide:book-text',
-        path: 'mangas',
+        path: '/mangas',
     },
     {
         label: 'Personas',
         icon: 'lucide:users',
-        path: 'people',
+        path: '/people',
     },
     {
         label: 'Revistas',
         icon: 'lucide:newspaper',
-        path: 'magazines',
+        path: '/magazines',
     },
     {
         label: 'Admin',
         icon: 'lucide:monitor-cog',
-        path: 'admin',
+        path: '/admin',
     },
 ];

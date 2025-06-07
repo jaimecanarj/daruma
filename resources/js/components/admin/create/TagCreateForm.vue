@@ -38,7 +38,7 @@ const onSubmit = () => {
                     <USelect v-model="form.type" :items="tagTypeOptions" placeholder="Selecciona un tipo" class="w-full" />
                 </UFormField>
             </div>
-            <UButton type="submit" class="text-md mt-4 justify-center" :disabled="form.processing">
+            <UButton type="submit" class="text-md mt-4 justify-center" :loading="form.processing">
                 {{ form.processing ? 'Creando' : 'Crear' }}
             </UButton>
         </UForm>

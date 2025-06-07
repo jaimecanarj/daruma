@@ -48,7 +48,7 @@ const onSubmit = () => {
                     <UInput v-model="form.kanjiSurname" class="w-full" />
                 </UFormField>
             </div>
-            <UButton type="submit" class="text-md mt-4 justify-center" :disabled="form.processing">
+            <UButton type="submit" class="text-md mt-4 justify-center" :loading="form.processing">
                 {{ form.processing ? 'Creando' : 'Crear' }}
             </UButton>
         </UForm>

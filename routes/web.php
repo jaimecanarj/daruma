@@ -17,43 +17,43 @@ Route::get('/', function () {
 Route::prefix('admin')->group(function () {
     Route::get('/', [AdminController::class, 'index'])->name('admin.index');
     Route::get('/create/{tab?}', [AdminController::class, 'create'])->name('admin.create');
-    Route::get('/edit/{tab?}/{id}', [AdminController::class, 'create'])->name('admin.edit');
+    Route::get('/edit/{tab?}/{id}', [AdminController::class, 'edit'])->name('admin.edit');
 });
 
 // Rutas para manejar recursos
 Route::prefix('manga')->group(function () {
     Route::get('/', [MangaController::class, 'index'])->name('manga.index');
     Route::post('/store', [MangaController::class, 'store'])->name('manga.store');
-    Route::post('/update', [MangaController::class, 'update'])->name('manga.update');
-    Route::post('/delete', [MangaController::class, 'destroy'])->name('manga.destroy');
+    Route::put('/update', [MangaController::class, 'update'])->name('manga.update');
+    Route::delete('/delete', [MangaController::class, 'destroy'])->name('manga.destroy');
 });
 
 Route::prefix('person')->group(function () {
     Route::get('/', [PersonController::class, 'index'])->name('person.index');
     Route::post('/store', [PersonController::class, 'store'])->name('person.store');
-    Route::post('/update', [PersonController::class, 'update'])->name('person.update');
-    Route::post('/delete', [PersonController::class, 'destroy'])->name('person.destroy');
+    Route::put('/update', [PersonController::class, 'update'])->name('person.update');
+    Route::delete('/delete', [PersonController::class, 'destroy'])->name('person.destroy');
 });
 
 Route::prefix('magazine')->group(function () {
     Route::get('/', [MagazineController::class, 'index'])->name('magazine.index');
     Route::post('/store', [MagazineController::class, 'store'])->name('magazine.store');
-    Route::post('/update', [MagazineController::class, 'update'])->name('magazine.update');
-    Route::post('/delete', [MagazineController::class, 'destroy'])->name('magazine.destroy');
+    Route::put('/update', [MagazineController::class, 'update'])->name('magazine.update');
+    Route::delete('/delete', [MagazineController::class, 'destroy'])->name('magazine.destroy');
 });
 
 Route::prefix('user')->group(function () {
     Route::get('/', [UserController::class, 'index'])->name('user.index');
     Route::post('/store', [UserController::class, 'store'])->name('user.store');
-    Route::post('/update', [UserController::class, 'update'])->name('user.update');
-    Route::post('/delete', [UserController::class, 'destroy'])->name('user.destroy');
+    Route::put('/update', [UserController::class, 'update'])->name('user.update');
+    Route::delete('/delete', [UserController::class, 'destroy'])->name('user.destroy');
 });
 
 Route::prefix('tag')->group(function () {
     Route::get('/', [TagController::class, 'index'])->name('tag.index');
     Route::post('/store', [TagController::class, 'store'])->name('tag.store');
-    Route::post('/update', [TagController::class, 'update'])->name('tag.update');
-    Route::post('/delete', [TagController::class, 'destroy'])->name('tag.destroy');
+    Route::put('/update', [TagController::class, 'update'])->name('tag.update');
+    Route::delete('/delete', [TagController::class, 'destroy'])->name('tag.destroy');
 });
 
 require __DIR__ . '/auth.php';

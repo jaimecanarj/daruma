@@ -42,3 +42,36 @@ export const tagTypeOptions = [
     { value: 'genre', label: 'Género' },
     { value: 'theme', label: 'Tema' },
 ];
+
+export const adminTabItems = [
+    {
+        slot: 'mangas' as const,
+        label: 'Mangas',
+        value: 'manga',
+        icon: 'lucide:book-text',
+    },
+    {
+        slot: 'people' as const,
+        label: 'Personas',
+        value: 'person',
+        icon: 'lucide:users',
+    },
+    {
+        slot: 'magazines' as const,
+        label: 'Revistas',
+        value: 'magazine',
+        icon: 'lucide:newspaper',
+    },
+    {
+        slot: 'users' as const,
+        label: 'Usuarios',
+        value: 'user',
+        icon: 'lucide:circle-user',
+    },
+    {
+        slot: 'tags' as const,
+        label: 'Etiquetas',
+        value: 'tag',
+        icon: 'lucide:tag',
+    },
+];

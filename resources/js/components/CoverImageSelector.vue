@@ -25,6 +25,6 @@ const handleFileChange = (e: Event) => {
             <img v-if="tempImage" :src="base64" class="h-full w-full rounded object-cover" alt="tempImage" />
             <UIcon v-else name="lucide:image" class="text text-dimmed size-24" />
         </div>
-        <UInput type="file" accept="image/*" class="mt-3" @change="handleFileChange" @input="cover = $event.target.files[0]" />
+        <UInput type="file" accept="image/*" class="mt-3 w-full" @change="handleFileChange" @input="cover = $event.target.files[0]" />
     </div>
 </template>
