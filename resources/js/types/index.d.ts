@@ -21,6 +21,26 @@ export interface User {
     updated_at: string;
 }
 
+export interface Manga {
+    id: number;
+    name: string;
+    cover: string;
+    startDate: string;
+    endDate: string;
+    volumes: number;
+    tankoubon: number;
+    chapters: number;
+    sinopsis: string;
+    readingDirection: string;
+    finished: boolean;
+    mal: number;
+    listadoManga: number;
+    language: string;
+    magazineId: number;
+    createdAt: string;
+    updatedAt: string;
+}
+
 export interface Person {
     id: number;
     name: string;

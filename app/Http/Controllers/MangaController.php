@@ -13,7 +13,7 @@ class MangaController extends Controller
      */
     public function index()
     {
-        //
+        return Manga::all();
     }
 
     /**
@@ -108,14 +108,34 @@ class MangaController extends Controller
      */
     public function update(Request $request, Manga $manga)
     {
-        //
+        $validatedData = $request->validate([
+            'name' => 'required|string',
+        ]);
+
+        $manga->update([
+            'name' => $validatedData['name'],
+        ]);
+
+        return to_route('admin.index');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Manga $manga)
+    public function destroy(Request $request)
     {
-        //
+        $validatedData = $request->validate([
+            'id' => 'required|integer',
+        ]);
+
+        $manga = Manga::find($validatedData['id']);
+
+        if (!$manga) {
+            return response()->json(['message' => 'Manga no encontrado'], 404);
+        }
+
+        $manga->delete();
+
+        return to_route('admin.index');
     }
 }

@@ -20,8 +20,13 @@ Route::prefix('admin')->group(function () {
     Route::get('/edit/{tab?}/{id}', [AdminController::class, 'create'])->name('admin.edit');
 });
 
-// Rutas para almacenar recursos
-Route::post('/manga/store', [MangaController::class, 'store']);
+// Rutas para manejar recursos
+Route::prefix('manga')->group(function () {
+    Route::get('/', [MangaController::class, 'index'])->name('manga.index');
+    Route::post('/store', [MangaController::class, 'store'])->name('manga.store');
+    Route::post('/update', [MangaController::class, 'update'])->name('manga.update');
+    Route::post('/delete', [MangaController::class, 'destroy'])->name('manga.destroy');
+});
 
 Route::prefix('person')->group(function () {
     Route::get('/', [PersonController::class, 'index'])->name('person.index');
