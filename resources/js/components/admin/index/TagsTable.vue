@@ -38,6 +38,7 @@ const columns: TableColumn<Tag>[] = [
 
             return h(UBadge, { class: 'capitalize', variant: 'subtle', color }, () => (row.getValue('type') === 'genre' ? 'Género' : 'Tema'));
         },
+        enableGlobalFilter: false,
     },
     {
         id: 'actions',

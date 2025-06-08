@@ -49,6 +49,7 @@ const columns: TableColumn<User>[] = [
                 year: 'numeric',
             });
         },
+        enableGlobalFilter: false,
     },
     {
         id: 'actions',

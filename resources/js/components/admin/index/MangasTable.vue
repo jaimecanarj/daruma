@@ -32,6 +32,7 @@ const columns: TableColumn<Manga>[] = [
     {
         accessorKey: 'volumes',
         header: ({ column }) => sortableHeader(column, 'Tomos', UButton),
+        enableGlobalFilter: false,
     },
     {
         id: 'date',
@@ -75,6 +76,7 @@ const columns: TableColumn<Manga>[] = [
             // Si ninguna tiene fecha de inicio, no se ordena
             return 0;
         },
+        enableGlobalFilter: false,
     },
     {
         accessorKey: 'language',
@@ -94,13 +96,15 @@ const columns: TableColumn<Manga>[] = [
             }
             return h('p', [language]);
         },
+        enableGlobalFilter: false,
     },
     {
         accessorKey: 'readingDirection',
         header: 'Dir. de lectura',
         cell: ({ row }) => {
-            return h('p', [row.original.readingDirection === 'ltr' ? 'Izquierda' : 'Derecha']);
+            return h('p', [row.original.readingDirection === 'ltr' ? 'Occidental' : 'Oriental']);
         },
+        enableGlobalFilter: false,
     },
     {
         accessorKey: 'finished',
@@ -108,6 +112,7 @@ const columns: TableColumn<Manga>[] = [
         cell: ({ row }) => {
             return h(UIcon, { class: 'size-5', name: row.original.finished ? 'i-lucide-badge-check' : 'i-lucide-badge' });
         },
+        enableGlobalFilter: false,
     },
     {
         id: 'actions',

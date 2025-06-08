@@ -30,6 +30,7 @@ const columns: TableColumn<Magazine>[] = [
     {
         accessorKey: 'publisher',
         header: 'Editorial',
+        enableGlobalFilter: false,
     },
     {
         accessorKey: 'demography',
@@ -37,6 +38,7 @@ const columns: TableColumn<Magazine>[] = [
         cell: ({ row }) => {
             return h('p', [(row.getValue('demography') as string).charAt(0).toUpperCase(), (row.getValue('demography') as string).slice(1)]);
         },
+        enableGlobalFilter: false,
     },
     {
         accessorKey: 'frequency',
@@ -65,6 +67,7 @@ const columns: TableColumn<Magazine>[] = [
             }
             return h('p', [label]);
         },
+        enableGlobalFilter: false,
     },
     {
         accessorKey: 'date',
@@ -78,6 +81,7 @@ const columns: TableColumn<Magazine>[] = [
                   })
                 : '';
         },
+        enableGlobalFilter: false,
     },
     {
         id: 'actions',

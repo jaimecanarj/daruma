@@ -1,20 +1,28 @@
 <script setup lang="ts">
-import { breakpointsTailwind, useBreakpoints } from '@vueuse/core';
-import { ref } from 'vue';
+import { breakpointsTailwind, refDebounced, useBreakpoints } from '@vueuse/core';
+import { ref, watch } from 'vue';
 
 defineProps<{ tab: string }>();
 
 const globalFilter = defineModel<string>();
 
+const localInput = ref<string>(globalFilter.value || '');
+
 const activeBreakpoint = useBreakpoints(breakpointsTailwind).active();
 
 const showFilters = ref(false);
+
+const globalFilterDebounced = refDebounced(localInput, 300);
+
+watch(globalFilterDebounced, (newValue) => {
+    globalFilter.value = newValue;
+});
 </script>
 
 <template>
     <div class="mt-8 flex justify-between">
         <div class="flex gap-2">
-            <UInput class="w-48 sm:w-60" v-model="globalFilter" placeholder="Buscar..." leading-icon="lucide:search" type="search" />
+            <UInput class="w-48 sm:w-60" v-model="localInput" placeholder="Buscar..." leading-icon="lucide:search" type="search" />
             <UButton
                 variant="soft"
                 color="neutral"
