@@ -1,24 +1,27 @@
 <script setup lang="ts">
 import DeleteModal from '@/components/admin/index/DeleteModal.vue';
 import FiltersHeader from '@/components/admin/index/FiltersHeader.vue';
+import UsersFilter from '@/components/admin/index/UsersFilter.vue';
 import { useFetchTable } from '@/composables/useFetchTable';
 import { User } from '@/types';
 import { actionsCell, sortableHeader, sortablePinnableHeader } from '@/utils/tableColumns';
+import { parseDate } from '@internationalized/date';
 import { TableColumn } from '@nuxt/ui';
 import { h, ref, resolveComponent, useTemplateRef } from 'vue';
 
+//Componentes
 const UDropdownMenu = resolveComponent('UDropdownMenu');
 const UButton = resolveComponent('UButton');
 const UAvatar = resolveComponent('UAvatar');
 
+//Modal
 const deleteModal = useTemplateRef('deleteModal');
 
-//Ejecutar al crear el componente
+//Datos
 const { fetchData, data, fetching } = useFetchTable<User>('user.index');
 fetchData();
 
-const globalFilter = ref('');
-
+//Columnas
 const columns: TableColumn<User>[] = [
     {
         accessorKey: 'id',
@@ -50,21 +53,38 @@ const columns: TableColumn<User>[] = [
             });
         },
         enableGlobalFilter: false,
+        filterFn: (row, columnId, filterValue) => {
+            if (filterValue?.end) {
+                const date = parseDate((row.getValue(columnId) as string).split('T')[0]);
+                return date.compare(filterValue.start) >= 0 && date.compare(filterValue.end) <= 0;
+            } else {
+                return true;
+            }
+        },
     },
     {
         id: 'actions',
         cell: ({ row }) => actionsCell(row, UDropdownMenu, UButton, deleteModal, 'user'),
     },
 ];
+
+//Filtros
+const globalFilter = ref('');
+const filters = [{ id: 'createdAt', value: null }];
+const table = useTemplateRef('table');
 </script>
 
 <template>
-    <FiltersHeader tab="user" v-model="globalFilter"></FiltersHeader>
+    <FiltersHeader tab="user" v-model="globalFilter">
+        <UsersFilter v-model="table" />
+    </FiltersHeader>
     <UTable
+        ref="table"
         sticky
         :loading="fetching"
         :data="data"
         :columns="columns"
+        :column-filters="filters"
         :sorting="[{ id: 'name', desc: false }]"
         :global-filter="globalFilter"
         class="mt-6 h-[620px] flex-1"
