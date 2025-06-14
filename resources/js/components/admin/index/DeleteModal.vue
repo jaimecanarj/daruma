@@ -17,7 +17,7 @@ const deleteItem = () => {
             deleteFormOpen.value = false;
             deleteForm.reset();
             toast.add({ title: props.deleteSuccessMessage });
-            //fetchUsers(); //Emitar un refetch hacia arriba
+            //fetchUsers(); //Emitir un refetch hacia arriba
         },
     });
 };
@@ -33,7 +33,7 @@ defineExpose({
         v-model:open="deleteFormOpen"
         title="Borrar usuario"
         :description="`Estás a punto de borrar ${deleteDesc}, ¿estás seguro?`"
-        :ui="{ footer: 'justify-end' }"
+        :ui="{ overlay: 'z-[1]', content: 'z-[2]', footer: 'justify-end' }"
     >
         <template #footer>
             <UButton label="Cancelar" color="neutral" variant="outline" @click="deleteFormOpen = false" />
