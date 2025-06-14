@@ -1,22 +1,26 @@
 <script setup lang="ts">
 import DeleteModal from '@/components/admin/index/DeleteModal.vue';
 import FiltersHeader from '@/components/admin/index/FiltersHeader.vue';
+import MagazinesFilter from '@/components/admin/index/MagazinesFilter.vue';
 import { useFetchTable } from '@/composables/useFetchTable';
 import { Magazine } from '@/types';
 import { actionsCell, sortableHeader, sortablePinnableHeader } from '@/utils/tableColumns';
+import { parseDate } from '@internationalized/date';
 import { TableColumn } from '@nuxt/ui';
 import { h, ref, resolveComponent, useTemplateRef } from 'vue';
 
+//Componentes
 const UDropdownMenu = resolveComponent('UDropdownMenu');
 const UButton = resolveComponent('UButton');
 
+//Modal
 const deleteModal = useTemplateRef('deleteModal');
 
+//Datos
 const { fetchData, data, fetching } = useFetchTable<Magazine>('magazine.index');
 fetchData();
 
-const globalFilter = ref('');
-
+//Columnas
 const columns: TableColumn<Magazine>[] = [
     {
         accessorKey: 'id',
@@ -39,6 +43,9 @@ const columns: TableColumn<Magazine>[] = [
             return h('p', [(row.getValue('demography') as string).charAt(0).toUpperCase(), (row.getValue('demography') as string).slice(1)]);
         },
         enableGlobalFilter: false,
+        filterFn: (row, columnId, filterValue) => {
+            return !!filterValue.includes(row.getValue(columnId));
+        },
     },
     {
         accessorKey: 'frequency',
@@ -68,6 +75,10 @@ const columns: TableColumn<Magazine>[] = [
             return h('p', [label]);
         },
         enableGlobalFilter: false,
+        filterFn: (row, columnId, filterValue) => {
+            if (filterValue === 'all') return true;
+            return filterValue === row.getValue(columnId);
+        },
     },
     {
         accessorKey: 'date',
@@ -82,21 +93,41 @@ const columns: TableColumn<Magazine>[] = [
                 : '';
         },
         enableGlobalFilter: false,
+        filterFn: (row, columnId, filterValue) => {
+            if (filterValue?.end) {
+                if (!row.getValue(columnId)) return false;
+                const date = parseDate(row.getValue(columnId) as string);
+                return date.compare(filterValue.start) >= 0 && date.compare(filterValue.end) <= 0;
+            } else {
+                return true;
+            }
+        },
     },
     {
         id: 'actions',
         cell: ({ row }) => actionsCell(row, UDropdownMenu, UButton, deleteModal, 'magazine'),
     },
 ];
+
+//Filtros
+const globalFilter = ref('');
+const filters = [
+    { id: 'demography', value: ['shounen', 'shoujo', 'seinen', 'josei'] },
+    { id: 'frequency', value: 'all' },
+    { id: 'date', value: null },
+];
+const table = useTemplateRef('table');
 </script>
 
 <template>
-    <FiltersHeader tab="magazine" v-model="globalFilter"></FiltersHeader>
+    <FiltersHeader tab="magazine" v-model="globalFilter"><MagazinesFilter v-model="table" /></FiltersHeader>
     <UTable
+        ref="table"
         sticky
         :loading="fetching"
         :data="data"
         :columns="columns"
+        :column-filters="filters"
         :sorting="[{ id: 'name', desc: false }]"
         :global-filter="globalFilter"
         class="mt-6 h-[620px] flex-1"
