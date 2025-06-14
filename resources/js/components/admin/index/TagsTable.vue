@@ -44,7 +44,7 @@ const columns: TableColumn<Tag>[] = [
         },
         enableGlobalFilter: false,
         filterFn: (row, columnId, filterValue) => {
-            return !!filterValue.includes(row.getValue('type'));
+            return !!filterValue.includes(row.getValue(columnId));
         },
     },
     {

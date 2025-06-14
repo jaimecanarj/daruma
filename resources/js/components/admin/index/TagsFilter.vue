@@ -14,7 +14,7 @@ const setFilter = (id: string, value: string) => {
         filter.value.push(value);
     }
 
-    table.value?.tableApi?.getColumn('type')?.setFilterValue(filter.value);
+    table.value?.tableApi?.getColumn(id)?.setFilterValue(filter.value);
 };
 </script>
 
