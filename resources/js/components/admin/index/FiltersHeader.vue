@@ -39,7 +39,9 @@ watch(globalFilterDebounced, (newValue) => {
             }}</UButton>
         </ULink>
     </div>
-    <template v-if="showFilters">
-        <slot />
-    </template>
+    <UModal v-model:open="showFilters" title="Filtros" :ui="{ overlay: 'z-[1]', content: 'z-[2]' }">
+        <template #body>
+            <slot />
+        </template>
+    </UModal>
 </template>

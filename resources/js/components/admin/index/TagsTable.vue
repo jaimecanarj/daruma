@@ -1,22 +1,26 @@
 <script setup lang="ts">
 import DeleteModal from '@/components/admin/index/DeleteModal.vue';
 import FiltersHeader from '@/components/admin/index/FiltersHeader.vue';
+import TagsFilter from '@/components/admin/index/TagsFilter.vue';
 import { useFetchTable } from '@/composables/useFetchTable';
 import { Tag } from '@/types';
 import { actionsCell, sortablePinnableHeader } from '@/utils/tableColumns';
 import type { TableColumn } from '@nuxt/ui';
 import { h, ref, resolveComponent, useTemplateRef } from 'vue';
 
+//Componentes
 const UBadge = resolveComponent('UBadge');
 const UDropdownMenu = resolveComponent('UDropdownMenu');
 const UButton = resolveComponent('UButton');
 
+//Modal
 const deleteModal = useTemplateRef('deleteModal');
 
-//Ejecutar al crear el componente
+//Datos
 const { fetchData, data, fetching } = useFetchTable<Tag>('tag.index');
 fetchData();
 
+//Columnas
 const columns: TableColumn<Tag>[] = [
     {
         accessorKey: 'id',
@@ -39,6 +43,9 @@ const columns: TableColumn<Tag>[] = [
             return h(UBadge, { class: 'capitalize', variant: 'subtle', color }, () => (row.getValue('type') === 'genre' ? 'Género' : 'Tema'));
         },
         enableGlobalFilter: false,
+        filterFn: (row, columnId, filterValue) => {
+            return !!filterValue.includes(row.getValue('type'));
+        },
     },
     {
         id: 'actions',
@@ -46,17 +53,24 @@ const columns: TableColumn<Tag>[] = [
     },
 ];
 
+//Filtros
 const globalFilter = ref('');
+const filters = [{ id: 'type', value: ['theme', 'genre'] }];
+const table = useTemplateRef('table');
 </script>
 
 <template>
-    <FiltersHeader tab="tag" v-model="globalFilter"></FiltersHeader>
+    <FiltersHeader tab="tag" v-model="globalFilter">
+        <TagsFilter v-model="table" />
+    </FiltersHeader>
     <UTable
+        ref="table"
         sticky
         :loading="fetching"
         :data="data"
         :columns="columns"
         :global-filter="globalFilter"
+        :column-filters="filters"
         :sorting="[{ id: 'name', desc: false }]"
         class="mt-6 h-[620px] flex-1"
     />
