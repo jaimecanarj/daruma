@@ -1,43 +1,22 @@
 <script setup lang="ts">
 import DateRangePicker from '@/components/DateRangePicker.vue';
+import { useTableFilters } from '@/composables/useTableFilters';
 import { Magazine } from '@/types';
 import { demographies, frequencies } from '@/utils/constants';
 import { Table } from '@tanstack/table-core';
 import { DateRange } from 'reka-ui';
-import { ref, watch } from 'vue';
 
+//Tabla
 const table = defineModel<{ tableApi: Table<Magazine> } | null>();
 
-const filters = ref([
-    { id: 'demography', value: table.value?.tableApi?.getColumn('demography')?.getFilterValue() as string[] },
-    { id: 'frequency', value: table.value?.tableApi?.getColumn('frequency')?.getFilterValue() as string },
-    { id: 'date', value: table.value?.tableApi?.getColumn('date')?.getFilterValue() as DateRange },
-]);
+//Filtros iniciales
+const starterFilters = [
+    { id: 'demography', value: ['shounen', 'shoujo', 'seinen', 'josei'] },
+    { id: 'frequency', value: 'all' },
+    { id: 'date', value: undefined },
+];
 
-const setFilter = (id: string, value: string) => {
-    const filter = filters.value!.find((item) => item.id === id)! as { value: string[] };
-    if (filter.value.includes(value)) {
-        filter.value = filter.value.filter((item) => item !== value);
-    } else {
-        filter.value.push(value);
-    }
-
-    table.value?.tableApi?.getColumn(id)?.setFilterValue(filter.value);
-};
-
-//Actualizo el valor del filtro date cuando se selecciona una fecha de fin o cuando se borran las fechas
-watch(
-    filters,
-    () => {
-        const filter = filters.value!.find((item) => item.id === 'date')! as { value: DateRange };
-        if (filter.value?.end) {
-            table.value?.tableApi?.getColumn('date')?.setFilterValue(filter.value);
-        } else if (!filter.value) {
-            table.value?.tableApi?.getColumn('date')?.setFilterValue(null);
-        }
-    },
-    { deep: true },
-);
+const { filters, setListFilter, setFilter, resetFilters } = useTableFilters(table, starterFilters);
 </script>
 
 <template>
@@ -51,7 +30,7 @@ watch(
             variant="soft"
             size="sm"
             class="cursor-pointer"
-            @click="setFilter('demography', demography.value)"
+            @click="setListFilter('demography', demography.value)"
         >
             {{ demography.label }}
         </UButton>
@@ -64,12 +43,16 @@ watch(
             :items="[{ label: 'Todas', value: 'all' }, ...frequencies]"
             class="w-48"
             :ui="{ content: 'z-[3]' }"
-            @change="table?.tableApi?.getColumn('frequency')?.setFilterValue(filters!.find((item) => item.id === 'frequency')!.value as string)"
+            @change="setFilter('frequency')"
         />
     </div>
     <!--Filtro de fecha-->
     <div class="my-3 flex items-center gap-1 sm:gap-2">
         <p>Fecha:</p>
         <DateRangePicker v-model="filters!.find((item) => item.id === 'date')!.value as DateRange" />
+    </div>
+    <USeparator />
+    <div class="mt-3 flex w-full justify-end">
+        <UButton label="Borrar filtros" variant="outline" color="error" class="cursor-pointer" @click="resetFilters" />
     </div>
 </template>

@@ -2,7 +2,7 @@
 import { breakpointsTailwind, refDebounced, useBreakpoints } from '@vueuse/core';
 import { ref, watch } from 'vue';
 
-defineProps<{ tab: string }>();
+defineProps<{ tab: string; filters?: boolean }>();
 
 const globalFilter = defineModel<string>();
 
@@ -22,8 +22,13 @@ watch(globalFilterDebounced, (newValue) => {
 <template>
     <div class="mt-8 flex justify-between">
         <div class="flex gap-2">
-            <UInput class="w-48 sm:w-60" v-model="localInput" placeholder="Buscar..." leading-icon="lucide:search" type="search" />
+            <UInput class="w-48 sm:w-60" v-model="localInput" placeholder="Buscar..." leading-icon="lucide:search" type="search">
+                <template v-if="localInput?.length" #trailing>
+                    <UButton color="neutral" variant="link" size="sm" icon="i-lucide-circle-x" aria-label="Clear input" @click="localInput = ''" />
+                </template>
+            </UInput>
             <UButton
+                v-if="filters"
                 variant="soft"
                 color="neutral"
                 trailing-icon="lucide:list-filter"

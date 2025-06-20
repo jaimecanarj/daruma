@@ -8,17 +8,18 @@ import { TableColumn } from '@nuxt/ui';
 import { FilterFnOption } from '@tanstack/table-core';
 import { h, ref, resolveComponent, useTemplateRef } from 'vue';
 
+//Componentes
 const UDropdownMenu = resolveComponent('UDropdownMenu');
 const UButton = resolveComponent('UButton');
 
+//Modal
 const deleteModal = useTemplateRef('deleteModal');
 
-//Ejecutar al crear el componente
+//Datos
 const { fetchData, data, fetching } = useFetchTable<Person>('person.index');
 fetchData();
 
-const globalFilter = ref('');
-
+//Columnas
 const columns: TableColumn<Person>[] = [
     {
         accessorKey: 'id',
@@ -47,6 +48,8 @@ const columns: TableColumn<Person>[] = [
     },
 ];
 
+//Filtros
+const globalFilter = ref('');
 const globalFilterFn: FilterFnOption<Person> = (row, columnId, filterValue) => {
     // Si no hay valor de filtro, no filtrar
     if (!filterValue) return true;
@@ -65,7 +68,7 @@ const globalFilterFn: FilterFnOption<Person> = (row, columnId, filterValue) => {
 </script>
 
 <template>
-    <FiltersHeader tab="person" v-model="globalFilter"></FiltersHeader>
+    <FiltersHeader tab="person" v-model="globalFilter" />
     <UTable
         sticky
         :loading="fetching"
@@ -74,7 +77,7 @@ const globalFilterFn: FilterFnOption<Person> = (row, columnId, filterValue) => {
         :sorting="[{ id: 'name', desc: false }]"
         :global-filter="globalFilter"
         :global-filter-options="{ globalFilterFn: globalFilterFn }"
-        class="mt-6 h-[620px] flex-1"
+        class="mt-6 h-[610px] flex-1"
     />
     <DeleteModal ref="deleteModal" delete-route="person.destroy" delete-desc="esta persona" delete-success-message="Persona borrada correctamente" />
 </template>

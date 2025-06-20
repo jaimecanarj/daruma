@@ -1,42 +1,44 @@
 <script setup lang="ts">
+import { useTableFilters } from '@/composables/useTableFilters';
 import { Tag } from '@/types';
 import { Table } from '@tanstack/table-core';
-import { ref } from 'vue';
 
+//Tabla
 const table = defineModel<{ tableApi: Table<Tag> } | null>();
 
-const filters = ref([{ id: 'type', value: table.value?.tableApi?.getColumn('type')?.getFilterValue() as string[] }]);
-const setFilter = (id: string, value: string) => {
-    const filter = filters.value!.find((item) => item.id === id)!;
-    if (filter.value.includes(value)) {
-        filter.value = filter.value.filter((item) => item !== value);
-    } else {
-        filter.value.push(value);
-    }
+//Filtros iniciales
+const starterFilters = [{ id: 'type', value: ['theme', 'genre'] }];
 
-    table.value?.tableApi?.getColumn(id)?.setFilterValue(filter.value);
-};
+const { filters, setListFilter, resetFilters } = useTableFilters(table, starterFilters);
 </script>
 
 <template>
     <!--Filtro de tipo-->
-    <div class="flex items-center gap-2">
+    <div class="my-3 flex items-center gap-2">
         <p>Tipo:</p>
         <!--Género-->
         <UButton
-            :color="filters!.find((item) => item.id === 'type')!.value.includes('genre') ? 'primary' : 'neutral'"
+            :color="(filters!.find((item) => item.id === 'type')!.value as string[]).includes('genre') ? 'primary' : 'neutral'"
             variant="soft"
+            size="sm"
             class="cursor-pointer"
-            @click="setFilter('type', 'genre')"
-            >Género</UButton
+            @click="setListFilter('type', 'genre')"
         >
+            Género
+        </UButton>
         <!--Tema-->
         <UButton
-            :color="filters!.find((item) => item.id === 'type')!.value.includes('theme') ? 'secondary' : 'neutral'"
+            :color="(filters!.find((item) => item.id === 'type')!.value as string[]).includes('theme') ? 'secondary' : 'neutral'"
             variant="soft"
-            @click="setFilter('type', 'theme')"
+            size="sm"
             class="cursor-pointer"
-            >Tema</UButton
+            @click="setListFilter('type', 'theme')"
         >
+            Tema
+        </UButton>
+    </div>
+    <USeparator />
+    <div class="mt-3 flex w-full justify-end">
+        <UButton label="Borrar filtros" variant="outline" color="error" class="cursor-pointer" @click="resetFilters" />
     </div>
 </template>

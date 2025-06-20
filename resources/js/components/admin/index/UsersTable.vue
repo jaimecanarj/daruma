@@ -75,7 +75,7 @@ const table = useTemplateRef('table');
 </script>
 
 <template>
-    <FiltersHeader tab="user" v-model="globalFilter">
+    <FiltersHeader tab="user" v-model="globalFilter" filters>
         <UsersFilter v-model="table" />
     </FiltersHeader>
     <UTable
@@ -87,7 +87,7 @@ const table = useTemplateRef('table');
         :column-filters="filters"
         :sorting="[{ id: 'name', desc: false }]"
         :global-filter="globalFilter"
-        class="mt-6 h-[620px] flex-1"
+        class="mt-6 h-[610px] flex-1"
     />
     <DeleteModal ref="deleteModal" delete-route="user.destroy" delete-desc="este usuario" delete-success-message="Usuario borrado correctamente" />
 </template>

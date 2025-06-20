@@ -120,7 +120,7 @@ const table = useTemplateRef('table');
 </script>
 
 <template>
-    <FiltersHeader tab="magazine" v-model="globalFilter"><MagazinesFilter v-model="table" /></FiltersHeader>
+    <FiltersHeader tab="magazine" v-model="globalFilter" filters><MagazinesFilter v-model="table" /></FiltersHeader>
     <UTable
         ref="table"
         sticky
@@ -130,7 +130,7 @@ const table = useTemplateRef('table');
         :column-filters="filters"
         :sorting="[{ id: 'name', desc: false }]"
         :global-filter="globalFilter"
-        class="mt-6 h-[620px] flex-1"
+        class="mt-6 h-[610px] flex-1"
     />
     <DeleteModal
         ref="deleteModal"

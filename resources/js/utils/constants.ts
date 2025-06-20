@@ -20,6 +20,11 @@ export const languageOptions = [
     { value: 'jp', label: '日本語' },
 ];
 
+export const readingDirections = [
+    { label: 'Oriental', value: 'rtl' },
+    { label: 'Occidental', value: 'ltr' },
+];
+
 export const alternativeNamesOptions = [
     { label: '日本語', value: 'japanese', color: 'primary' },
     { label: 'Español', value: 'spanish', color: 'secondary' },

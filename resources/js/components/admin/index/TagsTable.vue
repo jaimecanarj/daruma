@@ -60,7 +60,7 @@ const table = useTemplateRef('table');
 </script>
 
 <template>
-    <FiltersHeader tab="tag" v-model="globalFilter">
+    <FiltersHeader tab="tag" v-model="globalFilter" filters>
         <TagsFilter v-model="table" />
     </FiltersHeader>
     <UTable
@@ -72,7 +72,7 @@ const table = useTemplateRef('table');
         :global-filter="globalFilter"
         :column-filters="filters"
         :sorting="[{ id: 'name', desc: false }]"
-        class="mt-6 h-[620px] flex-1"
+        class="mt-6 h-[610px] flex-1"
     />
     <DeleteModal ref="deleteModal" delete-route="tag.destroy" delete-desc="esta etiqueta" delete-success-message="Etiqueta borrada correctamente" />
 </template>
