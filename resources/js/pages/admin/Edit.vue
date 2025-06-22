@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import MagazineForm from '@/components/admin/MagazineForm.vue';
 import TagForm from '@/components/admin/TagForm.vue';
 import UserForm from '@/components/admin/UserForm.vue';
 import { SharedData } from '@/types';
@@ -30,7 +31,7 @@ switch (page.props.ziggy.location.split('/')[2]) {
         component = TagForm;
         break;
     case 'magazine':
-        component = TagForm;
+        component = MagazineForm;
         break;
     case 'user':
         component = UserForm;

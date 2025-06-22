@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import MagazineCreateForm from '@/components/admin/create/MagazineCreateForm.vue';
 import MangaCreateForm from '@/components/admin/create/MangaCreateForm.vue';
 import PersonCreateForm from '@/components/admin/create/PersonCreateForm.vue';
+import MagazineForm from '@/components/admin/MagazineForm.vue';
 import TagForm from '@/components/admin/TagForm.vue';
 import UserForm from '@/components/admin/UserForm.vue';
 import { CreatePageProps, SharedData } from '@/types';
@@ -49,7 +49,7 @@ const activeBreakpoint = useBreakpoints(breakpointsTailwind).active();
     >
         <template #mangas><MangaCreateForm v-bind="props" /></template>
         <template #people><PersonCreateForm /></template>
-        <template #magazines><MagazineCreateForm /></template>
+        <template #magazines><MagazineForm purpose="create" /></template>
         <template #users><UserForm purpose="create" /></template>
         <template #tags><TagForm purpose="create" /></template>
     </UTabs>

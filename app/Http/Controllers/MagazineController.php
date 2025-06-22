@@ -33,7 +33,7 @@ class MagazineController extends Controller
         //Almacenar en la base de datos
         Magazine::create($validatedData);
 
-        return to_route('admin.create');
+        return to_route('admin.create', ['tab' => 'magazine']);
     }
 
     /**
@@ -51,13 +51,21 @@ class MagazineController extends Controller
     {
         $validatedData = $request->validate([
             'name' => 'required|string',
+            'publisher' => 'required|string',
+            'demography' => ['required', 'string', Rule::in(['shounen', 'shoujo', 'seinen', 'josei'])],
+            'frequency' => ['required', 'string', Rule::in(['weekly', 'biweekly', 'monthly', 'bimonthly', 'quarterly', 'irregular'])],
+            'date' => 'nullable|date',
         ]);
 
         $magazine->update([
             'name' => $validatedData['name'],
+            'publisher' => $validatedData['publisher'],
+            'demography' => $validatedData['demography'],
+            'frequency' => $validatedData['frequency'],
+            'date' => $validatedData['date'],
         ]);
 
-        return to_route('admin.index');
+        return to_route('admin.index', ['tab' => 'magazine']);
     }
 
     /**
