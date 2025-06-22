@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import MangaEditForm from '@/components/admin/edit/MangaEditForm.vue';
 import TagForm from '@/components/admin/TagForm.vue';
+import UserForm from '@/components/admin/UserForm.vue';
 import { SharedData } from '@/types';
 import { Deferred, usePage } from '@inertiajs/vue3';
 
@@ -24,16 +24,16 @@ let component: unknown | null = null;
 
 switch (page.props.ziggy.location.split('/')[2]) {
     case 'manga':
-        component = MangaEditForm;
+        component = TagForm;
         break;
     case 'person':
-        component = MangaEditForm;
+        component = TagForm;
         break;
     case 'magazine':
-        component = MangaEditForm;
+        component = TagForm;
         break;
     case 'user':
-        component = MangaEditForm;
+        component = UserForm;
         break;
     case 'tag':
         component = TagForm;

@@ -2,8 +2,8 @@
 import MagazineCreateForm from '@/components/admin/create/MagazineCreateForm.vue';
 import MangaCreateForm from '@/components/admin/create/MangaCreateForm.vue';
 import PersonCreateForm from '@/components/admin/create/PersonCreateForm.vue';
-import UserCreateForm from '@/components/admin/create/UserCreateForm.vue';
 import TagForm from '@/components/admin/TagForm.vue';
+import UserForm from '@/components/admin/UserForm.vue';
 import { CreatePageProps, SharedData } from '@/types';
 import { adminTabItems } from '@/utils/constants';
 import { router, usePage } from '@inertiajs/vue3';
@@ -50,7 +50,7 @@ const activeBreakpoint = useBreakpoints(breakpointsTailwind).active();
         <template #mangas><MangaCreateForm v-bind="props" /></template>
         <template #people><PersonCreateForm /></template>
         <template #magazines><MagazineCreateForm /></template>
-        <template #users><UserCreateForm /></template>
+        <template #users><UserForm purpose="create" /></template>
         <template #tags><TagForm purpose="create" /></template>
     </UTabs>
 </template>

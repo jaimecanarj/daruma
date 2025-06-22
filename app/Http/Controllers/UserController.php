@@ -31,7 +31,7 @@ class UserController extends Controller
         //Almacenar en la base de datos
         User::create($validatedData);
 
-        return to_route('admin.create');
+        return to_route('admin.create', ['tab' => 'user']);
     }
 
     /**
@@ -41,13 +41,15 @@ class UserController extends Controller
     {
         $validatedData = $request->validate([
             'name' => 'required|string',
+            'email' => 'required|email|unique:users',
         ]);
 
         $user->update([
             'name' => $validatedData['name'],
+            'email' => $validatedData['email'],
         ]);
 
-        return to_route('admin.index');
+        return to_route('admin.index', ['tab' => 'user']);
     }
 
     /**
