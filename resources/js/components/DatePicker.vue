@@ -31,7 +31,7 @@ const nextDecade = () => {
         </UButton>
 
         <template #content>
-            <div v-if="decades" class="mx-2 flex justify-between pt-1">
+            <div v-if="decades" class="mx-2 flex justify-between pt-2">
                 <UButton color="neutral" variant="ghost" class="p-1.5" @click="prevDecade">
                     <UIcon name="lucide:chevron-first" class="size-5" />
                 </UButton>
