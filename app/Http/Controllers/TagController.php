@@ -30,7 +30,7 @@ class TagController extends Controller
         //Almacenar en la base de datos
         Tag::create($validatedData);
 
-        return to_route('admin.create');
+        return to_route('admin.create', ['tab' => 'tag']);
     }
 
     /**
@@ -48,7 +48,7 @@ class TagController extends Controller
             'type' => $validatedData['type'],
         ]);
 
-        return to_route('admin.index');
+        return to_route('admin.index', ['tab' => 'tag']);
     }
 
     /**

@@ -32,10 +32,10 @@ export interface Manga {
     chapters: number;
     sinopsis: string;
     readingDirection: string;
-    finished: boolean;
+    finished: boolean | number;
     mal: number;
     listadoManga: number;
-    language: string;
+    language: 'es' | 'en' | 'jp';
     magazineId: number;
     createdAt: string;
     updatedAt: string;
@@ -66,6 +66,14 @@ export interface Tag {
 
 //Formularios
 export interface CreatePageProps {
+    mangas?: { name: string; id: number }[];
+    people?: { name: string; surname: string; id: number }[];
+    magazines?: { name: string; id: number }[];
+    tags?: { name: string; id: number; type: string }[];
+}
+
+export interface EditPageProps {
+    item: Manga | Person | Magazine | User | Tag;
     mangas?: { name: string; id: number }[];
     people?: { name: string; surname: string; id: number }[];
     magazines?: { name: string; id: number }[];
