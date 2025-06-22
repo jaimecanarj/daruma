@@ -31,7 +31,7 @@ class PersonController extends Controller
         // Almacenar en la base de datos
         Person::create($validatedData);
 
-        return to_route('admin.create');
+        return to_route('admin.create', ['tab' => 'person']);
     }
 
     /**
@@ -49,13 +49,19 @@ class PersonController extends Controller
     {
         $validatedData = $request->validate([
             'name' => 'required|string',
+            'kanji_name' => 'string|nullable',
+            'surname' => 'string|nullable',
+            'kanji_surname' => 'string|nullable',
         ]);
 
         $person->update([
             'name' => $validatedData['name'],
+            'kanji_name' => $validatedData['kanji_name'],
+            'surname' => $validatedData['surname'],
+            'kanji_surname' => $validatedData['kanji_surname'],
         ]);
 
-        return to_route('admin.index');
+        return to_route('admin.index', ['tab' => 'person']);
     }
 
     /**
