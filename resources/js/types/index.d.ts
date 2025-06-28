@@ -11,16 +11,6 @@ export interface SharedData extends PageProps {
     ziggy: Config & { location: string };
 }
 
-export interface User {
-    id: number;
-    name: string;
-    email: string;
-    avatar?: string;
-    email_verified_at: string | null;
-    created_at: string;
-    updated_at: string;
-}
-
 export interface Manga {
     id: number;
     name: string;
@@ -68,6 +58,16 @@ export interface Magazine {
     frequency: 'weekly' | 'biweekly' | 'monthly' | 'bimonthly' | 'quarterly' | 'irregular';
 }
 
+export interface User {
+    id: number;
+    name: string;
+    email: string;
+    avatar?: string;
+    email_verified_at: string | null;
+    created_at: string;
+    updated_at: string;
+}
+
 export interface Tag {
     id: number;
     name: string;
@@ -75,53 +75,7 @@ export interface Tag {
 }
 
 //Formularios
-export interface CreatePageProps {
-    mangas?: { name: string; id: number }[];
-    people?: { name: string; surname: string; id: number }[];
-    magazines?: { name: string; id: number }[];
-    tags?: { name: string; id: number; type: string }[];
-}
-
-export interface EditPageProps {
-    item: Manga | Person | Magazine | User | Tag;
-    mangas?: { name: string; id: number }[];
-    people?: { name: string; surname: string; id: number }[];
-    magazines?: { name: string; id: number }[];
-    tags?: { name: string; id: number; type: string }[];
-}
-
-export interface MagazineCreateForm {
-    name?: string;
-    publisher?: string;
-    demography: 'shounen' | 'shoujo' | 'seinen' | 'josei' | undefined;
-    date?: CalendarDate;
-    frequency: 'weekly' | 'biweekly' | 'monthly' | 'bimonthly' | 'quarterly' | 'irregular' | undefined;
-    [key: string]: any;
-}
-
-export interface PersonCreateForm {
-    name?: string;
-    kanjiName?: string;
-    surname?: string;
-    kanjiSurname?: string;
-    [key: string]: any;
-}
-
-export interface TagCreateForm {
-    name?: string;
-    type?: 'genre' | 'theme';
-    [key: string]: any;
-}
-
-export interface UserCreateForm {
-    name?: string;
-    email?: string;
-    password?: string;
-    passwordConfirmation?: string;
-    [key: string]: any;
-}
-
-export interface MangaCreateForm {
+export interface MangaForm {
     cover?: File;
     name?: string;
     startDate?: CalendarDate;
@@ -143,8 +97,38 @@ export interface MangaCreateForm {
     [key: string]: any;
 }
 
-//Utilidades
+export interface PersonForm {
+    name?: string;
+    kanjiName?: string;
+    surname?: string;
+    kanjiSurname?: string;
+    [key: string]: any;
+}
 
+export interface MagazineForm {
+    name?: string;
+    publisher?: string;
+    demography: 'shounen' | 'shoujo' | 'seinen' | 'josei' | undefined;
+    date?: CalendarDate;
+    frequency: 'weekly' | 'biweekly' | 'monthly' | 'bimonthly' | 'quarterly' | 'irregular' | undefined;
+    [key: string]: any;
+}
+
+export interface UserForm {
+    name?: string;
+    email?: string;
+    password?: string;
+    passwordConfirmation?: string;
+    [key: string]: any;
+}
+
+export interface TagForm {
+    name?: string;
+    type?: 'genre' | 'theme';
+    [key: string]: any;
+}
+
+//Utilidades
 export type MultiValues = {
     label: string;
     value?: number;

@@ -1,12 +1,13 @@
 <script setup lang="ts">
+import BaseForm from '@/components/admin/BaseForm.vue';
 import CoverImageSelector from '@/components/CoverImageSelector.vue';
 import DatePicker from '@/components/DatePicker.vue';
 import MultipleValuesInput from '@/components/MultipleValuesInput.vue';
 import MultipleValuesSelect from '@/components/MultipleValuesSelect.vue';
-import type { Manga, MangaCreateForm } from '@/types';
+import type { Manga, MangaForm } from '@/types';
 import { alternativeNamesOptions, authorsOptions, languageOptions, relatedMangasOptions } from '@/utils/constants';
 import { mangaSchema } from '@/utils/zodSchemas';
-import { Deferred, useForm } from '@inertiajs/vue3';
+import { Deferred } from '@inertiajs/vue3';
 import { parseDate } from '@internationalized/date';
 import { computed, useTemplateRef } from 'vue';
 
@@ -19,17 +20,14 @@ const props = defineProps<{
     tags?: { name: string; id: number; type: string }[];
 }>();
 
-const submitLabel = props.purpose === 'create' ? 'Crea' : 'Edita';
-
-const toast = useToast();
-
 //Estructuro las props para que se puedan usar correctamente
 const mangas = computed(() =>
     props.mangas
         ? props.mangas
               .filter(
                   (manga) =>
-                      (!props.item || manga.id !== props.item.id) && !form.relatedMangas?.some((relatedManga) => relatedManga.value === manga.id),
+                      (!props.item || manga.id !== props.item.id) &&
+                      !(baseForm.value?.form as MangaForm)?.relatedMangas?.some((relatedManga) => relatedManga.value === manga.id),
               )
               .map((manga) => ({ label: manga.name, value: manga.id }))
               .sort((a, b) => a.label.localeCompare(b.label))
@@ -55,7 +53,7 @@ const tags = computed(() =>
         : [],
 );
 
-const form = useForm<MangaCreateForm>({
+const initialValues: MangaForm = {
     cover: undefined,
     name: props.item?.name,
     alternativeNames: props.item?.names
@@ -65,7 +63,7 @@ const form = useForm<MangaCreateForm>({
               color: name.type === 'japanese' ? 'primary' : name.type === 'spanish' ? 'secondary' : 'neutral',
           }))
         : [],
-    sinopsis: props.item?.sinopsis,
+    sinopsis: props.item?.sinopsis ?? undefined,
     startDate: props.item?.startDate ? parseDate(props.item.startDate) : undefined,
     endDate: props.item?.endDate ? parseDate(props.item.endDate) : undefined,
     authors: props.item?.people
@@ -109,42 +107,36 @@ const form = useForm<MangaCreateForm>({
     mal: props.item?.mal ?? undefined,
     listadoManga: props.item?.listadoManga ?? undefined,
     purpose: props.purpose,
-});
+};
 
 const coverComponent = useTemplateRef('cover');
 
-const onSubmit = async () => {
-    const options = {
-        preserveScroll: true,
-        preserveState: true,
-        onSuccess: () => {
-            form.reset();
-            coverComponent.value?.clear();
-            toast.add({ title: `Manga ${props.purpose == 'create' ? 'creado' : 'actualizado'} satisfactoriamente.` });
-        },
-        onError: () => {
-            toast.add({ title: 'Hubo algún problema.' });
-        },
-    };
+const formTransform = (data: any) => ({
+    ...data,
+    readingDirection: data.readingDirection ? 'ltr' : 'rtl',
+    startDate: data.startDate?.toString(),
+    endDate: data.endDate?.toString(),
+    cover: data.cover ? data.cover : undefined,
+});
 
-    const transform = (data: MangaCreateForm) => ({
-        ...data,
-        readingDirection: data.readingDirection ? 'ltr' : 'rtl',
-        startDate: data.startDate?.toString(),
-        endDate: data.endDate?.toString(),
-        cover: data.cover ? data.cover : undefined,
-    });
-    if (props.purpose === 'create') {
-        form.transform(transform).post(route('manga.store'), options);
-    } else {
-        form.transform(transform).post(route('manga.update', { manga: props.item?.id }), options);
-    }
-};
+const baseForm = useTemplateRef('baseForm');
 </script>
 
 <template>
-    <UCard class="bg-muted mx-auto mt-10 w-full md:max-w-3xl">
-        <UForm :schema="mangaSchema" class="mt-4 flex flex-col gap-4" :state="form" @submit.prevent="onSubmit">
+    <BaseForm
+        ref="baseForm"
+        :item="item"
+        :purpose="purpose"
+        resource-name="Manga"
+        resource-gender="masculine"
+        resource-route="manga"
+        update-method="post"
+        :schema="mangaSchema"
+        :initial-values="initialValues"
+        :form-transform="formTransform"
+        @success="coverComponent?.clear()"
+    >
+        <template #default="{ form }">
             <div class="flex flex-col gap-6 md:flex-row">
                 <UFormField name="cover" required class="md:basis-2/5">
                     <CoverImageSelector ref="cover" v-model="form.cover" :stored-image="props.item?.cover" />
@@ -260,9 +252,6 @@ const onSubmit = async () => {
                     <UInputNumber v-model="form.listadoManga" orientation="vertical" :format-options="{ useGrouping: false }" />
                 </UFormField>
             </div>
-            <UButton type="submit" class="text-md mt-4 justify-center" :loading="form.processing">
-                {{ form.processing ? `${submitLabel}ndo` : `${submitLabel}r` }}
-            </UButton>
-        </UForm>
-    </UCard>
+        </template>
+    </BaseForm>
 </template>

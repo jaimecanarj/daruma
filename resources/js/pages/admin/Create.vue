@@ -4,14 +4,13 @@ import MangaForm from '@/components/admin/MangaForm.vue';
 import PersonForm from '@/components/admin/PersonForm.vue';
 import TagForm from '@/components/admin/TagForm.vue';
 import UserForm from '@/components/admin/UserForm.vue';
-import { CreatePageProps, SharedData } from '@/types';
+import { SharedData } from '@/types';
 import { adminTabItems } from '@/utils/constants';
 import { router, usePage } from '@inertiajs/vue3';
 import { breakpointsTailwind, useBreakpoints } from '@vueuse/core';
 import { ref } from 'vue';
 
 const page: { props: SharedData } = usePage();
-const props = defineProps<CreatePageProps>();
 
 const breadcrumbItems = [
     {
@@ -50,7 +49,7 @@ const activeBreakpoint = useBreakpoints(breakpointsTailwind).active();
         @update:model-value="handleTabChange"
         :ui="{ label: activeBreakpoint || 'hidden' }"
     >
-        <template #mangas><MangaForm purpose="create" v-bind="props" /></template>
+        <template #mangas><MangaForm purpose="create" v-bind="page.props" /></template>
         <template #people><PersonForm purpose="create" /></template>
         <template #magazines><MagazineForm purpose="create" /></template>
         <template #users><UserForm purpose="create" /></template>

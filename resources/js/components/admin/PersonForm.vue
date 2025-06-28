@@ -1,48 +1,32 @@
 <script setup lang="ts">
-import { Person, PersonCreateForm } from '@/types';
+import BaseForm from '@/components/admin/BaseForm.vue';
+import { Person, PersonForm } from '@/types';
 import { personSchema } from '@/utils/zodSchemas';
-import { useForm } from '@inertiajs/vue3';
 
 const props = defineProps<{
     item?: Person;
     purpose: 'create' | 'edit';
 }>();
 
-const submitLabel = props.purpose === 'create' ? 'Crea' : 'Edita';
-
-const toast = useToast();
-
-const form = useForm<PersonCreateForm>({
+const initialValues: PersonForm = {
     name: props.item?.name,
     kanjiName: props.item?.kanjiName,
     surname: props.item?.surname,
     kanjiSurname: props.item?.kanjiSurname,
-});
-
-const onSubmit = () => {
-    const options = {
-        preserveScroll: true,
-        preserveState: true,
-        onSuccess: () => {
-            form.reset();
-            toast.add({ title: `Persona ${props.purpose == 'create' ? 'creada' : 'actualizada'} satisfactoriamente.` });
-        },
-        onError: () => {
-            toast.add({ title: 'Hubo algún problema.' });
-        },
-    };
-
-    if (props.purpose === 'create') {
-        form.post(route('person.store'), options);
-    } else {
-        form.put(route('person.update', { person: props.item?.id }), options);
-    }
 };
 </script>
 
 <template>
-    <UCard class="bg-muted mx-auto mt-10 w-full md:max-w-3xl">
-        <UForm :schema="personSchema" class="mt-4 flex flex-col gap-4 md:gap-8" :state="form" @submit="onSubmit">
+    <BaseForm
+        :item="item"
+        :purpose="purpose"
+        resource-name="Persona"
+        resource-gender="feminine"
+        resource-route="person"
+        :schema="personSchema"
+        :initial-values="initialValues"
+    >
+        <template #default="{ form }">
             <div class="flex w-full flex-col gap-6 md:flex-row">
                 <UFormField label="Nombre" name="name" class="w-full" required>
                     <UInput v-model="form.name" class="w-full" />
@@ -61,9 +45,6 @@ const onSubmit = () => {
                     <UInput v-model="form.kanjiSurname" class="w-full" />
                 </UFormField>
             </div>
-            <UButton type="submit" class="text-md mt-4 justify-center" :loading="form.processing">
-                {{ form.processing ? `${submitLabel}ndo` : `${submitLabel}r` }}
-            </UButton>
-        </UForm>
-    </UCard>
+        </template>
+    </BaseForm>
 </template>
