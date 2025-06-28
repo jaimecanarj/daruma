@@ -44,7 +44,7 @@ const removeInputValue = (index: number) => {
 <template>
     <div class="flex items-center gap-2">
         <div class="flex flex-1 flex-col gap-2 md:flex-row">
-            <UInput v-model.trim="inputValue" class="w-full" @keydown.enter="addInputValue" />
+            <UInput v-model="inputValue" class="w-full" @keydown.enter.prevent="addInputValue" />
             <USelectMenu v-if="typeOptions" v-model="inputType" class="min-w-48" :items="typeOptions" :search-input="false">
                 <template #leading="{ modelValue, ui }">
                     <UChip
@@ -66,7 +66,7 @@ const removeInputValue = (index: number) => {
     <div class="mt-2 flex flex-wrap gap-2">
         <div v-for="(item, index) in inputValues" :key="index">
             <UBadge :color="(item.color as BadgeProps['color']) ?? 'neutral'" variant="soft" size="md">
-                <span class="max-w-32 overflow-hidden overflow-ellipsis">
+                <span class="max-w-32 overflow-hidden overflow-ellipsis whitespace-nowrap">
                     {{ item.label }}
                 </span>
                 <template #trailing>

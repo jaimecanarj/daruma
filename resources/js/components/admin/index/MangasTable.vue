@@ -184,5 +184,11 @@ const table = useTemplateRef('table');
         :global-filter="globalFilter"
         class="mt-6 h-[610px] flex-1"
     />
-    <DeleteModal ref="deleteModal" delete-route="manga.destroy" delete-desc="este manga" delete-success-message="Manga borrado correctamente" />
+    <DeleteModal
+        ref="deleteModal"
+        delete-route="manga.destroy"
+        delete-desc="este manga"
+        delete-success-message="Manga borrado correctamente"
+        @item-deleted="fetchData"
+    />
 </template>

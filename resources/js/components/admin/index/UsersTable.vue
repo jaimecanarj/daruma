@@ -89,5 +89,11 @@ const table = useTemplateRef('table');
         :global-filter="globalFilter"
         class="mt-6 h-[610px] flex-1"
     />
-    <DeleteModal ref="deleteModal" delete-route="user.destroy" delete-desc="este usuario" delete-success-message="Usuario borrado correctamente" />
+    <DeleteModal
+        ref="deleteModal"
+        delete-route="user.destroy"
+        delete-desc="este usuario"
+        delete-success-message="Usuario borrado correctamente"
+        @item-deleted="fetchData"
+    />
 </template>

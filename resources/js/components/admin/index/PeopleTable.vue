@@ -79,5 +79,11 @@ const globalFilterFn: FilterFnOption<Person> = (row, columnId, filterValue) => {
         :global-filter-options="{ globalFilterFn: globalFilterFn }"
         class="mt-6 h-[610px] flex-1"
     />
-    <DeleteModal ref="deleteModal" delete-route="person.destroy" delete-desc="esta persona" delete-success-message="Persona borrada correctamente" />
+    <DeleteModal
+        ref="deleteModal"
+        delete-route="person.destroy"
+        delete-desc="esta persona"
+        delete-success-message="Persona borrada correctamente"
+        @item-deleted="fetchData"
+    />
 </template>

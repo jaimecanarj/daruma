@@ -5,6 +5,7 @@ import { ref } from 'vue';
 const toast = useToast();
 
 const props = defineProps<{ deleteRoute: string; deleteDesc: string; deleteSuccessMessage: string }>();
+const emit = defineEmits(['itemDeleted']);
 
 const deleteFormOpen = ref(false);
 const deleteForm = useForm<{ id: number | undefined }>({ id: undefined });
@@ -17,7 +18,7 @@ const deleteItem = () => {
             deleteFormOpen.value = false;
             deleteForm.reset();
             toast.add({ title: props.deleteSuccessMessage });
-            //fetchUsers(); //Emitir un refetch hacia arriba
+            emit('itemDeleted');
         },
     });
 };

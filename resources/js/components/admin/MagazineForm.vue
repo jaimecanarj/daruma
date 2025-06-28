@@ -20,7 +20,7 @@ const form = useForm<MagazineCreateForm>({
     name: props.item?.name,
     publisher: props.item?.publisher,
     demography: props.item?.demography,
-    date: props.item ? parseDate(props.item?.date) : undefined,
+    date: props.item?.date ? parseDate(props.item?.date) : undefined,
     frequency: props.item?.frequency,
 });
 

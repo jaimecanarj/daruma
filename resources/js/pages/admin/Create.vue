@@ -30,6 +30,9 @@ const breadcrumbItems = [
 const activeTab = ref(page.props.ziggy.location.split('/')[2]);
 
 const handleTabChange = (tab: string | number) => {
+    //No cambiar si es la vista actual
+    if (tab === activeTab.value) return;
+
     activeTab.value = tab as string;
     router.visit(route('admin.create', tab), { preserveScroll: true, replace: true });
 };

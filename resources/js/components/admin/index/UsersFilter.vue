@@ -22,6 +22,6 @@ const { filters, resetFilters } = useTableFilters(table, starterFilters);
     </div>
     <USeparator />
     <div class="mt-3 flex w-full justify-end">
-        <UButton label="Borrar filtros" variant="outline" color="error" class="cursor-pointer" @click="resetFilters" />
+        <UButton label="Borrar filtros" variant="outline" color="error" @click="resetFilters" />
     </div>
 </template>

@@ -29,7 +29,6 @@ const { filters, setListFilter, setFilter, resetFilters } = useTableFilters(tabl
             :color="(filters!.find((item) => item.id === 'demography')!.value as string[]).includes(demography.value) ? 'primary' : 'neutral'"
             variant="soft"
             size="sm"
-            class="cursor-pointer"
             @click="setListFilter('demography', demography.value)"
         >
             {{ demography.label }}
@@ -53,6 +52,6 @@ const { filters, setListFilter, setFilter, resetFilters } = useTableFilters(tabl
     </div>
     <USeparator />
     <div class="mt-3 flex w-full justify-end">
-        <UButton label="Borrar filtros" variant="outline" color="error" class="cursor-pointer" @click="resetFilters" />
+        <UButton label="Borrar filtros" variant="outline" color="error" @click="resetFilters" />
     </div>
 </template>

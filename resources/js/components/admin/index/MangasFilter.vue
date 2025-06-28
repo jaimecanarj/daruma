@@ -60,7 +60,6 @@ const { filters, setListFilter, setFilter, resetFilters } = useTableFilters(tabl
             "
             variant="soft"
             size="sm"
-            class="cursor-pointer"
             @click="setListFilter('readingDirection', readingDirection.value)"
         />
     </div>
@@ -72,7 +71,6 @@ const { filters, setListFilter, setFilter, resetFilters } = useTableFilters(tabl
             :color="(filters!.find((item) => item.id === 'finished')!.value as string[]).includes('finished') ? 'primary' : 'neutral'"
             variant="soft"
             size="sm"
-            class="cursor-pointer"
             @click="setListFilter('finished', 'finished')"
         />
         <UButton
@@ -80,12 +78,11 @@ const { filters, setListFilter, setFilter, resetFilters } = useTableFilters(tabl
             :color="(filters!.find((item) => item.id === 'finished')!.value as string[]).includes('unfinished') ? 'primary' : 'neutral'"
             variant="soft"
             size="sm"
-            class="cursor-pointer"
             @click="setListFilter('finished', 'unfinished')"
         />
     </div>
     <USeparator />
     <div class="mt-3 flex w-full justify-end">
-        <UButton label="Borrar filtros" variant="outline" color="error" class="cursor-pointer" @click="resetFilters" />
+        <UButton label="Borrar filtros" variant="outline" color="error" @click="resetFilters" />
     </div>
 </template>

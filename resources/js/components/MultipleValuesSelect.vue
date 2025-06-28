@@ -120,7 +120,7 @@ const removeInputValue = (index: number) => {
     <div class="mt-2 flex flex-wrap gap-2">
         <div v-for="(item, index) in inputValues" :key="index">
             <UBadge :color="(item.color as BadgeProps['color']) ?? 'neutral'" variant="soft" size="md">
-                <span class="max-w-32 overflow-hidden overflow-ellipsis">
+                <span class="max-w-32 overflow-hidden overflow-ellipsis whitespace-nowrap">
                     {{ item.label }}
                 </span>
                 <template #trailing>

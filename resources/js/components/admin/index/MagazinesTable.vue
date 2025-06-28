@@ -137,5 +137,6 @@ const table = useTemplateRef('table');
         delete-route="magazine.destroy"
         delete-desc="esta revista"
         delete-success-message="Revista borrada correctamente"
+        @item-deleted="fetchData"
     />
 </template>

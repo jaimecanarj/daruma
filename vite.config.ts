@@ -24,9 +24,15 @@ export default defineConfig({
             ui: {
                 colors: {
                     primary: 'orange',
-                    neutral: 'stone',
                     secondary: 'blue',
-                    tertiary: 'violet',
+                    info: 'cyan',
+                    warning: 'violet',
+                    neutral: 'stone',
+                },
+                button: {
+                    slots: {
+                        base: ['cursor-pointer'],
+                    },
                 },
             },
         }),

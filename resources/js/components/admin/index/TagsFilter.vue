@@ -21,7 +21,6 @@ const { filters, setListFilter, resetFilters } = useTableFilters(table, starterF
             :color="(filters!.find((item) => item.id === 'type')!.value as string[]).includes('genre') ? 'primary' : 'neutral'"
             variant="soft"
             size="sm"
-            class="cursor-pointer"
             @click="setListFilter('type', 'genre')"
         >
             Género
@@ -31,7 +30,6 @@ const { filters, setListFilter, resetFilters } = useTableFilters(table, starterF
             :color="(filters!.find((item) => item.id === 'type')!.value as string[]).includes('theme') ? 'secondary' : 'neutral'"
             variant="soft"
             size="sm"
-            class="cursor-pointer"
             @click="setListFilter('type', 'theme')"
         >
             Tema
@@ -39,6 +37,6 @@ const { filters, setListFilter, resetFilters } = useTableFilters(table, starterF
     </div>
     <USeparator />
     <div class="mt-3 flex w-full justify-end">
-        <UButton label="Borrar filtros" variant="outline" color="error" class="cursor-pointer" @click="resetFilters" />
+        <UButton label="Borrar filtros" variant="outline" color="error" @click="resetFilters" />
     </div>
 </template>

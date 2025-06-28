@@ -33,15 +33,12 @@ watch(globalFilterDebounced, (newValue) => {
                 color="neutral"
                 trailing-icon="lucide:list-filter"
                 :size="activeBreakpoint ? 'xl' : 'lg'"
-                class="cursor-pointer"
                 @click="showFilters = !showFilters"
                 >{{ activeBreakpoint ? 'Filtrar' : '' }}
             </UButton>
         </div>
-        <ULink :to="`admin/create/${tab}`">
-            <UButton trailing-icon="lucide:square-plus" :size="activeBreakpoint ? 'xl' : 'lg'" class="cursor-pointer">{{
-                activeBreakpoint ? 'Crear' : ''
-            }}</UButton>
+        <ULink :to="`/admin/create/${tab}`">
+            <UButton trailing-icon="lucide:square-plus" :size="activeBreakpoint ? 'xl' : 'lg'">{{ activeBreakpoint ? 'Crear' : '' }}</UButton>
         </ULink>
     </div>
     <UModal v-model:open="showFilters" title="Filtros" :ui="{ overlay: 'z-[1]', content: 'z-[2]' }">

@@ -20,7 +20,6 @@ const form = useForm<UserCreateForm>({
 });
 
 const onSubmit = () => {
-    console.log('voy o no');
     const options = {
         preserveScroll: true,
         preserveState: true,

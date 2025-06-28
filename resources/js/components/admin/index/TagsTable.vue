@@ -74,5 +74,11 @@ const table = useTemplateRef('table');
         :sorting="[{ id: 'name', desc: false }]"
         class="mt-6 h-[610px] flex-1"
     />
-    <DeleteModal ref="deleteModal" delete-route="tag.destroy" delete-desc="esta etiqueta" delete-success-message="Etiqueta borrada correctamente" />
+    <DeleteModal
+        ref="deleteModal"
+        delete-route="tag.destroy"
+        delete-desc="esta etiqueta"
+        delete-success-message="Etiqueta borrada correctamente"
+        @item-deleted="fetchData"
+    />
 </template>

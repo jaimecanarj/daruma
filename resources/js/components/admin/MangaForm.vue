@@ -25,7 +25,15 @@ const toast = useToast();
 
 //Estructuro las props para que se puedan usar correctamente
 const mangas = computed(() =>
-    props.mangas ? props.mangas.map((manga) => ({ label: manga.name, value: manga.id })).sort((a, b) => a.label.localeCompare(b.label)) : [],
+    props.mangas
+        ? props.mangas
+              .filter(
+                  (manga) =>
+                      (!props.item || manga.id !== props.item.id) && !form.relatedMangas?.some((relatedManga) => relatedManga.value === manga.id),
+              )
+              .map((manga) => ({ label: manga.name, value: manga.id }))
+              .sort((a, b) => a.label.localeCompare(b.label))
+        : [],
 );
 const people = computed(() =>
     props.people
