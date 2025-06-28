@@ -39,6 +39,16 @@ export interface Manga {
     magazineId: number;
     createdAt: string;
     updatedAt: string;
+    names?: { id: number; name: string; type: 'japanese' | 'spanish' | 'other' }[];
+    people?: (Person & { pivot: { job: 'writer' | 'illustrator' | 'both' } })[];
+    tags?: Tag[];
+    mangasRelated?: {
+        id: number;
+        name: string;
+        pivot: {
+            relation: 'prequel' | 'sequel' | 'spin-off' | 'main story';
+        };
+    }[];
 }
 
 export interface Person {

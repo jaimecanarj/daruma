@@ -28,19 +28,20 @@ export const readingDirections = [
 export const alternativeNamesOptions = [
     { label: '日本語', value: 'japanese', color: 'primary' },
     { label: 'Español', value: 'spanish', color: 'secondary' },
-    { label: 'Otro', value: 'other', color: 'neutral' },
+    { label: 'Otro', value: 'other', color: 'info' },
 ];
 
 export const authorsOptions = [
     { label: 'Escritor', value: 'writer', color: 'primary' },
     { label: 'Ilustrador', value: 'illustrator', color: 'secondary' },
+    { label: 'Ambos', value: 'both', color: 'info' },
 ];
 
 export const relatedMangasOptions = [
     { label: 'Precuela', value: 'prequel', color: 'primary' },
     { label: 'Secuela', value: 'sequel', color: 'secondary' },
-    { label: 'Spin-off', value: 'spin-off', color: 'neutral' },
-    { label: 'Historia principal', value: 'main story', color: 'tertiary' },
+    { label: 'Spin-off', value: 'spin-off', color: 'info' },
+    { label: 'Historia principal', value: 'main story', color: 'warning' },
 ];
 
 export const tagTypeOptions = [

@@ -2,6 +2,8 @@
 import { useBase64 } from '@vueuse/core';
 import { ref } from 'vue';
 
+defineProps<{ storedImage?: string }>();
+
 const cover = defineModel<File>();
 const tempImage = ref<File>();
 
@@ -21,8 +23,14 @@ const handleFileChange = (e: Event) => {
 
 <template>
     <div class="flex w-full flex-col items-center">
-        <div :class="[{ 'border-accented border-2 border-dashed': !tempImage }, 'flex h-[392px] w-[280px] items-center justify-center rounded']">
+        <div
+            :class="[
+                { 'border-accented border-2 border-dashed': !tempImage && !storedImage },
+                'flex h-[392px] w-[280px] items-center justify-center rounded',
+            ]"
+        >
             <img v-if="tempImage" :src="base64" class="h-full w-full rounded object-cover" alt="tempImage" />
+            <img v-else-if="storedImage" :src="`/storage/${storedImage}`" class="h-full w-full rounded object-cover" alt="storedImage" />
             <UIcon v-else name="lucide:image" class="text text-dimmed size-24" />
         </div>
         <UInput type="file" accept="image/*" class="mt-3 w-full" @change="handleFileChange" @input="cover = $event.target.files[0]" />

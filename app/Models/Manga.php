@@ -33,7 +33,7 @@ class Manga extends Model
 
     public function people(): BelongsToMany
     {
-        return $this->belongsToMany(Person::class);
+        return $this->belongsToMany(Person::class)->withPivot('job');
     }
 
     public function users(): BelongsToMany

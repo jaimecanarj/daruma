@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import MagazineForm from '@/components/admin/MagazineForm.vue';
+import MangaForm from '@/components/admin/MangaForm.vue';
 import PersonForm from '@/components/admin/PersonForm.vue';
 import TagForm from '@/components/admin/TagForm.vue';
 import UserForm from '@/components/admin/UserForm.vue';
@@ -26,7 +27,7 @@ let component: unknown | null = null;
 
 switch (page.props.ziggy.location.split('/')[2]) {
     case 'manga':
-        component = TagForm;
+        component = MangaForm;
         break;
     case 'person':
         component = PersonForm;

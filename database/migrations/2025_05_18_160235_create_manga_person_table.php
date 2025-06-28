@@ -13,8 +13,8 @@ return new class extends Migration {
         Schema::create('manga_person', function (Blueprint $table) {
             $table->foreignId('manga_id')->constrained('mangas')->onDelete('cascade');
             $table->foreignId('person_id')->constrained('people')->onDelete('cascade');
-            $table->enum('job', ['writer', 'illustrator']);
-            $table->primary(['manga_id', 'person_id', 'job']);
+            $table->enum('job', ['writer', 'illustrator', 'both']);
+            $table->primary(['manga_id', 'person_id']);
         });
     }
 

@@ -49,10 +49,11 @@ class AdminController extends Controller
         // Verificar si el tab existe en nuestro mapa
         if (isset($models[$tab])) {
             // Cargar el modelo correspondiente
-            $props['item'] = Inertia::defer(fn() => $models[$tab]::find($id));
-
-            // Cargar datos adicionales solo para manga
-            if ($tab === 'manga') {
+            if ($tab !== 'manga') {
+                $props['item'] = Inertia::defer(fn() => $models[$tab]::find($id));
+            } else {
+                // En caso de ser manga, cargar modelo y datos extra
+                $props['item'] = Inertia::defer(fn() => Manga::find($id)->load('names', 'people', 'tags', 'mangasRelated'));
                 $props['mangas'] = Inertia::defer(fn() => Manga::all()->select('id', 'name'));
                 $props['people'] = Inertia::defer(fn() => Person::all()->select('id', 'name', 'surname'));
                 $props['magazines'] = Inertia::defer(fn() => Magazine::all()->select('id', 'name'));

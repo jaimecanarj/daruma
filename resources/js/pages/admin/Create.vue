@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import MangaCreateForm from '@/components/admin/create/MangaCreateForm.vue';
 import MagazineForm from '@/components/admin/MagazineForm.vue';
+import MangaForm from '@/components/admin/MangaForm.vue';
 import PersonForm from '@/components/admin/PersonForm.vue';
 import TagForm from '@/components/admin/TagForm.vue';
 import UserForm from '@/components/admin/UserForm.vue';
@@ -47,7 +47,7 @@ const activeBreakpoint = useBreakpoints(breakpointsTailwind).active();
         @update:model-value="handleTabChange"
         :ui="{ label: activeBreakpoint || 'hidden' }"
     >
-        <template #mangas><MangaCreateForm v-bind="props" /></template>
+        <template #mangas><MangaForm purpose="create" v-bind="props" /></template>
         <template #people><PersonForm purpose="create" /></template>
         <template #magazines><MagazineForm purpose="create" /></template>
         <template #users><UserForm purpose="create" /></template>
