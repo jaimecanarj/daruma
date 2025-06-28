@@ -44,10 +44,7 @@ class UserController extends Controller
             'email' => 'required|email|unique:users',
         ]);
 
-        $user->update([
-            'name' => $validatedData['name'],
-            'email' => $validatedData['email'],
-        ]);
+        $user->update($validatedData);
 
         return to_route('admin.index', ['tab' => 'user']);
     }

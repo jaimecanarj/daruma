@@ -149,86 +149,13 @@ class MangaController extends Controller
             $validatedData['cover'] = $manga->cover;
         }
 
-        $manga->update([
-            'name' => $validatedData['name'],
-            'cover' => $validatedData['cover'],
-            'start_date' => $validatedData['start_date'],
-            'end_date' => $validatedData['end_date'],
-            'volumes' => $validatedData['volumes'],
-            'tankoubon' => $validatedData['tankoubon'],
-            'chapters' => $validatedData['chapters'],
-            'sinopsis' => $validatedData['sinopsis'],
-            'reading_direction' => $validatedData['reading_direction'],
-            'language' => $validatedData['language'],
-            'finished' => $validatedData['finished'],
-            'magazine_id' => $validatedData['magazine_id'],
-            'mal' => $validatedData['mal'],
-            'listado_manga' => $validatedData['listado_manga'],
-        ]);
+        $manga->update($validatedData);
 
-        //Actualizar relacion names
-        if (isset($validatedData['alternative_names'])) {
-            // Obtener nombres existentes
-            $existingNames = $manga->names;
-
-            // Array para llevar registro de IDs de nombres existentes que se mantienen
-            $keepNameIds = [];
-
-            // Verificar nuevos nombres y actualizar o crear según corresponda
-            foreach ($validatedData['alternative_names'] as $alternativeName) {
-                // Buscar si ya existe un nombre igual
-                $existingName = $existingNames->first(function ($name) use ($alternativeName) {
-                    return $name->name === $alternativeName['label'] && $name->type === $alternativeName['category'];
-                });
-
-                if ($existingName) {
-                    // Si existe, lo conservamos (no hacemos nada con él)
-                    $keepNameIds[] = $existingName->id;
-                } else {
-                    // Si no existe, lo creamos
-                    $manga->names()->create([
-                        'name' => $alternativeName['label'],
-                        'type' => $alternativeName['category'],
-                    ]);
-                }
-            }
-
-            // Eliminar solo los nombres que ya no están en la nueva lista
-            $manga->names()->whereNotIn('id', $keepNameIds)->delete();
-        } else {
-            // Si no hay nombres, eliminar todos
-            $manga->names()->delete();
-        }
-
-        // Actualizar relación people
-        if (isset($validatedData['authors'])) {
-            $authorPivot = [];
-            foreach ($validatedData['authors'] as $author) {
-                $authorPivot[$author['value']] = ['job' => $author['category']];
-            }
-            $manga->people()->sync($authorPivot);
-        } else {
-            $manga->people()->detach();
-        }
-
-        // Actualizar relación tags
-        if (isset($validatedData['tags'])) {
-            $tagIds = collect($validatedData['tags'])->pluck('value')->toArray();
-            $manga->tags()->sync($tagIds);
-        } else {
-            $manga->tags()->detach();
-        }
-
-        // Actualizar relación mangasRelated
-        if (isset($validatedData['related_mangas'])) {
-            $relatedMangasPivot = [];
-            foreach ($validatedData['related_mangas'] as $relatedManga) {
-                $relatedMangasPivot[$relatedManga['value']] = ['relation' => $relatedManga['category']];
-            }
-            $manga->mangasRelated()->sync($relatedMangasPivot);
-        } else {
-            $manga->mangasRelated()->detach();
-        }
+        // Actualizar relaciones
+        $this->syncAlternativeNames($manga, $validatedData['alternative_names'] ?? null);
+        $this->syncRelation($manga, 'people', $validatedData['authors'] ?? null, 'job');
+        $this->syncRelation($manga, 'tags', $validatedData['tags'] ?? null);
+        $this->syncRelation($manga, 'mangasRelated', $validatedData['related_mangas'] ?? null, 'relation');
 
         return to_route('admin.index', ['tab' => 'manga']);
     }
@@ -251,5 +178,56 @@ class MangaController extends Controller
         $manga->delete();
 
         return to_route('admin.index');
+    }
+
+    private function syncRelation($manga, $relation, $items = null, $pivotField = null, $valueField = 'value', $categoryField = 'category'): void
+    {
+        if ($items === null) {
+            $manga->$relation()->detach();
+            return;
+        }
+
+        if ($pivotField) {
+            // Relación con datos en tabla pivot
+            $pivotData = [];
+            foreach ($items as $item) {
+                $pivotData[$item[$valueField]] = [$pivotField => $item[$categoryField]];
+            }
+            $manga->$relation()->sync($pivotData);
+        } else {
+            // Relación simple (solo Ids)
+            $ids = collect($items)->pluck($valueField)->toArray();
+            $manga->$relation()->sync($ids);
+        }
+    }
+
+    private function syncAlternativeNames($manga, $alternativeNames = null): void
+    {
+        if ($alternativeNames === null) {
+            $manga->names()->delete();
+            return;
+        }
+
+        $existingNames = $manga->names;
+        $keepNameIds = [];
+
+        foreach ($alternativeNames as $item) {
+            $existingName = $existingNames->first(function ($name) use ($item) {
+                return $name->name === $item['label'] && $name->type === $item['category'];
+            });
+
+            if ($existingName) {
+                $keepNameIds[] = $existingName->id;
+            } else {
+                $newName = $manga->names()->create([
+                    'name' => $item['label'],
+                    'type' => $item['category'],
+                ]);
+                $keepNameIds[] = $newName->id;
+            }
+        }
+
+        // Eliminar nombres que ya no existen en la nueva lista
+        $manga->names()->whereNotIn('id', $keepNameIds)->delete();
     }
 }

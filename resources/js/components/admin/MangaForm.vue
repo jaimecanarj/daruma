@@ -38,7 +38,7 @@ const mangas = computed(() =>
 const people = computed(() =>
     props.people
         ? props.people
-              .map((person) => ({ label: `${person.name} ${person.surname}`, value: person.id }))
+              .map((person) => ({ label: `${person.name} ${person.surname ?? ''}`, value: person.id }))
               .sort((a, b) => a.label.localeCompare(b.label))
         : [],
 );
@@ -69,11 +69,11 @@ const form = useForm<MangaCreateForm>({
     startDate: props.item?.startDate ? parseDate(props.item.startDate) : undefined,
     endDate: props.item?.endDate ? parseDate(props.item.endDate) : undefined,
     authors: props.item?.people
-        ? props.item.people.map((author) => ({
-              label: `${author.name} ${author.surname}`,
-              value: author.id,
-              category: author.pivot.job,
-              color: author.pivot.job === 'writer' ? 'primary' : author.pivot.job === 'illustrator' ? 'secondary' : 'info',
+        ? props.item.people.map((person) => ({
+              label: `${person.name} ${person.surname ?? ''}`,
+              value: person.id,
+              category: person.pivot.job,
+              color: person.pivot.job === 'writer' ? 'primary' : person.pivot.job === 'illustrator' ? 'secondary' : 'info',
           }))
         : [],
     tags: props.item?.tags

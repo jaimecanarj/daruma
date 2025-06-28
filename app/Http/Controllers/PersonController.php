@@ -54,12 +54,7 @@ class PersonController extends Controller
             'kanji_surname' => 'string|nullable',
         ]);
 
-        $person->update([
-            'name' => $validatedData['name'],
-            'kanji_name' => $validatedData['kanji_name'],
-            'surname' => $validatedData['surname'],
-            'kanji_surname' => $validatedData['kanji_surname'],
-        ]);
+        $person->update($validatedData);
 
         return to_route('admin.index', ['tab' => 'person']);
     }

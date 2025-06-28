@@ -43,10 +43,7 @@ class TagController extends Controller
             'type' => ['required', 'string', Rule::in(['genre', 'theme'])],
         ]);
 
-        $tag->update([
-            'name' => $validatedData['name'],
-            'type' => $validatedData['type'],
-        ]);
+        $tag->update($validatedData);
 
         return to_route('admin.index', ['tab' => 'tag']);
     }

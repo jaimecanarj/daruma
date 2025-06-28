@@ -57,13 +57,7 @@ class MagazineController extends Controller
             'date' => 'nullable|date',
         ]);
 
-        $magazine->update([
-            'name' => $validatedData['name'],
-            'publisher' => $validatedData['publisher'],
-            'demography' => $validatedData['demography'],
-            'frequency' => $validatedData['frequency'],
-            'date' => $validatedData['date'],
-        ]);
+        $magazine->update($validatedData);
 
         return to_route('admin.index', ['tab' => 'magazine']);
     }
