@@ -175,6 +175,11 @@ class MangaController extends Controller
             return response()->json(['message' => 'Manga no encontrado'], 404);
         }
 
+        // Eliminar la cover
+        if ($manga->cover && Storage::disk('public')->exists($manga->cover)) {
+            Storage::disk('public')->delete($manga->cover);
+        }
+
         $manga->delete();
 
         return to_route('admin.index');

@@ -2,6 +2,7 @@
 import BaseForm from '@/components/admin/BaseForm.vue';
 import { type User, UserForm } from '@/types';
 import { userSchema } from '@/utils/zodSchemas';
+import { ref } from 'vue';
 
 const props = defineProps<{
     item?: User;
@@ -14,6 +15,8 @@ const initialValues: UserForm = {
     password: props.purpose === 'edit' ? 'contraseña' : undefined,
     passwordConfirmation: props.purpose === 'edit' ? 'contraseña' : undefined,
 };
+
+const show = ref(false);
 </script>
 
 <template>
@@ -37,10 +40,36 @@ const initialValues: UserForm = {
             </div>
             <div v-if="purpose === 'create'" class="flex w-full flex-col gap-6 md:flex-row">
                 <UFormField label="Contraseña" name="password" class="w-full" required>
-                    <UInput v-model="form.password" class="w-full" />
+                    <UInput v-model="form.password" :type="show ? 'text' : 'password'" :ui="{ trailing: 'pe-1' }" class="w-full">
+                        <template #trailing>
+                            <UButton
+                                color="neutral"
+                                variant="link"
+                                size="sm"
+                                :icon="show ? 'i-lucide-eye-off' : 'i-lucide-eye'"
+                                :aria-label="show ? 'Hide password' : 'Show password'"
+                                :aria-pressed="show"
+                                aria-controls="password"
+                                @click="show = !show"
+                            />
+                        </template>
+                    </UInput>
                 </UFormField>
                 <UFormField label="Repetir contraseña" name="passwordConfirmation" class="w-full" required>
-                    <UInput v-model="form.passwordConfirmation" class="w-full" />
+                    <UInput v-model="form.passwordConfirmation" :type="show ? 'text' : 'password'" :ui="{ trailing: 'pe-1' }" class="w-full">
+                        <template #trailing>
+                            <UButton
+                                color="neutral"
+                                variant="link"
+                                size="sm"
+                                :icon="show ? 'i-lucide-eye-off' : 'i-lucide-eye'"
+                                :aria-label="show ? 'Hide password' : 'Show password'"
+                                :aria-pressed="show"
+                                aria-controls="password"
+                                @click="show = !show"
+                            />
+                        </template>
+                    </UInput>
                 </UFormField>
             </div>
         </template>
