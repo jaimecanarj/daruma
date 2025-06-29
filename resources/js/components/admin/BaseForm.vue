@@ -24,7 +24,7 @@ const form = useForm(props.initialValues);
 const onSubmit = () => {
     const options = {
         preserveScroll: true,
-        preserveState: true,
+        preserveState: false,
         onSuccess: () => {
             form.reset();
             toast.add({
