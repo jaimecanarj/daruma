@@ -22,7 +22,14 @@ watch(globalFilterDebounced, (newValue) => {
 <template>
     <div class="mt-8 flex justify-between">
         <div class="flex gap-2">
-            <UInput class="w-48 sm:w-60" v-model="localInput" placeholder="Buscar..." leading-icon="lucide:search" type="search">
+            <UInput
+                class="w-48 sm:w-60"
+                v-model="localInput"
+                placeholder="Buscar..."
+                leading-icon="lucide:search"
+                type="search"
+                :ui="{ base: 'pr-8', trailing: 'pe-1' }"
+            >
                 <template v-if="localInput?.length" #trailing>
                     <UButton color="neutral" variant="link" size="sm" icon="i-lucide-circle-x" aria-label="Clear input" @click="localInput = ''" />
                 </template>
