@@ -6,6 +6,8 @@ use App\Models\Manga;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Str;
+use Intervention\Image\Laravel\Facades\Image;
 
 class MangaController extends Controller
 {
@@ -52,10 +54,10 @@ class MangaController extends Controller
         ]);
 
         if ($request->hasFile('cover')) {
-            // Guarda el archivo en storage/app/public/covers
-            $path = $request->file('cover')->store('covers', 'public');
+            // Procesar y optimizar la imagen
+            $path = $this->processImage($request->file('cover'));
 
-            // Reemplaza el objeto File con la ruta del archivo
+            // Reemplazar con la ruta del archivo optimizado
             $validatedData['cover'] = $path;
         }
 
@@ -140,10 +142,10 @@ class MangaController extends Controller
                 Storage::disk('public')->delete($manga->cover);
             }
 
-            // Guardo el archivo en storage/app/public/covers
-            $path = $request->file('cover')->store('covers', 'public');
+            // Procesar y optimizar la imagen
+            $path = $this->processImage($request->file('cover'));
 
-            // Reemplazo el objeto File con la ruta del archivo
+            // Reemplazar con la ruta del archivo optimizado
             $validatedData['cover'] = $path;
         } else {
             $validatedData['cover'] = $manga->cover;
@@ -183,6 +185,30 @@ class MangaController extends Controller
         $manga->delete();
 
         return to_route('admin.index');
+    }
+
+    private function processImage($file)
+    {
+        // Crear un nombre de archivo único basado en timestamp y un string aleatorio
+        $filename = time() . '-' . Str::random(10) . '.webp';
+        $path = 'covers/' . $filename;
+
+        // Crear la carpeta si no existe
+        $directory = storage_path('app/public/covers');
+        if (!file_exists($directory)) {
+            mkdir($directory, 0755, true);
+        }
+
+        // Procesar la imagen con Intervention Image
+        $image = Image::read($file->getRealPath());
+
+        // Redimensionar a 500px de ancho manteniendo la proporción
+        $image = $image->scale(width: 500);
+
+        // Guardar como WebP con calidad 80 (buen equilibrio entre calidad y tamaño)
+        $image->toWebp(80)->save(storage_path('app/public/' . $path));
+
+        return $path;
     }
 
     private function syncRelation($manga, $relation, $items = null, $pivotField = null, $valueField = 'value', $categoryField = 'category'): void
