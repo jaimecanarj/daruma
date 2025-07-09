@@ -4,7 +4,7 @@ import FiltersHeader from '@/components/admin/index/FiltersHeader.vue';
 import TagsFilter from '@/components/admin/index/TagsFilter.vue';
 import { useFetchTable } from '@/composables/useFetchTable';
 import { Tag } from '@/types';
-import { actionsCell, sortablePinnableHeader } from '@/utils/tableColumns';
+import { actionsCell, sortableHeader, sortablePinnableHeader } from '@/utils/tableColumns';
 import type { TableColumn } from '@nuxt/ui';
 import { h, ref, resolveComponent, useTemplateRef } from 'vue';
 
@@ -24,7 +24,7 @@ fetchData();
 const columns: TableColumn<Tag>[] = [
     {
         accessorKey: 'id',
-        header: 'Id',
+        header: ({ column }) => sortableHeader(column, 'Id', UButton),
         cell: ({ row }) => `#${row.getValue('id')}`,
     },
     {

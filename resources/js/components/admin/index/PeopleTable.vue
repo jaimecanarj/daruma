@@ -23,7 +23,7 @@ fetchData();
 const columns: TableColumn<Person>[] = [
     {
         accessorKey: 'id',
-        header: 'Id',
+        header: ({ column }) => sortableHeader(column, 'Id', UButton),
         cell: ({ row }) => `#${row.getValue('id')}`,
     },
     {

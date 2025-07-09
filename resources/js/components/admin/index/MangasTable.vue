@@ -25,7 +25,7 @@ fetchData();
 const columns: TableColumn<Manga>[] = [
     {
         accessorKey: 'id',
-        header: 'Id',
+        header: ({ column }) => sortableHeader(column, 'Id', UButton),
         cell: ({ row }) => `#${row.getValue('id')}`,
     },
     {
