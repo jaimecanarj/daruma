@@ -43,7 +43,7 @@ export const mangaSchema = z
         sinopsis: z.string().optional(),
         startDate: z.instanceof(CalendarDate).optional(),
         endDate: z.instanceof(CalendarDate).optional(),
-        magazineId: z.number().optional(),
+        magazineId: z.object({ label: z.string(), value: z.number() }).optional(),
         mal: optionalNumberSchema,
         listadoManga: optionalNumberSchema,
         relatedMangas: z.array(multiItemSchema),

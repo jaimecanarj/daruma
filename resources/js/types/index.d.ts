@@ -90,7 +90,7 @@ export interface MangaForm {
     alternativeNames?: MultiValues[];
     authors?: MultiValues[];
     tags?: MultiValues[];
-    magazineId?: number;
+    magazineId?: { label: string; value: number };
     relatedMangas?: MultiValues[];
     mal?: number;
     listadoManga?: number;

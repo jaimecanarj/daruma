@@ -88,7 +88,9 @@ const initialValues: MangaForm = {
     readingDirection: props.item?.readingDirection === 'ltr',
     language: props.item?.language ?? 'es',
     finished: props.item?.finished === 1,
-    magazineId: props.item?.magazineId ?? undefined,
+    magazineId: props.item?.magazineId
+        ? { label: magazines.value.find((magazine) => magazine.value === props.item?.magazineId)?.label ?? '', value: props.item.magazineId }
+        : undefined,
     relatedMangas: props.item?.mangasRelated
         ? props.item.mangasRelated.map((manga) => ({
               label: manga.name,
@@ -117,6 +119,7 @@ const formTransform = (data: any) => ({
     startDate: data.startDate?.toString(),
     endDate: data.endDate?.toString(),
     cover: data.cover ? data.cover : undefined,
+    magazineId: data.magazineId ? data.magazineId.value : undefined,
 });
 
 const baseForm = useTemplateRef('baseForm');
@@ -242,7 +245,7 @@ const baseForm = useTemplateRef('baseForm');
                 <UFormField label="Revista" name="magazineId">
                     <Deferred data="magazines">
                         <template #fallback><USelect disabled class="w-full" /></template>
-                        <USelect v-model="form.magazineId" :items="magazines" placeholder="Selecciona una revista" class="w-full" />
+                        <USelectMenu v-model="form.magazineId" :items="magazines" placeholder="Selecciona una revista" class="w-full" />
                     </Deferred>
                 </UFormField>
                 <UFormField label="MAL" name="mal">
