@@ -27,7 +27,7 @@ const loadSearchData = async () => {
                 items: response.data.mangas.map((manga: Manga) => ({
                     label: manga.name,
                     avatar: {
-                        src: `storage/${manga.cover}`,
+                        src: `/storage/${manga.cover}`,
                     },
                     to: `/mangas/${manga.id}`,
                 })),
@@ -57,6 +57,11 @@ const loadSearchData = async () => {
         isLoading.value = false;
     }
 };
+
+const handleSelect = () => {
+    modalOpen.value = false;
+    searchTerm.value = '';
+};
 </script>
 
 <template>
@@ -68,7 +73,7 @@ const loadSearchData = async () => {
                 placeholder="Buscar..."
                 :loading="isLoading"
                 :groups="searchResults"
-                @update:model-value="modalOpen = false"
+                @update:model-value="handleSelect"
                 class="h-80"
             />
         </template>
