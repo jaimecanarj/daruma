@@ -25,7 +25,7 @@ const slideOver = ref(false);
 </script>
 
 <template>
-    <nav class="border-default bg-default/60 sticky top-0 z-10 border-b backdrop-blur">
+    <nav class="border-default bg-default/60 sticky top-0 z-[1] border-b backdrop-blur">
         <UContainer class="flex items-center justify-between py-3">
             <template v-if="activeBreakpoint">
                 <!--Logo-->
@@ -50,7 +50,7 @@ const slideOver = ref(false);
                 </div>
             </template>
             <template v-else>
-                <USlideover side="left" title="Daruma" v-model:open="slideOver" :ui="{ content: 'z-20' }">
+                <USlideover side="left" title="Daruma" v-model:open="slideOver" :ui="{ content: 'z-[2]' }">
                     <!--Logo-->
                     <div class="flex cursor-pointer items-center gap-2">
                         <img :src="logo" class="h-10 w-10" alt="logo" />

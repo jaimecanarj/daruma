@@ -34,6 +34,12 @@ export default defineConfig({
                         base: ['cursor-pointer'],
                     },
                 },
+                modal: {
+                    slots: {
+                        overlay: 'z-[5]',
+                        content: 'z-[6]',
+                    },
+                },
             },
         }),
     ],

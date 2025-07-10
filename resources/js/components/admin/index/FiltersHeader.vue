@@ -48,7 +48,7 @@ watch(globalFilterDebounced, (newValue) => {
             <UButton trailing-icon="lucide:square-plus" :size="activeBreakpoint ? 'xl' : 'lg'">{{ activeBreakpoint ? 'Crear' : '' }}</UButton>
         </ULink>
     </div>
-    <UModal v-model:open="showFilters" title="Filtros" :ui="{ overlay: 'z-[1]', content: 'z-[2]' }">
+    <UModal v-model:open="showFilters" title="Filtros">
         <template #body>
             <slot />
         </template>

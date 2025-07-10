@@ -34,7 +34,7 @@ defineExpose({
         v-model:open="deleteFormOpen"
         title="Borrar usuario"
         :description="`Estás a punto de borrar ${deleteDesc}, ¿estás seguro?`"
-        :ui="{ overlay: 'z-[1]', content: 'z-[2]', footer: 'justify-end' }"
+        :ui="{ footer: 'justify-end' }"
     >
         <template #footer>
             <UButton label="Cancelar" color="neutral" variant="outline" @click="deleteFormOpen = false" />
