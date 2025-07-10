@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import logo from '@/assets/logo.svg';
+import SearchBar from '@/components/SearchBar.vue';
 import { SharedData } from '@/types';
 import { links } from '@/utils/links';
 import { usePage } from '@inertiajs/vue3';
@@ -81,7 +82,7 @@ const slideOver = ref(false);
                 <!--Botón modo de color-->
                 <UButton :icon="isDarkMode ? 'lucide:moon' : 'lucide:sun'" color="neutral" variant="ghost" @click="isDarkMode = !isDarkMode" />
                 <!--Botón de búsqueda-->
-                <UButton icon="lucide:search" color="neutral" variant="ghost" />
+                <SearchBar />
                 <!--Botón de usuario-->
                 <UAvatar src="#" alt="Avatar" class="cursor-pointer" />
             </div>
