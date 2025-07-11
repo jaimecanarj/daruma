@@ -4,6 +4,7 @@ import laravel from 'laravel-vite-plugin';
 import { resolve } from 'node:path';
 import path from 'path';
 import { defineConfig } from 'vite';
+import vueDevTools from 'vite-plugin-vue-devtools';
 export default defineConfig({
     plugins: [
         laravel({
@@ -18,6 +19,9 @@ export default defineConfig({
                     includeAbsolute: false,
                 },
             },
+        }),
+        vueDevTools({
+            appendTo: 'app.ts',
         }),
         ui({
             inertia: true,
