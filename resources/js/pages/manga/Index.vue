@@ -8,6 +8,7 @@ import { computed, ref } from 'vue';
 const props = defineProps<{ pagination: { currentPage: number; lastPage: number; total: number; data: Manga[] }; filters: { search?: string } }>();
 
 const activeBreakpoint = useBreakpoints(breakpointsTailwind).active();
+const fullYear = useBreakpoints(breakpointsTailwind).greaterOrEqual('lg');
 
 const localInput = ref(props.filters.search);
 const showFilters = ref(false);
@@ -106,7 +107,7 @@ const debouncedSearch = useDebounceFn(() => {
                         class="absolute inset-0 flex flex-col justify-end bg-black/70 p-3 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
                         @click="router.visit(route('mangas.show', manga.id))"
                     >
-                        <h3 class="line-clamp-2 text-lg font-bold text-white/90">{{ manga.name }}</h3>
+                        <h3 class="line-clamp-2 text-lg font-bold text-white/90 select-none">{{ manga.name }}</h3>
                     </div>
                 </div>
             </div>
@@ -134,8 +135,8 @@ const debouncedSearch = useDebounceFn(() => {
                             </div>
                             <div class="flex gap-2 text-sm lg:text-base">
                                 <p v-if="manga.startDate !== undefined">
-                                    <UIcon name="lucide:calendar" class="mr-0.5 mb-1 inline" /> {{ manga.startDate.slice(2, 4) }} -
-                                    <span v-if="manga.endDate">{{ manga.endDate.slice(2, 4) }}</span>
+                                    <UIcon name="lucide:calendar" class="mr-0.5 mb-1 inline" /> {{ manga.startDate.slice(fullYear ? 0 : 2, 4) }} -
+                                    <span v-if="manga.endDate">{{ manga.endDate.slice(fullYear ? 0 : 2, 4) }}</span>
                                 </p>
                                 <p v-if="manga.tankoubon">
                                     <UIcon name="lucide:library-big" class="mr-0.5 mb-1 inline" /> {{ manga.tankoubon }}
@@ -154,8 +155,9 @@ const debouncedSearch = useDebounceFn(() => {
                                 </div>
                                 <div class="relative flex-grow overflow-hidden text-sm">
                                     <p>{{ manga.sinopsis }}</p>
+                                    <!--Colores de from escritos en hexadecimal pues es imposible obtener los colores relativos-->
                                     <div
-                                        class="from-elevated/50 pointer-events-none absolute bottom-0 left-0 h-5 w-full bg-gradient-to-t from-60% to-transparent"
+                                        class="pointer-events-none absolute bottom-0 left-0 h-5 w-full bg-gradient-to-t from-[#fafaf9] to-transparent dark:from-[#231f1d]"
                                     ></div>
                                 </div>
                             </div>
@@ -178,7 +180,13 @@ const debouncedSearch = useDebounceFn(() => {
             always
             :buffer="500"
         >
-            <template #fallback> Cargando </template>
+            <template #fallback>
+                <div class="my-10 flex items-center justify-center space-x-2">
+                    <div class="bg-inverted/80 size-6 animate-bounce rounded-full [animation-delay:-0.3s]" />
+                    <div class="bg-inverted/80 size-6 animate-bounce rounded-full [animation-delay:-0.15s]" />
+                    <div class="bg-inverted/80 size-6 animate-bounce rounded-full" />
+                </div>
+            </template>
         </WhenVisible>
     </template>
 </template>

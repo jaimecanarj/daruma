@@ -28,7 +28,6 @@ class MangaController extends Controller
         $search = $request->input('search');
 
         $filterMangas = function ($page, $search) {
-            sleep(1);
             $query = Manga::with('tags');
 
             if (!empty($search)) {
@@ -39,7 +38,7 @@ class MangaController extends Controller
                 });
             }
 
-            return $query->paginate(18, page: $page);
+            return $query->paginate(24, page: $page);
         };
 
         $props['pagination'] = Inertia::defer(fn() => $filterMangas($page, $search))->deepMerge();
