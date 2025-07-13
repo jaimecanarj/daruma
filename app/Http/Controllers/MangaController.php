@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Str;
 use Intervention\Image\Laravel\Facades\Image;
+use Inertia\Inertia;
 
 class MangaController extends Controller
 {
@@ -17,6 +18,37 @@ class MangaController extends Controller
     public function index()
     {
         return Manga::all();
+    }
+
+    public function indexPage(Request $request)
+    {
+        $props = [];
+
+        $page = $request->input('page', 1);
+        $search = $request->input('search');
+
+        $filterMangas = function ($page, $search) {
+            sleep(1);
+            $query = Manga::with('tags');
+
+            if (!empty($search)) {
+                $query->where(function ($q) use ($search) {
+                    $q->where('name', 'like', '%' . $search . '%')->orWhereHas('names', function ($subQuery) use ($search) {
+                        $subQuery->where('name', 'like', '%' . $search . '%');
+                    });
+                });
+            }
+
+            return $query->paginate(18, page: $page);
+        };
+
+        $props['pagination'] = Inertia::defer(fn() => $filterMangas($page, $search))->deepMerge();
+
+        $props['filters'] = [
+            'search' => $search,
+        ];
+
+        return Inertia::render('manga/Index', $props);
     }
 
     /**
@@ -99,7 +131,7 @@ class MangaController extends Controller
      */
     public function show(Manga $manga)
     {
-        //
+        return Inertia::render('manga/Show', ['manga' => $manga]);
     }
 
     /**
