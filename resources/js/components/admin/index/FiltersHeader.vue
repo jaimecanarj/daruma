@@ -10,13 +10,17 @@ const localInput = ref<string>(globalFilter.value || '');
 
 const activeBreakpoint = useBreakpoints(breakpointsTailwind).active();
 
-const showFilters = ref(false);
+const showFilters = ref<string | undefined>(undefined);
 
 const globalFilterDebounced = refDebounced(localInput, 300);
 
 watch(globalFilterDebounced, (newValue) => {
     globalFilter.value = newValue;
 });
+
+const toggleShowFilters = () => {
+    showFilters.value = showFilters.value === '0' ? undefined : '0';
+};
 </script>
 
 <template>
@@ -40,17 +44,22 @@ watch(globalFilterDebounced, (newValue) => {
                 color="neutral"
                 trailing-icon="lucide:list-filter"
                 :size="activeBreakpoint ? 'xl' : 'lg'"
-                @click="showFilters = !showFilters"
-                >{{ activeBreakpoint ? 'Filtrar' : '' }}
+                @click="toggleShowFilters"
+                >{{ activeBreakpoint ? 'Filtros' : '' }}
             </UButton>
         </div>
         <ULink :to="`/admin/create/${tab}`">
-            <UButton trailing-icon="lucide:square-plus" :size="activeBreakpoint ? 'xl' : 'lg'">{{ activeBreakpoint ? 'Crear' : '' }}</UButton>
+            <UButton trailing-icon="lucide:square-plus" :size="activeBreakpoint ? 'xl' : 'lg'" class="font-semibold">{{
+                activeBreakpoint ? 'Crear' : ''
+            }}</UButton>
         </ULink>
     </div>
-    <UModal v-model:open="showFilters" title="Filtros">
-        <template #body>
-            <slot />
+    <UAccordion v-model="showFilters" :items="[{}]">
+        <template #trailing>{{ '' }}</template>
+        <template #content>
+            <UCard variant="subtle" class="rounded-xl">
+                <slot />
+            </UCard>
         </template>
-    </UModal>
+    </UAccordion>
 </template>

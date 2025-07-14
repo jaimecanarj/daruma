@@ -10,7 +10,7 @@ export const sortableHeader = <T>(column: Column<T>, label: string, UButton: any
         variant: 'ghost',
         label,
         icon: isSorted ? (isSorted === 'asc' ? 'i-lucide-arrow-up-narrow-wide' : 'i-lucide-arrow-down-wide-narrow') : 'i-lucide-arrow-up-down',
-        class: '-mx-2.5',
+        class: '-mx-2.5 text-highlighted font-semibold',
         onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
     });
 };
@@ -33,7 +33,7 @@ export const sortablePinnableHeader = <T>(column: Column<T>, label: string, UBut
                         ? 'i-lucide-arrow-up-narrow-wide'
                         : 'i-lucide-arrow-down-wide-narrow'
                     : 'i-lucide-arrow-up-down',
-                class: '-ml-2.5',
+                class: '-ml-2.5 text-highlighted font-semibold',
                 onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
             }),
             h(UButton, {
@@ -41,7 +41,7 @@ export const sortablePinnableHeader = <T>(column: Column<T>, label: string, UBut
                 variant: 'ghost',
                 size: 'icon',
                 icon: isPinned ? 'i-lucide-pin-off' : 'i-lucide-pin',
-                class: 'px-2',
+                class: 'px-2 text-highlighted font-semibold',
                 onClick() {
                     column.pin(isPinned === 'left' ? false : 'left');
                 },

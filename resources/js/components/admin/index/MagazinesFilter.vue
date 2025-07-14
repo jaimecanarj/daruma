@@ -20,38 +20,42 @@ const { filters, setListFilter, setFilter, resetFilters } = useTableFilters(tabl
 </script>
 
 <template>
-    <!--Filtro de demografía-->
-    <div class="my-3 flex flex-wrap items-center gap-1 sm:gap-2">
-        <p>Demografía:</p>
-        <UButton
-            v-for="demography of demographies"
-            :key="demography.value"
-            :color="(filters!.find((item) => item.id === 'demography')!.value as string[]).includes(demography.value) ? 'primary' : 'neutral'"
-            variant="soft"
-            size="sm"
-            @click="setListFilter('demography', demography.value)"
-        >
-            {{ demography.label }}
-        </UButton>
+    <div class="flex flex-wrap gap-x-8 gap-y-3">
+        <!--Filtro de demografía-->
+        <div class="flex flex-wrap items-center gap-1 sm:gap-2">
+            <p>Demografía:</p>
+            <div class="flex items-center gap-1 sm:gap-2">
+                <UButton
+                    v-for="demography of demographies"
+                    :key="demography.value"
+                    :color="(filters!.find((item) => item.id === 'demography')!.value as string[]).includes(demography.value) ? 'primary' : 'neutral'"
+                    variant="soft"
+                    size="sm"
+                    @click="setListFilter('demography', demography.value)"
+                >
+                    {{ demography.label }}
+                </UButton>
+            </div>
+        </div>
+        <!--Filtro de periodicidad-->
+        <div class="flex flex-wrap items-center gap-1 sm:gap-2">
+            <p>Periodicidad:</p>
+            <USelect
+                v-model="filters!.find((item) => item.id === 'frequency')!.value as string"
+                :items="[{ label: 'Todas', value: 'all' }, ...frequencies]"
+                class="w-48"
+                :ui="{ content: 'z-[3]' }"
+                @change="setFilter('frequency')"
+            />
+        </div>
+        <!--Filtro de fecha-->
+        <div class="flex items-center gap-1 sm:gap-2">
+            <p>Fecha:</p>
+            <DateRangePicker v-model="filters!.find((item) => item.id === 'date')!.value as DateRange" />
+        </div>
     </div>
-    <!--Filtro de periodicidad-->
-    <div class="my-3 flex flex-wrap items-center gap-1 sm:gap-2">
-        <p>Periodicidad:</p>
-        <USelect
-            v-model="filters!.find((item) => item.id === 'frequency')!.value as string"
-            :items="[{ label: 'Todas', value: 'all' }, ...frequencies]"
-            class="w-48"
-            :ui="{ content: 'z-[3]' }"
-            @change="setFilter('frequency')"
-        />
-    </div>
-    <!--Filtro de fecha-->
-    <div class="my-3 flex items-center gap-1 sm:gap-2">
-        <p>Fecha:</p>
-        <DateRangePicker v-model="filters!.find((item) => item.id === 'date')!.value as DateRange" />
-    </div>
-    <USeparator />
-    <div class="mt-3 flex w-full justify-end">
+    <USeparator class="my-3" />
+    <div class="flex w-full justify-end">
         <UButton label="Borrar filtros" variant="outline" color="error" @click="resetFilters" />
     </div>
 </template>

@@ -27,7 +27,7 @@ const resetDates = () => {
                     {{ df.format(date.start.toDate(getLocalTimeZone())) }}
                 </template>
             </template>
-            <template v-else> Marca una fecha </template>
+            <template v-else> Fecha </template>
         </UButton>
 
         <template #content>
