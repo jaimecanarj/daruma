@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import MangaIndexSkeleton from '@/components/skeletons/MangaIndexSkeleton.vue';
 import { Manga } from '@/types';
-import { Deferred, router, WhenVisible } from '@inertiajs/vue3';
+import { Deferred, Head, router, WhenVisible } from '@inertiajs/vue3';
 import { breakpointsTailwind, useBreakpoints, useDebounceFn } from '@vueuse/core';
 import { computed, ref } from 'vue';
 
@@ -36,6 +36,9 @@ const debouncedSearch = useDebounceFn(() => {
 </script>
 
 <template>
+    <Head>
+        <title>Mangas</title>
+    </Head>
     <div class="my-6 flex flex-col justify-between gap-4 sm:flex-row">
         <div class="flex gap-2">
             <UInput

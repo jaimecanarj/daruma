@@ -6,7 +6,7 @@ import TagsTable from '@/components/admin/index/TagsTable.vue';
 import UsersTable from '@/components/admin/index/UsersTable.vue';
 import { SharedData } from '@/types';
 import { adminTabItems } from '@/utils/constants';
-import { router, usePage } from '@inertiajs/vue3';
+import { Head, router, usePage } from '@inertiajs/vue3';
 import { breakpointsTailwind, useBreakpoints } from '@vueuse/core';
 import { ref } from 'vue';
 
@@ -34,6 +34,9 @@ const activeBreakpoint = useBreakpoints(breakpointsTailwind).active();
 </script>
 
 <template>
+    <Head>
+        <title>Panel de administración</title>
+    </Head>
     <UBreadcrumb :items="breadcrumbItems" :ui="{ linkLeadingIcon: 'size-8' }" />
     <UTabs
         :items="adminTabItems"

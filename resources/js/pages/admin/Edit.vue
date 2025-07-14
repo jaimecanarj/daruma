@@ -5,7 +5,7 @@ import PersonForm from '@/components/admin/PersonForm.vue';
 import TagForm from '@/components/admin/TagForm.vue';
 import UserForm from '@/components/admin/UserForm.vue';
 import { SharedData } from '@/types';
-import { Deferred, usePage } from '@inertiajs/vue3';
+import { Deferred, Head, usePage } from '@inertiajs/vue3';
 
 const page: { props: SharedData } = usePage();
 
@@ -45,6 +45,9 @@ switch (page.props.ziggy.location.split('/')[2]) {
 </script>
 
 <template>
+    <Head>
+        <title>Edición</title>
+    </Head>
     <UBreadcrumb :items="breadcrumbItems" :ui="{ linkLeadingIcon: 'size-8' }" />
     <Deferred data="item">
         <template #fallback>
