@@ -9,14 +9,22 @@ import { computed, ref } from 'vue';
 
 const page: { props: SharedData } = usePage();
 const route = computed(() => page.props.ziggy.location);
-const { store } = useColorMode();
+const { store, system } = useColorMode();
 
 const isDarkMode = computed({
     get() {
-        return store.value === 'dark';
+        if (store.value === 'auto') {
+            return system.value === 'dark';
+        } else {
+            return store.value === 'dark';
+        }
     },
     set() {
-        store.value = store.value === 'dark' ? 'light' : 'dark';
+        if (store.value === 'auto') {
+            store.value = system.value === 'dark' ? 'light' : 'dark';
+        } else {
+            store.value = store.value === 'dark' ? 'light' : 'dark';
+        }
     },
 });
 
