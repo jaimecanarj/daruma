@@ -29,7 +29,7 @@ export interface Manga {
     magazineId: number;
     createdAt: string;
     updatedAt: string;
-    names?: { id: number; name: string; type: 'japanese' | 'spanish' | 'other' }[];
+    names?: Name[];
     people?: (Person & { pivot: { job: 'writer' | 'illustrator' | 'both' } })[];
     tags?: Tag[];
     mangasRelated?: {
@@ -39,6 +39,12 @@ export interface Manga {
             relation: 'prequel' | 'sequel' | 'spin-off' | 'main story';
         };
     }[];
+}
+
+export interface Name {
+    id: number;
+    name: string;
+    type: 'japanese' | 'spanish' | 'other';
 }
 
 export interface Person {

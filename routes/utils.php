@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::prefix('api')->group(function () {
     Route::get('/search', function () {
-        $mangas = Manga::select('id', 'name', 'cover')->get();
+        $mangas = Manga::select('id', 'name', 'cover')->with('names')->get();
         $people = Person::all();
         $magazines = Magazine::select('id', 'name', 'publisher')->get();
 

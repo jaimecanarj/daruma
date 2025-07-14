@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Magazine, Manga, Person } from '@/types';
+import { Magazine, Manga, Name, Person } from '@/types';
 import axios from 'axios';
 import { ref, watch } from 'vue';
 
@@ -14,6 +14,11 @@ watch(modalOpen, async (isOpen) => {
     }
 });
 
+const formatNames = (names: Name[] | undefined) => {
+    if (names === undefined || names.length === 0) return '';
+    return names.map((name) => name.name).join(', ');
+};
+
 const loadSearchData = async () => {
     isLoading.value = true;
     try {
@@ -26,6 +31,7 @@ const loadSearchData = async () => {
                 label: 'Mangas',
                 items: response.data.mangas.map((manga: Manga) => ({
                     label: manga.name,
+                    names: formatNames(manga.names),
                     avatar: {
                         src: `/storage/${manga.cover}`,
                     },
@@ -73,6 +79,7 @@ const handleSelect = () => {
                 placeholder="Buscar..."
                 :loading="isLoading"
                 :groups="searchResults"
+                :fuse="{ fuseOptions: { keys: ['label', 'names', 'suffix'] } }"
                 @update:model-value="handleSelect"
                 class="h-80"
             />
