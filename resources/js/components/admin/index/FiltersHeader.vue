@@ -54,8 +54,7 @@ const toggleShowFilters = () => {
             }}</UButton>
         </ULink>
     </div>
-    <UAccordion v-model="showFilters" :items="[{}]">
-        <template #trailing>{{ '' }}</template>
+    <UAccordion v-model="showFilters" :items="[{}]" :ui="{ trigger: 'p-0', trailingIcon: 'size-0' }">
         <template #content>
             <UCard variant="subtle" class="rounded-xl">
                 <slot />
