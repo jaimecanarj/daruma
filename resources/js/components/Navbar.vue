@@ -1,36 +1,51 @@
 <script setup lang="ts">
 import logo from '@/assets/logo.svg';
+import DarkMode from '@/components/DarkMode.vue';
 import SearchBar from '@/components/SearchBar.vue';
 import { SharedData } from '@/types';
 import { links } from '@/utils/links';
-import { usePage } from '@inertiajs/vue3';
-import { breakpointsTailwind, useBreakpoints, useColorMode } from '@vueuse/core';
+import { router, usePage } from '@inertiajs/vue3';
+import { DropdownMenuItem } from '@nuxt/ui/components/DropdownMenu.vue';
+import { breakpointsTailwind, useBreakpoints } from '@vueuse/core';
 import { computed, ref } from 'vue';
 
 const page: { props: SharedData } = usePage();
 const route = computed(() => page.props.ziggy.location);
-const { store, system } = useColorMode();
-
-const isDarkMode = computed({
-    get() {
-        if (store.value === 'auto') {
-            return system.value === 'dark';
-        } else {
-            return store.value === 'dark';
-        }
-    },
-    set() {
-        if (store.value === 'auto') {
-            store.value = system.value === 'dark' ? 'light' : 'dark';
-        } else {
-            store.value = store.value === 'dark' ? 'light' : 'dark';
-        }
-    },
-});
 
 const activeBreakpoint = useBreakpoints(breakpointsTailwind).active();
 
 const slideOver = ref(false);
+
+const userItems = ref<DropdownMenuItem[][]>([
+    [
+        {
+            label: 'Perfil',
+            icon: 'lucide:user',
+            to: '/profile',
+        },
+        {
+            label: 'Opciones',
+            icon: 'lucide:settings',
+            to: '/profile',
+        },
+    ],
+    [
+        {
+            label: 'Cerrar sesión',
+            icon: 'lucide:log-out',
+            class: 'cursor-pointer',
+            onSelect() {
+                router.post(
+                    '/logout',
+                    {},
+                    {
+                        onSuccess: () => router.visit('/login'),
+                    },
+                );
+            },
+        },
+    ],
+]);
 </script>
 
 <template>
@@ -88,11 +103,23 @@ const slideOver = ref(false);
             <!--Botones lateral derecha-->
             <div class="flex items-center gap-2">
                 <!--Botón modo de color-->
-                <UButton :icon="isDarkMode ? 'lucide:moon' : 'lucide:sun'" color="neutral" variant="ghost" @click="isDarkMode = !isDarkMode" />
+                <DarkMode />
                 <!--Botón de búsqueda-->
                 <SearchBar />
                 <!--Botón de usuario-->
-                <UAvatar src="#" alt="Avatar" class="cursor-pointer" />
+                <UDropdownMenu
+                    :items="userItems"
+                    :content="{
+                        align: 'end',
+                        side: 'bottom',
+                        sideOffset: 18,
+                    }"
+                    :ui="{
+                        content: 'w-48',
+                    }"
+                >
+                    <UAvatar src="#" alt="Avatar" class="cursor-pointer" />
+                </UDropdownMenu>
             </div>
         </UContainer>
     </nav>

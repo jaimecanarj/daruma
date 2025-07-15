@@ -14,6 +14,7 @@ const show = defineModel<boolean>('show', { default: false });
                 :aria-label="show ? 'Hide password' : 'Show password'"
                 :aria-pressed="show"
                 aria-controls="password"
+                tabindex="-1"
                 @click="show = !show"
             />
         </template>

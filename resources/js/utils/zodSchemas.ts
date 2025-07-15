@@ -2,6 +2,19 @@ import { multiItemSchema, optionalNumberSchema } from '@/utils/zodUtils';
 import { CalendarDate } from '@internationalized/date';
 import { z } from 'zod';
 
+export const loginSchema = z.object({
+    email: z.string({ required_error: 'Obligatorio' }).email('Introduce un email válido'),
+    password: z.string({ required_error: 'Obligatorio' }).min(8, 'Debe tener al menos 8 caracteres'),
+    remember: z.boolean(),
+});
+
+export const registerSchema = z.object({
+    name: z.string({ required_error: 'Obligatorio' }),
+    email: z.string({ required_error: 'Obligatorio' }),
+    password: z.string({ required_error: 'Obligatorio' }).min(8, 'Debe tener al menos 8 caracteres'),
+    passwordConfirmation: z.string({ required_error: 'Obligatorio' }),
+});
+
 export const personSchema = z.object({
     name: z.string({ required_error: 'Obligatorio' }),
     kanjiName: z.string().optional(),
