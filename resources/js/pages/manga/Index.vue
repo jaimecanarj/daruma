@@ -36,9 +36,7 @@ const debouncedSearch = useDebounceFn(() => {
 </script>
 
 <template>
-    <Head>
-        <title>Mangas</title>
-    </Head>
+    <Head title="Mangas" />
     <div class="my-6 flex flex-col justify-between gap-4 sm:flex-row">
         <div class="flex gap-2">
             <UInput

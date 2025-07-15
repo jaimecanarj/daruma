@@ -34,9 +34,7 @@ const activeBreakpoint = useBreakpoints(breakpointsTailwind).active();
 </script>
 
 <template>
-    <Head>
-        <title>Panel de administración</title>
-    </Head>
+    <Head title="Panel de administración" />
     <UBreadcrumb :items="breadcrumbItems" :ui="{ linkLeadingIcon: 'size-8' }" />
     <UTabs
         :items="adminTabItems"

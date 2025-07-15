@@ -6,8 +6,6 @@ defineProps<{ manga: Manga }>();
 </script>
 
 <template>
-    <Head>
-        <title>{{ manga.name }}</title>
-    </Head>
+    <Head :title="manga.name" />
     {{ manga }}
 </template>

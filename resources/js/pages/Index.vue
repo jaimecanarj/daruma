@@ -3,8 +3,6 @@ import { Head } from '@inertiajs/vue3';
 </script>
 
 <template>
-    <Head>
-        <title>Inicio</title>
-    </Head>
+    <Head title="Inicio" />
     Página de inicio
 </template>
