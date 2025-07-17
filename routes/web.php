@@ -12,11 +12,13 @@ Route::get('/', function () {
 })->name('home');
 
 // Rutas de administración
-Route::prefix('admin')->group(function () {
-    Route::get('/{tab?}', [AdminController::class, 'index'])->name('admin.index');
-    Route::get('/create/{tab}', [AdminController::class, 'create'])->name('admin.create');
-    Route::get('/edit/{tab}/{id}', [AdminController::class, 'edit'])->name('admin.edit');
-});
+Route::prefix('admin')
+    ->middleware(['permission:manage_resources'])
+    ->group(function () {
+        Route::get('/{tab?}', [AdminController::class, 'index'])->name('admin.index');
+        Route::get('/create/{tab}', [AdminController::class, 'create'])->name('admin.create');
+        Route::get('/edit/{tab}/{id}', [AdminController::class, 'edit'])->name('admin.edit');
+    });
 
 // Rutas de mangas
 Route::prefix('mangas')->group(function () {

@@ -62,6 +62,7 @@ const userItems = ref<DropdownMenuItem[][]>([
                     <template v-for="link of links" :key="link.path">
                         <!--Activo en caso de empezar por la ruta, excepto / que tiene que ser exacto-->
                         <ULink
+                            v-if="!link.permission || page.props.auth.userPermissions.includes(link.permission)"
                             :to="link.path"
                             :active="(link.path === '/' && route === '/') || (link.path !== '/' && route.startsWith(link.path.slice(1)))"
                             active-class="text-primary font-bold"

@@ -41,6 +41,8 @@ class HandleInertiaRequests extends Middleware
             'name' => config('app.name'),
             'auth' => [
                 'user' => $request->user(),
+                'userRoles' => $request->user() ? $request->user()->roles->pluck('name') : [],
+                'userPermissions' => $request->user() ? $request->user()->getPermissionsViaRoles()->pluck('name') : [],
             ],
             'ziggy' => [...(new Ziggy())->toArray(), 'location' => $request->path()],
         ];

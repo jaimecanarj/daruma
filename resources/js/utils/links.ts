@@ -23,5 +23,6 @@ export const links = [
         label: 'Admin',
         icon: 'lucide:monitor-cog',
         path: '/admin',
+        permission: 'manage_resources',
     },
 ];

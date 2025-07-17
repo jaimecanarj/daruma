@@ -3,6 +3,8 @@ import type { Config } from 'ziggy-js';
 
 export interface Auth {
     user: User;
+    userRoles: string[];
+    userPermissions: string[];
 }
 
 export interface SharedData extends PageProps {
