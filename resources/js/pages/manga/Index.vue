@@ -166,6 +166,8 @@ const debouncedSearch = useDebounceFn(() => {
                     </div>
                 </UCard>
             </div>
+
+            <div v-if="mangas.length === 0" class="text-muted text-center text-xl">No hay resultados</div>
         </Deferred>
         <!--Scroll infinito-->
         <WhenVisible
