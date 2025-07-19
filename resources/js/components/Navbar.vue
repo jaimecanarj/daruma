@@ -2,10 +2,10 @@
 import logo from '@/assets/logo.svg';
 import DarkMode from '@/components/DarkMode.vue';
 import SearchBar from '@/components/SearchBar.vue';
+import UserMenu from '@/components/UserMenu.vue';
 import { SharedData } from '@/types';
 import { links } from '@/utils/links';
-import { router, usePage } from '@inertiajs/vue3';
-import { DropdownMenuItem } from '@nuxt/ui/components/DropdownMenu.vue';
+import { usePage } from '@inertiajs/vue3';
 import { breakpointsTailwind, useBreakpoints } from '@vueuse/core';
 import { computed, ref } from 'vue';
 
@@ -15,37 +15,6 @@ const route = computed(() => page.props.ziggy.location);
 const activeBreakpoint = useBreakpoints(breakpointsTailwind).active();
 
 const slideOver = ref(false);
-
-const userItems = ref<DropdownMenuItem[][]>([
-    [
-        {
-            label: 'Perfil',
-            icon: 'lucide:user',
-            to: '/profile',
-        },
-        {
-            label: 'Opciones',
-            icon: 'lucide:settings',
-            to: '/profile',
-        },
-    ],
-    [
-        {
-            label: 'Cerrar sesión',
-            icon: 'lucide:log-out',
-            class: 'cursor-pointer',
-            onSelect() {
-                router.post(
-                    '/logout',
-                    {},
-                    {
-                        onSuccess: () => router.visit('/login'),
-                    },
-                );
-            },
-        },
-    ],
-]);
 </script>
 
 <template>
@@ -108,19 +77,7 @@ const userItems = ref<DropdownMenuItem[][]>([
                 <!--Botón de búsqueda-->
                 <SearchBar />
                 <!--Botón de usuario-->
-                <UDropdownMenu
-                    :items="userItems"
-                    :content="{
-                        align: 'end',
-                        side: 'bottom',
-                        sideOffset: 18,
-                    }"
-                    :ui="{
-                        content: 'w-48',
-                    }"
-                >
-                    <UAvatar src="#" alt="Avatar" class="cursor-pointer" />
-                </UDropdownMenu>
+                <UserMenu :user="page.props.auth.user" />
             </div>
         </UContainer>
     </nav>

@@ -2,6 +2,7 @@
 import BaseForm from '@/components/admin/BaseForm.vue';
 import SecretInput from '@/components/SecretInput.vue';
 import { type User, UserForm } from '@/types';
+import { roles } from '@/utils/constants';
 import { userSchema } from '@/utils/zodSchemas';
 import { ref } from 'vue';
 
@@ -15,6 +16,7 @@ const initialValues: UserForm = {
     email: props.item?.email,
     password: props.purpose === 'edit' ? 'contraseña' : undefined,
     passwordConfirmation: props.purpose === 'edit' ? 'contraseña' : undefined,
+    roles: undefined,
 };
 
 const show = ref<boolean>();
@@ -47,6 +49,9 @@ const show = ref<boolean>();
                     <SecretInput v-model="form.passwordConfirmation" v-model:show="show" />
                 </UFormField>
             </div>
+            <UFormField label="Roles" name="admin">
+                <UCheckboxGroup v-model="form.roles" orientation="horizontal" :items="roles" />
+            </UFormField>
         </template>
     </BaseForm>
 </template>

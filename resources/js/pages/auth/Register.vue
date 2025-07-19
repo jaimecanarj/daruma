@@ -6,6 +6,7 @@ export default { layout: AuthLayout };
 
 <script setup lang="ts">
 import SecretInput from '@/components/SecretInput.vue';
+import UserImageSelector from '@/components/UserImageSelector.vue';
 import { registerSchema } from '@/utils/zodSchemas';
 import { Head, useForm } from '@inertiajs/vue3';
 import { ref } from 'vue';
@@ -15,6 +16,7 @@ const show = ref<boolean>();
 const form = useForm({
     name: '',
     email: '',
+    avatar: undefined,
     password: '',
     passwordConfirmation: '',
 });
@@ -30,7 +32,10 @@ const onSubmit = () => {
     <Head title="Registro" />
 
     <UForm @submit="onSubmit" :state="form" :schema="registerSchema" class="mt-10">
-        <UFormField label="Nombre" name="name" required>
+        <div class="flex justify-center">
+            <UserImageSelector v-model="form.avatar" />
+        </div>
+        <UFormField label="Nombre" name="name" class="mt-4" required>
             <UInput v-model="form.name" class="w-full" />
         </UFormField>
         <UFormField label="Email" name="email" class="mt-4" required>

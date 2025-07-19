@@ -10,7 +10,15 @@ export const loginSchema = z.object({
 
 export const registerSchema = z.object({
     name: z.string({ required_error: 'Obligatorio' }),
-    email: z.string({ required_error: 'Obligatorio' }),
+    email: z.string({ required_error: 'Obligatorio' }).email('Introduce un email válido'),
+    avatar: z.custom<File | undefined>(
+        (val) => {
+            if (val === undefined) return true;
+            if (!(val instanceof File)) return false;
+            return val.type.startsWith('image/');
+        },
+        { message: 'Selecciona una imagen' },
+    ),
     password: z.string({ required_error: 'Obligatorio' }).min(8, 'Debe tener al menos 8 caracteres'),
     passwordConfirmation: z.string({ required_error: 'Obligatorio' }),
 });
