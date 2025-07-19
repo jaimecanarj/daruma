@@ -4,7 +4,7 @@ import { router } from '@inertiajs/vue3';
 import { DropdownMenuItem } from '@nuxt/ui/components/DropdownMenu.vue';
 import { ref } from 'vue';
 
-defineProps<{ user: User }>();
+defineProps<{ user?: User }>();
 
 const userItems = ref<DropdownMenuItem[][]>([
     [

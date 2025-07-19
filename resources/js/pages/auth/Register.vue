@@ -32,9 +32,9 @@ const onSubmit = () => {
     <Head title="Registro" />
 
     <UForm @submit="onSubmit" :state="form" :schema="registerSchema" class="mt-10">
-        <div class="flex justify-center">
+        <UFormField name="avatar" class="flex justify-center">
             <UserImageSelector v-model="form.avatar" />
-        </div>
+        </UFormField>
         <UFormField label="Nombre" name="name" class="mt-4" required>
             <UInput v-model="form.name" class="w-full" />
         </UFormField>
