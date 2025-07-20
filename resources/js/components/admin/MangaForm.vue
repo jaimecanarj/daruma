@@ -204,7 +204,7 @@ const baseForm = useTemplateRef('baseForm');
                                 <USelect disabled class="w-full" />
                                 <USelect class="min-w-48" disabled />
                             </div>
-                            <UButton icon="lucide:plus" color="neutral" class="h-12 w-12 justify-center md:h-auto md:w-auto" disabled />
+                            <UButton icon="lucide:plus" color="neutral" class="size-12 justify-center md:size-auto" disabled />
                         </div>
                     </template>
                     <MultipleValuesSelect v-model="form.authors" title="un autor" :input-options="people" :type-options="authorsOptions" />
@@ -215,7 +215,7 @@ const baseForm = useTemplateRef('baseForm');
                     <template #fallback>
                         <div class="flex items-center gap-2">
                             <USelect disabled class="w-full" />
-                            <UButton icon="lucide:plus" color="neutral" class="h-12 w-12 justify-center md:h-auto md:w-auto" disabled />
+                            <UButton icon="lucide:plus" color="neutral" class="size-12 justify-center md:size-auto" disabled />
                         </div>
                     </template>
                     <MultipleValuesSelect v-model="form.tags" title="una etiqueta" :input-options="tags" />
@@ -229,7 +229,7 @@ const baseForm = useTemplateRef('baseForm');
                                 <USelect disabled class="w-full" />
                                 <USelect class="min-w-48" disabled />
                             </div>
-                            <UButton icon="lucide:plus" color="neutral" class="h-12 w-12 justify-center md:h-auto md:w-auto" disabled />
+                            <UButton icon="lucide:plus" color="neutral" class="size-12 justify-center md:size-auto" disabled />
                         </div>
                     </template>
                     <MultipleValuesSelect

@@ -32,7 +32,7 @@ const initialValues: MagazineForm = {
         :form-transform="(data: MagazineForm) => ({ ...data, date: data.date?.toString() })"
     >
         <template #default="{ form }">
-            <div class="flex w-full flex-col gap-6 md:flex-row">
+            <div class="flex w-full flex-col gap-6 sm:flex-row">
                 <UFormField label="Nombre" name="name" class="w-full" required>
                     <UInput v-model="form.name" class="w-full" />
                 </UFormField>
@@ -41,7 +41,7 @@ const initialValues: MagazineForm = {
                     <UInput v-model="form.publisher" class="w-full" />
                 </UFormField>
             </div>
-            <div class="flex w-full flex-col gap-6 md:flex-row">
+            <div class="flex w-full flex-col gap-6 sm:flex-row">
                 <UFormField label="Demografía" name="demography" class="w-full" required>
                     <USelect v-model="form.demography" :items="demographies" placeholder="Selecciona una demografía" class="w-full" />
                 </UFormField>
@@ -51,7 +51,7 @@ const initialValues: MagazineForm = {
                 </UFormField>
             </div>
 
-            <UFormField label="Fecha" name="date" class="md:w-1/2 md:pr-3">
+            <UFormField label="Fecha" name="date" class="sm:w-1/2 sm:pr-3">
                 <DatePicker v-model="form.date" decades />
             </UFormField>
         </template>

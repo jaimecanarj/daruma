@@ -26,7 +26,7 @@ const initialValues: TagForm = {
         :initial-values="initialValues"
     >
         <template #default="{ form }">
-            <div class="flex w-full flex-col gap-6 md:flex-row">
+            <div class="flex w-full flex-col gap-6 sm:flex-row">
                 <UFormField label="Nombre" name="name" class="w-full" required>
                     <UInput v-model="form.name" class="w-full" />
                 </UFormField>
