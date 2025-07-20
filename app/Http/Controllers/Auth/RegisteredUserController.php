@@ -34,9 +34,9 @@ class RegisteredUserController extends Controller
     {
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|string|lowercase|email|max:255|unique:' . User::class,
+            'email' => 'required|string|lowercase|email|max:255|unique:users',
             'avatar' => 'nullable|file|mimes:jpg,jpeg,png,jxl',
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'password' => ['required', 'min:8', 'confirmed', Rules\Password::defaults()],
         ]);
 
         //Compruebo que se ha pasado un avatar

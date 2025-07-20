@@ -81,3 +81,8 @@ export const adminTabItems = [
         icon: 'lucide:tag',
     },
 ];
+
+export const roles = [
+    { label: 'Administrador', value: 'admin' },
+    { label: 'Usuario', value: 'user' },
+];

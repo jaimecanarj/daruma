@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import BaseForm from '@/components/admin/BaseForm.vue';
 import SecretInput from '@/components/SecretInput.vue';
+import UserImageSelector from '@/components/UserImageSelector.vue';
 import { type User, UserForm } from '@/types';
 import { roles } from '@/utils/constants';
 import { userSchema } from '@/utils/zodSchemas';
@@ -14,6 +15,7 @@ const props = defineProps<{
 const initialValues: UserForm = {
     name: props.item?.name,
     email: props.item?.email,
+    avatar: undefined,
     password: props.purpose === 'edit' ? 'contraseña' : undefined,
     passwordConfirmation: props.purpose === 'edit' ? 'contraseña' : undefined,
     roles: undefined,
@@ -29,29 +31,41 @@ const show = ref<boolean>();
         resource-name="Usuario"
         resource-gender="masculine"
         resource-route="user"
+        update-method="post"
         :schema="userSchema"
         :initial-values="initialValues"
     >
         <template #default="{ form }">
-            <div class="flex w-full flex-col gap-6 md:flex-row">
-                <UFormField label="Nombre" name="name" class="w-full" required>
-                    <UInput v-model="form.name" class="w-full" />
+            <div class="flex flex-col gap-6 sm:flex-row">
+                <UFormField name="avatar" required class="flex justify-center sm:basis-2/5">
+                    <UserImageSelector ref="avatar" v-model="form.avatar" :stored-image="props.item?.avatar" />
                 </UFormField>
-                <UFormField label="Email" name="email" class="w-full" required>
-                    <UInput v-model="form.email" class="w-full" />
+                <div class="flex w-full flex-col gap-6 sm:basis-3/5">
+                    <UFormField label="Nombre" name="name" class="w-full" required>
+                        <UInput v-model="form.name" class="w-full" />
+                    </UFormField>
+                    <UFormField label="Email" name="email" class="w-full" required>
+                        <UInput v-model="form.email" class="w-full" />
+                    </UFormField>
+                </div>
+            </div>
+            <div class="flex flex-col gap-6 sm:flex-row">
+                <div class="flex w-full flex-col gap-6 sm:order-2 sm:basis-3/5">
+                    <UFormField label="Contraseña" name="password" class="w-full" required>
+                        <SecretInput v-model="form.password" v-model:show="show" />
+                    </UFormField>
+                    <UFormField label="Repetir contraseña" name="passwordConfirmation" class="w-full" required>
+                        <SecretInput v-model="form.passwordConfirmation" v-model:show="show" />
+                    </UFormField>
+                </div>
+                <UFormField label="Roles" name="admin" class="sm:order-1 sm:basis-2/5">
+                    <UCheckboxGroup v-model="form.roles" color="neutral" variant="table" :items="roles" />
                 </UFormField>
             </div>
-            <div v-if="purpose === 'create'" class="flex w-full flex-col gap-6 md:flex-row">
-                <UFormField label="Contraseña" name="password" class="w-full" required>
-                    <SecretInput v-model="form.password" v-model:show="show" />
-                </UFormField>
-                <UFormField label="Repetir contraseña" name="passwordConfirmation" class="w-full" required>
-                    <SecretInput v-model="form.passwordConfirmation" v-model:show="show" />
-                </UFormField>
-            </div>
-            <UFormField label="Roles" name="admin">
-                <UCheckboxGroup v-model="form.roles" orientation="horizontal" :items="roles" />
-            </UFormField>
         </template>
     </BaseForm>
+    <!--Hacer que la contraseña no sea obligatoria en edicion, pero si en creacion (revisar cover en mangas) -->
+    <!--Al crear, simplemente asignar los roles al final de la creación-->
+    <!--Al editar, comprobar los roles del usuario y eliminar o añadir según el caso-->
+    <!--La parte complicada es obtener los roles previos a la edición-->
 </template>

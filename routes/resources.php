@@ -29,7 +29,7 @@ Route::prefix('api')->group(function () {
     Route::prefix('user')->group(function () {
         Route::get('/', [UserController::class, 'index'])->name('user.index');
         Route::post('/store', [UserController::class, 'store'])->name('user.store');
-        Route::put('/update/{user}', [UserController::class, 'update'])->name('user.update');
+        Route::post('/update/{user}', [UserController::class, 'update'])->name('user.update');
         Route::delete('/delete', [UserController::class, 'destroy'])->name('user.destroy');
     });
     Route::prefix('tag')->group(function () {
