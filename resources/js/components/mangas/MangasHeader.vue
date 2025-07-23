@@ -10,7 +10,6 @@ const emit = defineEmits(['handleSearch']);
 
 const store = useMangasStore();
 const filters = computed(() => store.state);
-const loading = defineModel('loading');
 const display = defineModel('display');
 
 const showFilters = ref<string | undefined>(undefined);
@@ -20,7 +19,6 @@ const toggleShowFilters = () => {
 };
 
 const debouncedSearch = useDebounceFn(() => {
-    loading.value = true;
     emit('handleSearch', store.state);
 }, 300);
 </script>
@@ -47,8 +45,7 @@ const debouncedSearch = useDebounceFn(() => {
                         aria-label="Clear input"
                         @click="
                             filters.search = '';
-                            loading = true;
-                            emit('handleSearch');
+                            emit('handleSearch', filters);
                         "
                     />
                 </template>
