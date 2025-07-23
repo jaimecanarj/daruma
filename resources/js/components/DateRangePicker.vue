@@ -17,7 +17,7 @@ const resetDates = () => {
 
 <template>
     <UPopover :ui="{ content: 'z-[3]' }">
-        <UButton color="neutral" variant="subtle" icon="i-lucide-calendar">
+        <UButton color="neutral" variant="subtle" icon="i-lucide-calendar" class="focus-visible:ring-primary w-full">
             <template v-if="date?.start">
                 <template v-if="date.end">
                     {{ df.format(date.start.toDate(getLocalTimeZone())) }} - {{ df.format(date.end.toDate(getLocalTimeZone())) }}

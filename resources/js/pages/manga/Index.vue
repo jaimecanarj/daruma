@@ -35,6 +35,7 @@ watch(
 );
 
 const handleSearch = (filters: MangaFilters) => {
+    loading.value = true;
     router.reload({
         data: {
             ...filters,

@@ -31,7 +31,7 @@ export default defineConfig({
                     secondary: 'blue',
                     info: 'cyan',
                     warning: 'violet',
-                    neutral: 'stone',
+                    neutral: 'zinc',
                 },
                 button: {
                     slots: {

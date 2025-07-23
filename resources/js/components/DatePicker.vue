@@ -26,7 +26,7 @@ const nextDecade = () => {
             {{
                 date && typeof date?.toDate === 'function'
                     ? new DateFormatter('es-ES', { dateStyle: 'medium' }).format(date.toDate(getLocalTimeZone()))
-                    : 'Marca una fecha'
+                    : 'Fecha'
             }}
         </UButton>
 
