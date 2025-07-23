@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Magazine;
 use App\Models\Manga;
+use App\Models\Person;
+use App\Models\Tag;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
@@ -24,12 +27,15 @@ class MangaController extends Controller
     {
         $props = [];
 
-        $page = $request->input('page', 1);
-        $search = $request->input('search');
+        $filterMangas = function ($request) {
+            $page = $request->input('page', 1);
+            $search = $request->input('search');
+            $language = $request->input('language');
+            $finished = $request->input('finished');
 
-        $filterMangas = function ($page, $search) {
-            $query = Manga::with('tags');
+            $query = Manga::with('tags', 'people', 'magazine');
 
+            //Filtro de búsqueda
             if (!empty($search)) {
                 $query->where(function ($q) use ($search) {
                     $q->where('name', 'like', '%' . $search . '%')->orWhereHas('names', function ($subQuery) use ($search) {
@@ -38,14 +44,109 @@ class MangaController extends Controller
                 });
             }
 
+            //Filtro de tomos
+            if (!empty($request->volumes)) {
+                $query->where('volumes', $request->volumes);
+            }
+
+            //Filtro de fecha
+            if (!empty($request->date)) {
+                $query->where(function ($q) use ($request) {
+                    $q->where(function ($subq) use ($request) {
+                        $subq->where('start_date', '<=', $request->date)->where(function ($innerq) use ($request) {
+                            $innerq->where('end_date', '>=', $request->date)->orWhereNull('end_date');
+                        });
+                    });
+                });
+            }
+
+            //Filtro de autores
+            if (!empty($request->people)) {
+                $query->whereHas('people', function ($q) use ($request) {
+                    $q->whereIn('id', $request->people);
+                });
+            }
+
+            //Filtro de idioma
+            if (!empty($language)) {
+                $query->where('language', $language['value']);
+            }
+
+            //Filtro de revistas
+            if (!empty($request->magazines)) {
+                $query->whereIn('magazine_id', $request->magazines);
+            }
+
+            //Filtro de demografías
+            if (!empty($request->demographies)) {
+                $query->whereHas('magazine', function ($q) use ($request) {
+                    $q->whereIn('demography', $request->demographies);
+                });
+            }
+
+            //Filtro de estado
+            if (!empty($finished)) {
+                // Convertir los valores string 'true'/'false' a valores booleanos
+                $booleanValues = array_map(function ($value) {
+                    if ($value === 'true') {
+                        return true;
+                    }
+                    if ($value === 'false') {
+                        return false;
+                    }
+                    return $value;
+                }, $finished);
+
+                $query->whereIn('finished', $booleanValues);
+            }
+
+            //Filtro de dirección de lectura
+            if (!empty($request->reading_direction)) {
+                $query->whereIn('reading_direction', $request->reading_direction);
+            }
+
+            //Orden
+            switch ($request->order) {
+                case 'updateDesc':
+                    $query->orderBy('updated_at', 'desc');
+                    break;
+                case 'updateAsc':
+                    $query->orderBy('updated_at', 'asc');
+                    break;
+                case 'nameDesc':
+                    $query->orderBy('name', 'desc');
+                    break;
+                case 'nameAsc':
+                    $query->orderBy('name', 'asc');
+                    break;
+                case 'dateDesc':
+                    $query->orderBy('start_date', 'desc');
+                    break;
+                case 'dateAsc':
+                    $query->orderBy('start_date', 'asc');
+                    break;
+                case 'volumeDesc':
+                    $query->orderBy('volumes', 'desc');
+                    break;
+                case 'volumeAsc':
+                    $query->orderBy('volumes', 'asc');
+                    break;
+                default:
+                    $query->orderBy('updated_at', 'desc');
+            }
+
             return $query->paginate(24, page: $page);
         };
 
-        $props['pagination'] = Inertia::defer(fn() => $filterMangas($page, $search))->deepMerge();
+        $props['pagination'] = Inertia::defer(fn() => $filterMangas($request))->deepMerge();
 
-        $props['filters'] = [
-            'search' => $search,
-        ];
+        $props['filtersData'] = Inertia::defer(
+            fn() => [
+                'people' => Person::all()->select('id', 'name', 'surname'),
+                'magazines' => Magazine::all()->select('id', 'name', 'demography'),
+                'tags' => Tag::all()->select('id', 'name', 'type'),
+            ]
+        );
 
         return Inertia::render('manga/Index', $props);
     }

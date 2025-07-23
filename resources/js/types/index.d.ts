@@ -138,6 +138,20 @@ export interface TagForm {
 }
 
 //Utilidades
+export interface MangaFilters {
+    search?: string;
+    volumes?: string;
+    date?: CalendarDate;
+    tags: MultiValues[];
+    order: string;
+    people: { label: string; value: number }[];
+    magazines: { label: string; value: number }[];
+    demographies: string[];
+    finished: boolean[];
+    readingDirection: string[];
+    language?: { label: string; value: string; emoji: string };
+}
+
 export type MultiValues = {
     label: string;
     value?: number;

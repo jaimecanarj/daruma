@@ -15,9 +15,9 @@ export const frequencies = [
 ];
 
 export const languageOptions = [
-    { value: 'es', label: 'Español' },
-    { value: 'en', label: 'English' },
-    { value: 'jp', label: '日本語' },
+    { value: 'es', label: 'Español', emoji: '🇪🇸' },
+    { value: 'en', label: 'English', emoji: '🇬🇧' },
+    { value: 'jp', label: '日本語', emoji: '🇯🇵' },
 ];
 
 export const readingDirections = [
@@ -86,3 +86,28 @@ export const roles = [
     { label: 'Administrador', value: 'admin' },
     { label: 'Usuario', value: 'user' },
 ];
+
+export const mangaSortable = [
+    { label: 'Más reciente', value: 'updateDesc', icon: 'lucide:clock-arrow-down' },
+    { label: 'Más antiguo', value: 'updateAsc', icon: 'lucide:clock-arrow-up' },
+    { label: 'Título descendente', value: 'nameDesc', icon: 'lucide:arrow-down-z-a' },
+    { label: 'Título ascendente', value: 'nameAsc', icon: 'lucide:arrow-up-a-z' },
+    { label: 'Fecha descendente', value: 'dateDesc', icon: 'lucide:calendar-arrow-down' },
+    { label: 'Fecha ascendente', value: 'dateAsc', icon: 'lucide:calendar-arrow-up' },
+    { label: 'Tomos descendente', value: 'volumesDesc', icon: 'lucide:arrow-down-1-0' },
+    { label: 'Tomos ascendente', value: 'volumesAsc', icon: 'lucide:arrow-up-1-0' },
+];
+
+export const mangaFiltersInitialState = {
+    search: '',
+    volumes: undefined,
+    date: undefined,
+    tags: [],
+    order: 'updateDesc',
+    people: [],
+    language: undefined,
+    magazines: [],
+    demographies: [],
+    finished: [],
+    readingDirection: [],
+};
