@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Person;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class PersonController extends Controller
 {
@@ -13,6 +14,27 @@ class PersonController extends Controller
     public function index()
     {
         return Person::all();
+    }
+
+    public function indexPage(Request $request)
+    {
+        $filterMangas = function ($request) {
+            $page = $request->input('page', 1);
+            $search = $request->input('search');
+
+            $query = Person::query();
+
+            //Filtro de búsqueda
+            if (!empty($search)) {
+                $query->where('name', 'like', '%' . $search . '%');
+            }
+
+            return $query->paginate(24, page: $page);
+        };
+
+        $props['pagination'] = Inertia::defer(fn() => $filterMangas($request))->deepMerge();
+
+        return Inertia::render('person/Index', $props);
     }
 
     /**
@@ -39,7 +61,7 @@ class PersonController extends Controller
      */
     public function show(Person $person)
     {
-        //
+        return Inertia::render('person/Show', ['person' => $person]);
     }
 
     /**

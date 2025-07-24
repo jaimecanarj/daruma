@@ -26,6 +26,12 @@ Route::prefix('mangas')->group(function () {
     Route::get('/{manga}', [MangaController::class, 'show'])->name('mangas.show');
 });
 
+//Rutas de personas
+Route::prefix('people')->group(function () {
+    Route::get('/', [PersonController::class, 'indexPage'])->name('people.index');
+    Route::get('/{person}', [PersonController::class, 'show'])->name('people.show');
+});
+
 require __DIR__ . '/auth.php';
 require __DIR__ . '/resources.php';
 require __DIR__ . '/utils.php';
