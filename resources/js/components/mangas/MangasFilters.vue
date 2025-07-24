@@ -151,7 +151,7 @@ const emit = defineEmits(['filter']);
         <!--Dirección de lectura-->
         <div class="w-full">
             <p>
-                Dir. de lectura
+                Dirección de lectura
                 <span v-if="state.readingDirection.length > 0" class="text-primary ml-2 text-sm">+{{ state.readingDirection.length }}</span>
             </p>
             <USelect

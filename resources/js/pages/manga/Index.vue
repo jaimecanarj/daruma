@@ -18,7 +18,7 @@ const loading = ref(false);
 const store = useMangasStore();
 const localFilters = computed(() => store.state);
 
-const mangas = computed(() => props.pagination?.data);
+const mangas = computed(() => props.pagination?.data ?? []);
 const reachedEnd = computed(() => {
     if (!props.pagination) return true;
     return props.pagination.currentPage >= props.pagination.lastPage;
@@ -54,7 +54,7 @@ const handleSearch = (filters: MangaFilters) => {
 
 <template>
     <Head title="Mangas" />
-    <MangasHeader v-model:loading="loading" v-model:display="display" @handle-search="handleSearch" />
+    <MangasHeader v-model:loading="loading" v-model:display="display" :totalResults="pagination?.total" @handle-search="handleSearch" />
     <USeparator class="my-6" />
     <template v-if="loading">
         <MangaIndexSkeleton :display="display" />

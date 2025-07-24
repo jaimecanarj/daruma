@@ -6,6 +6,7 @@ import { computed, ref } from 'vue';
 
 const activeBreakpoint = useBreakpoints(breakpointsTailwind).active();
 
+defineProps<{ totalResults?: number }>();
 const emit = defineEmits(['handleSearch']);
 
 const store = useMangasStore();
@@ -24,7 +25,7 @@ const debouncedSearch = useDebounceFn(() => {
 </script>
 
 <template>
-    <div class="my-6 flex flex-col justify-between gap-4 sm:flex-row">
+    <div class="my-6 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
         <div class="flex gap-2">
             <!--Barra de búsqueda-->
             <UInput
@@ -60,23 +61,29 @@ const debouncedSearch = useDebounceFn(() => {
                 >{{ activeBreakpoint ? 'Filtros' : '' }}
             </UButton>
         </div>
-        <!--Selector de display-->
-        <UButtonGroup class="ml-auto">
-            <UButton
-                color="neutral"
-                :variant="display === 'grid' ? 'solid' : 'subtle'"
-                icon="lucide:grid-3x2"
-                :size="activeBreakpoint ? 'xl' : 'lg'"
-                @click="display = 'grid'"
-            />
-            <UButton
-                color="neutral"
-                :variant="display === 'list' ? 'solid' : 'subtle'"
-                icon="lucide:layout-list"
-                :size="activeBreakpoint ? 'xl' : 'lg'"
-                @click="display = 'list'"
-            />
-        </UButtonGroup>
+        <div class="ml-1 flex items-center gap-4">
+            <!--Total de mangas-->
+            <h3>
+                <span class="text-2xl font-semibold">{{ totalResults ?? 0 }}</span> manga{{ totalResults !== 1 ? 's' : '' }}
+            </h3>
+            <!--Selector de display-->
+            <UButtonGroup class="ml-auto">
+                <UButton
+                    color="neutral"
+                    :variant="display === 'grid' ? 'solid' : 'subtle'"
+                    icon="lucide:grid-3x2"
+                    :size="activeBreakpoint ? 'xl' : 'lg'"
+                    @click="display = 'grid'"
+                />
+                <UButton
+                    color="neutral"
+                    :variant="display === 'list' ? 'solid' : 'subtle'"
+                    icon="lucide:layout-list"
+                    :size="activeBreakpoint ? 'xl' : 'lg'"
+                    @click="display = 'list'"
+                />
+            </UButtonGroup>
+        </div>
     </div>
     <!--Filtros-->
     <UAccordion v-model="showFilters" :items="[{}]" :ui="{ trigger: 'p-0', trailingIcon: 'size-0' }">

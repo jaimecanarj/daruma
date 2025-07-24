@@ -11,7 +11,7 @@ defineProps<{ mangas?: Manga[] }>();
 
 <template>
     <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
-        <UCard v-for="manga in mangas" :key="manga.id" variant="subtle" :ui="{ body: 'p-2 sm:p-3' }">
+        <UCard v-for="manga in mangas" :key="manga.id" variant="subtle" class="shadow-md" :ui="{ body: 'p-2 sm:p-3' }">
             <div class="flex gap-2 overflow-hidden">
                 <!--Imagen-->
                 <div class="max-w-[150px] basis-1/4">
