@@ -14,10 +14,9 @@ const props = defineProps<{
     filtersData?: { publishers: string[] };
 }>();
 
-const localInput = ref('');
 const loading = ref(false);
 const store = useMagazinesStore();
-const localFilters = computed(() => store.state);
+const filters = computed(() => store.state);
 
 const magazines = computed(() => props.pagination?.data ?? []);
 const reachedEnd = computed(() => {
@@ -67,14 +66,14 @@ const debouncedSearch = useDebounceFn(() => {
             <!--Barra de búsqueda-->
             <UInput
                 class="w-full sm:w-60 md:w-96"
-                v-model="localInput"
+                v-model="filters.search"
                 placeholder="Buscar..."
                 leading-icon="lucide:search"
                 type="search"
                 :ui="{ base: 'pr-8', trailing: 'pe-1' }"
                 @input="debouncedSearch"
             >
-                <template v-if="localInput?.length" #trailing>
+                <template v-if="filters.search?.length" #trailing>
                     <UButton
                         color="neutral"
                         variant="link"
@@ -82,8 +81,8 @@ const debouncedSearch = useDebounceFn(() => {
                         icon="i-lucide-circle-x"
                         aria-label="Clear input"
                         @click="
-                            localInput = '';
-                            handleSearch(store.state);
+                            filters.search = '';
+                            handleSearch(filters);
                         "
                     />
                 </template>
@@ -138,7 +137,7 @@ const debouncedSearch = useDebounceFn(() => {
                 only: ['pagination'],
                 data: {
                     page: (pagination?.currentPage || 1) + 1,
-                    filters: localFilters,
+                    filters,
                 },
                 preserveUrl: true,
             }"
