@@ -152,6 +152,14 @@ export interface MangaFilters {
     language?: { label: string; value: string; emoji: string };
 }
 
+export interface MagazineFilters {
+    search?: string;
+    demographies: string[];
+    order: string;
+    date?: CalendarDate;
+    publishers: string[];
+}
+
 export type MultiValues = {
     label: string;
     value?: number;

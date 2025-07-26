@@ -90,12 +90,21 @@ export const roles = [
 export const mangaSortable = [
     { label: 'Más reciente', value: 'updateDesc', icon: 'lucide:clock-arrow-down' },
     { label: 'Más antiguo', value: 'updateAsc', icon: 'lucide:clock-arrow-up' },
-    { label: 'Título descendente', value: 'nameDesc', icon: 'lucide:arrow-down-z-a' },
     { label: 'Título ascendente', value: 'nameAsc', icon: 'lucide:arrow-up-a-z' },
-    { label: 'Fecha descendente', value: 'dateDesc', icon: 'lucide:calendar-arrow-down' },
+    { label: 'Título descendente', value: 'nameDesc', icon: 'lucide:arrow-down-z-a' },
     { label: 'Fecha ascendente', value: 'dateAsc', icon: 'lucide:calendar-arrow-up' },
-    { label: 'Tomos descendente', value: 'volumesDesc', icon: 'lucide:arrow-down-1-0' },
+    { label: 'Fecha descendente', value: 'dateDesc', icon: 'lucide:calendar-arrow-down' },
     { label: 'Tomos ascendente', value: 'volumesAsc', icon: 'lucide:arrow-up-1-0' },
+    { label: 'Tomos descendente', value: 'volumesDesc', icon: 'lucide:arrow-down-1-0' },
+];
+
+export const magazineSortable = [
+    { label: 'Título ascendente', value: 'nameAsc', icon: 'lucide:arrow-up-a-z' },
+    { label: 'Título descendente', value: 'nameDesc', icon: 'lucide:arrow-down-z-a' },
+    { label: 'Fecha ascendente', value: 'dateAsc', icon: 'lucide:calendar-arrow-up' },
+    { label: 'Fecha descendente', value: 'dateDesc', icon: 'lucide:calendar-arrow-down' },
+    { label: 'Más reciente', value: 'updateDesc', icon: 'lucide:clock-arrow-down' },
+    { label: 'Más antiguo', value: 'updateAsc', icon: 'lucide:clock-arrow-up' },
 ];
 
 export const mangaFiltersInitialState = {
@@ -110,4 +119,13 @@ export const mangaFiltersInitialState = {
     demographies: [],
     finished: [],
     readingDirection: [],
+};
+
+export const magazineFiltersInitialState = {
+    search: '',
+    publishers: [],
+    date: undefined,
+    order: 'nameAsc',
+    demographies: [],
+    frequencies: [],
 };

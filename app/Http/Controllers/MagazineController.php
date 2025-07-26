@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Magazine;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Inertia\Inertia;
 
 class MagazineController extends Controller
 {
@@ -14,6 +15,77 @@ class MagazineController extends Controller
     public function index()
     {
         return Magazine::all();
+    }
+
+    public function indexPage(Request $request)
+    {
+        $filterMangas = function ($request) {
+            $page = $request->input('page', 1);
+            $search = $request->input('search');
+
+            $query = Magazine::query();
+
+            //Filtro de búsqueda
+            if (!empty($search)) {
+                $query->where('name', 'like', '%' . $search . '%');
+            }
+
+            //Filtro de demografías
+            if (!empty($request->demographies)) {
+                $query->whereIn('demography', $request->demographies);
+            }
+
+            //Filtro de fecha
+            if (!empty($request->date)) {
+                $query->where('date', '<=', $request->date);
+            }
+
+            //Filtro de periodicidad
+            if (!empty($request->frequencies)) {
+                $query->whereIn('frequency', $request->frequencies);
+            }
+
+            //Filtro de editorial
+            if (!empty($request->publishers)) {
+                $query->whereIn('publisher', $request->publishers);
+            }
+
+            //Orden
+            switch ($request->order) {
+                case 'updateDesc':
+                    $query->orderBy('updated_at', 'desc');
+                    break;
+                case 'updateAsc':
+                    $query->orderBy('updated_at', 'asc');
+                    break;
+                case 'nameDesc':
+                    $query->orderBy('name', 'desc');
+                    break;
+                case 'nameAsc':
+                    $query->orderBy('name', 'asc');
+                    break;
+                case 'dateDesc':
+                    $query->orderBy('date', 'desc');
+                    break;
+                case 'dateAsc':
+                    $query->orderBy('date', 'asc');
+                    break;
+                default:
+                    $query->orderBy('name', 'asc');
+            }
+
+            return $query->paginate(24, page: $page);
+        };
+
+        $props['pagination'] = Inertia::defer(fn() => $filterMangas($request))->deepMerge();
+
+        $props['filtersData'] = Inertia::defer(
+            fn() => [
+                'publishers' => Magazine::distinct()->pluck('publisher')->toArray(),
+            ]
+        );
+
+        return Inertia::render('magazine/Index', $props);
     }
 
     /**
@@ -41,7 +113,7 @@ class MagazineController extends Controller
      */
     public function show(Magazine $magazine)
     {
-        //
+        return Inertia::render('magazine/Show', ['magazine' => $magazine]);
     }
 
     /**

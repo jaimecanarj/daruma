@@ -32,6 +32,12 @@ Route::prefix('people')->group(function () {
     Route::get('/{person}', [PersonController::class, 'show'])->name('people.show');
 });
 
+//Rutas de revistas
+Route::prefix('magazines')->group(function () {
+    Route::get('/', [MagazineController::class, 'indexPage'])->name('magazines.index');
+    Route::get('/{magazine}', [MagazineController::class, 'show'])->name('magazines.show');
+});
+
 require __DIR__ . '/auth.php';
 require __DIR__ . '/resources.php';
 require __DIR__ . '/utils.php';
