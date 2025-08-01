@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import DatePicker from '@/components/DatePicker.vue';
+import DatePicker from '@/components/formComponents/DatePicker.vue';
+import LabelWithCounter from '@/components/formComponents/labelWithCounter.vue';
 import { useMagazinesStore } from '@/stores/magazinesStore';
 import { demographies, frequencies, magazineFiltersInitialState, magazineSortable, mangaSortable } from '@/utils/constants';
 import { computed } from 'vue';
@@ -17,6 +18,7 @@ const publishers = computed(() =>
 );
 
 const sortIcon = computed(() => mangaSortable.find((item) => item.value === state.value.order)?.icon);
+//Comprueba si hay algún filtro activo
 const isFiltering = computed(() => {
     return Object.entries(state.value).some(([key, value]) => {
         // No considerar order como filtro
@@ -52,10 +54,7 @@ const emit = defineEmits(['filter']);
                 <div class="grid grid-cols-1 gap-x-8 gap-y-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                     <!--Demografía-->
                     <div class="w-full">
-                        <p>
-                            Demografía
-                            <span v-if="state.demographies.length > 0" class="text-primary ml-2 text-sm">+{{ state.demographies.length }}</span>
-                        </p>
+                        <LabelWithCounter label="Demografía" :size="state.demographies.length" />
                         <USelect
                             v-model="state.demographies"
                             :items="demographies"
@@ -72,10 +71,7 @@ const emit = defineEmits(['filter']);
                     </div>
                     <!--Periodicidad-->
                     <div class="w-full">
-                        <p>
-                            Periodicidad
-                            <span v-if="state.frequencies.length > 0" class="text-primary ml-2 text-sm">+{{ state.frequencies.length }}</span>
-                        </p>
+                        <LabelWithCounter label="Periodicidad" :size="state.frequencies.length" />
                         <USelect
                             v-model="state.frequencies"
                             :items="frequencies"
@@ -92,10 +88,7 @@ const emit = defineEmits(['filter']);
                     </div>
                     <!--Editorial-->
                     <div class="w-full">
-                        <p>
-                            Editorial
-                            <span v-if="state.publishers.length > 0" class="text-primary ml-2 text-sm">+{{ state.publishers.length }}</span>
-                        </p>
+                        <LabelWithCounter label="Editorial" :size="state.publishers.length" />
                         <USelect
                             v-model="state.publishers"
                             :items="publishers"
@@ -107,6 +100,7 @@ const emit = defineEmits(['filter']);
                     </div>
                 </div>
                 <USeparator class="my-3" />
+                <!--Botón reinicio filtros/ Buscar-->
                 <div class="flex w-full justify-end gap-3">
                     <UButton label="Restablecer filtros" variant="subtle" color="error" :disabled="!isFiltering" @click="resetFilters" />
                     <UButton label="Buscar" icon="lucide:search" variant="solid" @click="emit('filter', store.state)" />

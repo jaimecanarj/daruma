@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import logo from '@/assets/logo.svg';
-import DarkMode from '@/components/DarkMode.vue';
+import DarkMode from '@/components/navbar/DarkMode.vue';
 import { es } from '@nuxt/ui/locale';
 </script>
 

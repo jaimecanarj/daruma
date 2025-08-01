@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import MagazineForm from '@/components/admin/MagazineForm.vue';
-import MangaForm from '@/components/admin/MangaForm.vue';
-import PersonForm from '@/components/admin/PersonForm.vue';
-import TagForm from '@/components/admin/TagForm.vue';
-import UserForm from '@/components/admin/UserForm.vue';
+import MagazineForm from '@/components/admin/forms/MagazineForm.vue';
+import MangaForm from '@/components/admin/forms/MangaForm.vue';
+import PersonForm from '@/components/admin/forms/PersonForm.vue';
+import TagForm from '@/components/admin/forms/TagForm.vue';
+import UserForm from '@/components/admin/forms/UserForm.vue';
 import { SharedData } from '@/types';
 import { adminTabItems } from '@/utils/constants';
 import { Head, router, usePage } from '@inertiajs/vue3';

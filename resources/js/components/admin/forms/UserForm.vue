@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import BaseForm from '@/components/admin/BaseForm.vue';
-import SecretInput from '@/components/SecretInput.vue';
-import UserImageSelector from '@/components/UserImageSelector.vue';
+import BaseForm from '@/components/admin/forms/BaseForm.vue';
+import SecretInput from '@/components/formComponents/SecretInput.vue';
+import UserImageSelector from '@/components/formComponents/UserImageSelector.vue';
 import { type User, UserForm } from '@/types';
 import { roles } from '@/utils/constants';
 import { userSchema } from '@/utils/zodSchemas';

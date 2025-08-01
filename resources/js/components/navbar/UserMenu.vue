@@ -6,6 +6,7 @@ import { ref } from 'vue';
 
 defineProps<{ user?: User }>();
 
+//Menú de usuario logueado
 const userItems = ref<DropdownMenuItem[][]>([
     [
         {
@@ -37,6 +38,7 @@ const userItems = ref<DropdownMenuItem[][]>([
     ],
 ]);
 
+//Menú de usuario no logueado
 const guestItems = ref<DropdownMenuItem[][]>([
     [
         {

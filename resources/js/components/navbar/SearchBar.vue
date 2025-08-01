@@ -8,18 +8,21 @@ const isLoading = ref(false);
 const modalOpen = ref(false);
 const searchResults = ref<any[]>([]);
 
+//Ejecutar búsqueda al abrir el modal
 watch(modalOpen, async (isOpen) => {
     if (isOpen && searchResults.value.length === 0) {
-        await loadSearchData();
+        await fetchSearchData();
     }
 });
 
+//Función que formatea nombres de mangas para buscar por ellos
 const formatNames = (names: Name[] | undefined) => {
     if (names === undefined || names.length === 0) return '';
     return names.map((name) => name.name).join(', ');
 };
 
-const loadSearchData = async () => {
+//Función para obtener los datos de la búsqueda
+const fetchSearchData = async () => {
     isLoading.value = true;
     try {
         const response = await axios.get('/api/search');
@@ -64,7 +67,8 @@ const loadSearchData = async () => {
     }
 };
 
-const handleSelect = () => {
+//Función que se ejecuta cuando se selecciona un elemento
+const resetSearch = () => {
     modalOpen.value = false;
     searchTerm.value = '';
 };
@@ -80,7 +84,7 @@ const handleSelect = () => {
                 :loading="isLoading"
                 :groups="searchResults"
                 :fuse="{ fuseOptions: { keys: ['label', 'names', 'suffix'] } }"
-                @update:model-value="handleSelect"
+                @update:model-value="resetSearch"
                 class="h-80"
             />
         </template>

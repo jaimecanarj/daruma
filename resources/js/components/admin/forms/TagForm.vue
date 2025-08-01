@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import BaseForm from '@/components/admin/BaseForm.vue';
+import BaseForm from '@/components/admin/forms/BaseForm.vue';
 import { type Tag, TagForm } from '@/types';
 import { tagTypeOptions } from '@/utils/constants';
 import { tagSchema } from '@/utils/zodSchemas';

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import BaseForm from '@/components/admin/BaseForm.vue';
+import BaseForm from '@/components/admin/forms/BaseForm.vue';
 import { Person, PersonForm } from '@/types';
 import { personSchema } from '@/utils/zodSchemas';
 

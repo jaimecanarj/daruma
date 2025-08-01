@@ -5,6 +5,7 @@ import { computed } from 'vue';
 const { store, system } = useColorMode();
 
 const isDarkMode = computed({
+    //Comprueba sistema si el valor almacenado es auto
     get() {
         if (store.value === 'auto') {
             return system.value === 'dark';

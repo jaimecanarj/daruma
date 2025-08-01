@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import MagazinesFilters from '@/components/magazines/MagazinesFilters.vue';
-import PersonIndexSkeleton from '@/components/skeletons/PersonIndexSkeleton.vue';
+import GridSkeleton from '@/components/skeletons/GridSkeleton.vue';
 import { useMagazinesStore } from '@/stores/magazinesStore';
 import { Magazine, MagazineFilters } from '@/types';
 import { Deferred, Head, router, WhenVisible } from '@inertiajs/vue3';
@@ -105,12 +105,12 @@ const debouncedSearch = useDebounceFn(() => {
     <MagazinesFilters v-model:show-filters="showFilters" @filter="handleSearch" />
     <USeparator class="my-6" />
     <template v-if="loading">
-        <PersonIndexSkeleton />
+        <GridSkeleton />
     </template>
     <template v-else>
         <Deferred data="pagination">
             <template #fallback>
-                <PersonIndexSkeleton />
+                <GridSkeleton />
             </template>
             <!--Vista-->
             <div class="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">

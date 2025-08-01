@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import DateRangePicker from '@/components/DateRangePicker.vue';
+import DateRangePicker from '@/components/formComponents/DateRangePicker.vue';
 import { useTableFilters } from '@/composables/useTableFilters';
 import { Magazine } from '@/types';
 import { demographies, frequencies } from '@/utils/constants';

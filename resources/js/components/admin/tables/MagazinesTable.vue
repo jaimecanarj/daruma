@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import DeleteModal from '@/components/admin/index/DeleteModal.vue';
-import FiltersHeader from '@/components/admin/index/FiltersHeader.vue';
-import MagazinesFilter from '@/components/admin/index/MagazinesFilter.vue';
+import DeleteModal from '@/components/admin/DeleteModal.vue';
+import FiltersHeader from '@/components/admin/filters/FiltersHeader.vue';
+import MagazinesFilter from '@/components/admin/filters/MagazinesFilter.vue';
 import { useFetchTable } from '@/composables/useFetchTable';
 import { Magazine } from '@/types';
 import { actionsCell, sortableHeader, sortablePinnableHeader } from '@/utils/tableColumns';

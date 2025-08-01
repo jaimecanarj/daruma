@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import MagazinesTable from '@/components/admin/index/MagazinesTable.vue';
-import MangasTable from '@/components/admin/index/MangasTable.vue';
-import PeopleTable from '@/components/admin/index/PeopleTable.vue';
-import TagsTable from '@/components/admin/index/TagsTable.vue';
-import UsersTable from '@/components/admin/index/UsersTable.vue';
+import MagazinesTable from '@/components/admin/tables/MagazinesTable.vue';
+import MangasTable from '@/components/admin/tables/MangasTable.vue';
+import PeopleTable from '@/components/admin/tables/PeopleTable.vue';
+import TagsTable from '@/components/admin/tables/TagsTable.vue';
+import UsersTable from '@/components/admin/tables/UsersTable.vue';
 import { SharedData } from '@/types';
 import { adminTabItems } from '@/utils/constants';
 import { Head, router, usePage } from '@inertiajs/vue3';

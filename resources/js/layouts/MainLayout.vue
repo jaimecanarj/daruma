@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import Navbar from '@/components/Navbar.vue';
+import Navbar from '@/components/navbar/Navbar.vue';
 import { es } from '@nuxt/ui/locale';
 </script>
 

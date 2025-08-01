@@ -5,7 +5,7 @@ export default { layout: AuthLayout };
 </script>
 
 <script setup lang="ts">
-import SecretInput from '@/components/SecretInput.vue';
+import SecretInput from '@/components/formComponents/SecretInput.vue';
 import { loginSchema } from '@/utils/zodSchemas';
 import { Head, useForm } from '@inertiajs/vue3';
 

@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import DatePicker from '@/components/DatePicker.vue';
+import DatePicker from '@/components/formComponents/DatePicker.vue';
+import LabelWithCounter from '@/components/formComponents/labelWithCounter.vue';
 import { useMangasStore } from '@/stores/mangasStore';
 import { demographies, languageOptions, mangaFiltersInitialState, mangaSortable, readingDirections } from '@/utils/constants';
 import { computed } from 'vue';
@@ -81,9 +82,7 @@ const emit = defineEmits(['filter']);
         </div>
         <!--Autores-->
         <div class="w-full">
-            <p>
-                Autores <span v-if="state.people.length > 0" class="text-primary ml-2 text-sm">+{{ state.people.length }}</span>
-            </p>
+            <LabelWithCounter label="Autores" :size="state.people.length" />
             <USelectMenu v-model="state.people" :items="people" multiple placeholder="Cualquier autor" icon="lucide:users" class="w-full" />
         </div>
         <!--Idioma-->
@@ -105,9 +104,7 @@ const emit = defineEmits(['filter']);
         </div>
         <!--Revistas-->
         <div class="w-full">
-            <p>
-                Revistas <span v-if="state.magazines.length > 0" class="text-primary ml-2 text-sm">+{{ state.magazines.length }}</span>
-            </p>
+            <LabelWithCounter label="Revistas" :size="state.magazines.length" />
             <USelectMenu
                 v-model="state.magazines"
                 :items="magazines"
@@ -119,9 +116,7 @@ const emit = defineEmits(['filter']);
         </div>
         <!--Demografía-->
         <div class="w-full">
-            <p>
-                Demografía <span v-if="state.demographies.length > 0" class="text-primary ml-2 text-sm">+{{ state.demographies.length }}</span>
-            </p>
+            <LabelWithCounter label="Demografía" :size="state.demographies.length" />
             <USelect
                 v-model="state.demographies"
                 :items="demographies"
@@ -133,9 +128,7 @@ const emit = defineEmits(['filter']);
         </div>
         <!--Finalizado-->
         <div class="w-full">
-            <p>
-                Estado <span v-if="state.finished.length > 0" class="text-primary ml-2 text-sm">+{{ state.finished.length }}</span>
-            </p>
+            <LabelWithCounter label="Estado" :size="state.finished.length" />
             <USelect
                 v-model="state.finished"
                 :items="[
@@ -150,10 +143,7 @@ const emit = defineEmits(['filter']);
         </div>
         <!--Dirección de lectura-->
         <div class="w-full">
-            <p>
-                Dirección de lectura
-                <span v-if="state.readingDirection.length > 0" class="text-primary ml-2 text-sm">+{{ state.readingDirection.length }}</span>
-            </p>
+            <LabelWithCounter label="Dirección de lectura" :size="state.readingDirection.length" />
             <USelect
                 v-model="state.readingDirection"
                 :items="readingDirections"
@@ -172,5 +162,4 @@ const emit = defineEmits(['filter']);
     <!--etiquetas rehacer entero, con selector de incluir/excluir -->
     <!--Añadir manera de borrar seleccion de un select?-->
     <!--Hacer un formulario para que al pulsar enter, se envie la peticion-->
-    <!--Empezar por filtros mas sencillos, e ir añadiendo progresivamente-->
 </template>

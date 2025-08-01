@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import BaseForm from '@/components/admin/BaseForm.vue';
-import CoverImageSelector from '@/components/CoverImageSelector.vue';
-import DatePicker from '@/components/DatePicker.vue';
-import MultipleValuesInput from '@/components/MultipleValuesInput.vue';
-import MultipleValuesSelect from '@/components/MultipleValuesSelect.vue';
+import BaseForm from '@/components/admin/forms/BaseForm.vue';
+import CoverImageSelector from '@/components/formComponents/CoverImageSelector.vue';
+import DatePicker from '@/components/formComponents/DatePicker.vue';
+import MultipleValuesInput from '@/components/formComponents/MultipleValuesInput.vue';
+import MultipleValuesSelect from '@/components/formComponents/MultipleValuesSelect.vue';
 import type { Manga, MangaForm } from '@/types';
 import { alternativeNamesOptions, authorsOptions, languageOptions, relatedMangasOptions } from '@/utils/constants';
 import { mangaSchema } from '@/utils/zodSchemas';

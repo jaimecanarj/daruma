@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import BaseForm from '@/components/admin/BaseForm.vue';
-import DatePicker from '@/components/DatePicker.vue';
+import BaseForm from '@/components/admin/forms/BaseForm.vue';
+import DatePicker from '@/components/formComponents/DatePicker.vue';
 import { Magazine, MagazineForm } from '@/types';
 import { demographies, frequencies } from '@/utils/constants';
 import { magazineSchema } from '@/utils/zodSchemas';

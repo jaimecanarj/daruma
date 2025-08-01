@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import DateRangePicker from '@/components/DateRangePicker.vue';
+import DateRangePicker from '@/components/formComponents/DateRangePicker.vue';
 import { useTableFilters } from '@/composables/useTableFilters';
 import { User } from '@/types';
 import { Table } from '@tanstack/table-core';

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import PersonIndexSkeleton from '@/components/skeletons/PersonIndexSkeleton.vue';
+import GridSkeleton from '@/components/skeletons/GridSkeleton.vue';
 import { Person } from '@/types';
 import { Deferred, Head, router, WhenVisible } from '@inertiajs/vue3';
 import { useDebounceFn } from '@vueuse/core';
@@ -72,12 +72,12 @@ const debouncedSearch = useDebounceFn(() => {
     </div>
     <USeparator class="my-6" />
     <template v-if="loading">
-        <PersonIndexSkeleton />
+        <GridSkeleton />
     </template>
     <template v-else>
         <Deferred data="pagination">
             <template #fallback>
-                <PersonIndexSkeleton />
+                <GridSkeleton />
             </template>
             <!--Vista-->
             <div class="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
@@ -90,7 +90,7 @@ const debouncedSearch = useDebounceFn(() => {
                 >
                     <div class="relative mt-4 flex aspect-[1/1.4142] flex-col items-center">
                         <UIcon name="lucide:user" class="bg-accented my-3 size-20 rounded-full" />
-                        <p class="line-clamp-2 text-center">{{ person.name }} {{ person.surname }}</p>
+                        <p class="line-clamp-2 text-center font-semibold">{{ person.name }} {{ person.surname }}</p>
                         <p class="line-clamp-2 text-center">{{ person.kanjiName }} {{ person.kanjiSurname }}</p>
                     </div>
                 </UCard>

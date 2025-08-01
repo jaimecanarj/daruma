@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import logo from '@/assets/logo.svg';
-import DarkMode from '@/components/DarkMode.vue';
-import SearchBar from '@/components/SearchBar.vue';
-import UserMenu from '@/components/UserMenu.vue';
+import DarkMode from '@/components/navbar/DarkMode.vue';
+import SearchBar from '@/components/navbar/SearchBar.vue';
+import UserMenu from '@/components/navbar/UserMenu.vue';
 import { SharedData } from '@/types';
 import { links } from '@/utils/links';
 import { usePage } from '@inertiajs/vue3';
@@ -43,6 +43,7 @@ const slideOver = ref(false);
                     </template>
                 </div>
             </template>
+            <!--Menú móvil-->
             <template v-else>
                 <USlideover side="left" title="Daruma" v-model:open="slideOver" :ui="{ content: 'z-[2]' }">
                     <!--Logo-->
@@ -51,6 +52,7 @@ const slideOver = ref(false);
                         <p class="text-xl font-semibold">Daruma</p>
                     </div>
 
+                    <!--Enlaces-->
                     <template #body>
                         <div class="flex flex-col gap-6">
                             <template v-for="link of links" :key="link.path">
