@@ -70,10 +70,14 @@ const handleSearch = () => {
                     class="hover:bg-accented cursor-pointer shadow-md"
                     @click="router.visit(route('magazines.show', magazine.id))"
                 >
-                    <div class="relative mt-4 flex aspect-[1/1.4142] flex-col items-center">
-                        <UIcon name="lucide:book-image" class="bg-accented my-3 size-20 rounded-lg p-2" />
-                        <p class="line-clamp-2 text-center font-semibold">{{ magazine.name }}</p>
-                        <p class="line-clamp-2 text-center font-light">{{ magazine.publisher }}</p>
+                    <div class="relative flex aspect-[1/1.4142] flex-col items-center justify-center pb-6">
+                        <div class="flex w-full flex-col items-center">
+                            <UIcon name="lucide:book-image" class="bg-accented my-3 size-20 rounded-lg p-2" />
+                            <p class="1. line-clamp-2 h-[2.5rem] text-center leading-tight font-semibold">{{ magazine.name }}</p>
+                        </div>
+                        <div class="absolute bottom-0">
+                            <p class="line-clamp-1 text-center font-light">{{ magazine.publisher }}</p>
+                        </div>
                     </div>
                 </UCard>
             </div>
