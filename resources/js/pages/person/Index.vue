@@ -1,81 +1,51 @@
 <script setup lang="ts">
+import FiltersHeader from '@/components/FiltersHeader.vue';
+import InfiniteScroll from '@/components/InfiniteScroll.vue';
 import GridSkeleton from '@/components/skeletons/GridSkeleton.vue';
 import { Person } from '@/types';
-import { Deferred, Head, router, WhenVisible } from '@inertiajs/vue3';
-import { useDebounceFn } from '@vueuse/core';
+import { Deferred, Head, router } from '@inertiajs/vue3';
 import { computed, ref } from 'vue';
 
 const props = defineProps<{
-    pagination?: { currentPage: number; lastPage: number; total: number; data: Person[] };
+    paginatedResults?: { currentPage: number; lastPage: number; total: number; data: Person[] };
 }>();
 
-const localInput = ref('');
+const searchInput = ref('');
 const loading = ref(false);
 
-const people = computed(() => props.pagination?.data ?? []);
-const reachedEnd = computed(() => {
-    if (!props.pagination) return true;
-    return props.pagination.currentPage >= props.pagination.lastPage;
-});
+const people = computed(() => props.paginatedResults?.data ?? []);
 
 const handleSearch = () => {
     loading.value = true;
     router.reload({
         data: {
-            search: localInput.value,
+            search: searchInput.value,
         },
-        reset: ['pagination'],
+        reset: ['paginatedResults'],
         preserveUrl: true,
         onSuccess: () => {
             loading.value = false;
         },
     });
 };
-
-const debouncedSearch = useDebounceFn(() => {
-    handleSearch();
-}, 300);
 </script>
 
 <template>
     <Head title="Personas" />
-    <div class="my-6 flex flex-col justify-between gap-4 sm:flex-row">
-        <div class="flex gap-2">
-            <!--Barra de búsqueda-->
-            <UInput
-                class="w-full sm:w-60 md:w-96"
-                v-model="localInput"
-                placeholder="Buscar..."
-                leading-icon="lucide:search"
-                type="search"
-                :ui="{ base: 'pr-8', trailing: 'pe-1' }"
-                @input="debouncedSearch"
-            >
-                <template v-if="localInput?.length" #trailing>
-                    <UButton
-                        color="neutral"
-                        variant="link"
-                        size="sm"
-                        icon="i-lucide-circle-x"
-                        aria-label="Clear input"
-                        @click="
-                            localInput = '';
-                            handleSearch();
-                        "
-                    />
-                </template>
-            </UInput>
-        </div>
-        <h3>
-            <span class="text-2xl font-semibold">{{ pagination?.total ?? 0 }}</span> persona{{ pagination?.total !== 1 ? 's' : '' }}
-        </h3>
-    </div>
+    <!--Header-->
+    <FiltersHeader v-model="searchInput" class="my-6 flex flex-col justify-between gap-4 sm:flex-row" @search="handleSearch">
+        <template #rightSide>
+            <h3>
+                <span class="text-2xl font-semibold">{{ paginatedResults?.total ?? 0 }}</span> persona{{ paginatedResults?.total !== 1 ? 's' : '' }}
+            </h3>
+        </template>
+    </FiltersHeader>
     <USeparator class="my-6" />
     <template v-if="loading">
         <GridSkeleton />
     </template>
     <template v-else>
-        <Deferred data="pagination">
+        <Deferred data="paginatedResults">
             <template #fallback>
                 <GridSkeleton />
             </template>
@@ -98,26 +68,6 @@ const debouncedSearch = useDebounceFn(() => {
             <div v-if="people?.length === 0" class="text-muted text-center text-xl">No hay resultados</div>
         </Deferred>
         <!--Scroll infinito-->
-        <WhenVisible
-            v-if="!reachedEnd"
-            :params="{
-                only: ['pagination'],
-                data: {
-                    page: (pagination?.currentPage || 1) + 1,
-                    search: localInput,
-                },
-                preserveUrl: true,
-            }"
-            always
-            :buffer="500"
-        >
-            <template #fallback>
-                <div class="my-10 flex items-center justify-center space-x-2">
-                    <div class="bg-inverted/80 size-6 animate-bounce rounded-full [animation-delay:-0.3s]" />
-                    <div class="bg-inverted/80 size-6 animate-bounce rounded-full [animation-delay:-0.15s]" />
-                    <div class="bg-inverted/80 size-6 animate-bounce rounded-full" />
-                </div>
-            </template>
-        </WhenVisible>
+        <InfiniteScroll :current-page="paginatedResults?.currentPage" :last-page="paginatedResults?.lastPage" :filters="{ search: searchInput }" />
     </template>
 </template>

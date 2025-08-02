@@ -1,111 +1,39 @@
 <script setup lang="ts">
+import BaseFilters from '@/components/BaseFilters.vue';
 import DatePicker from '@/components/formComponents/DatePicker.vue';
-import LabelWithCounter from '@/components/formComponents/labelWithCounter.vue';
-import { useMagazinesStore } from '@/stores/magazinesStore';
-import { demographies, frequencies, magazineFiltersInitialState, magazineSortable, mangaSortable } from '@/utils/constants';
+import FilterSelect from '@/components/formComponents/FilterSelect.vue';
+import { MagazineFilters } from '@/types';
+import { demographies, frequencies, magazineFiltersInitialState, magazineSortable } from '@/utils/constants';
 import { computed } from 'vue';
 
-const store = useMagazinesStore();
-const state = computed(() => store.state);
+const props = defineProps<{ filterOptions?: { publishers: string[] } }>();
+const emit = defineEmits(['filter']);
 
-defineModel('show-filters');
+const filters = defineModel<MagazineFilters>({ default: magazineFiltersInitialState });
 
 //Valores de los selects
-const publishers = computed(() =>
-    store.filters.publishers
-        ? store.filters.publishers.map((publisher) => ({ label: publisher, value: publisher })).sort((a, b) => a.label.localeCompare(b.label))
-        : [],
-);
+const publishers = computed(() => (props.filterOptions?.publishers ? props.filterOptions.publishers.toSorted((a, b) => a.localeCompare(b)) : []));
 
-const sortIcon = computed(() => mangaSortable.find((item) => item.value === state.value.order)?.icon);
-//Comprueba si hay algún filtro activo
-const isFiltering = computed(() => {
-    return Object.entries(state.value).some(([key, value]) => {
-        // No considerar order como filtro
-        if (key === 'order') return false;
-
-        // Para arrays, verificar si tienen elementos
-        if (Array.isArray(value)) {
-            return value.length > 0;
-        }
-
-        // Para objetos, verificar si tienen propiedades
-        if (typeof value === 'object' && value !== null) {
-            return Object.keys(value).length > 0;
-        }
-
-        // Para otros valores, verificar si son truthy
-        return !!value;
-    });
-});
-
-const resetFilters = () => {
-    store.state = structuredClone(magazineFiltersInitialState);
-    emit('filter', store.state);
-};
-
-const emit = defineEmits(['filter']);
+const sortIcon = computed(() => magazineSortable.find((item) => item.value === filters.value.order)?.icon);
 </script>
 
 <template>
-    <UAccordion v-model="showFilters" :items="[{}]" :ui="{ trigger: 'p-0', trailingIcon: 'size-0' }">
-        <template #content>
-            <UCard variant="subtle" class="rounded-xl">
-                <div class="grid grid-cols-1 gap-x-8 gap-y-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                    <!--Demografía-->
-                    <div class="w-full">
-                        <LabelWithCounter label="Demografía" :size="state.demographies.length" />
-                        <USelect
-                            v-model="state.demographies"
-                            :items="demographies"
-                            multiple
-                            placeholder="Cualquier demografía"
-                            icon="lucide:square-user-round"
-                            class="w-full"
-                        />
-                    </div>
-                    <!--Fecha-->
-                    <div class="w-full">
-                        <p>Fecha</p>
-                        <DatePicker v-model="state.date" class="w-full" />
-                    </div>
-                    <!--Periodicidad-->
-                    <div class="w-full">
-                        <LabelWithCounter label="Periodicidad" :size="state.frequencies.length" />
-                        <USelect
-                            v-model="state.frequencies"
-                            :items="frequencies"
-                            multiple
-                            placeholder="Cualquier periodicidad"
-                            icon="lucide:calendar-1"
-                            class="w-full"
-                        />
-                    </div>
-                    <!--Orden-->
-                    <div class="w-full">
-                        <p>Orden</p>
-                        <USelect v-model="state.order" :items="magazineSortable" :icon="sortIcon" placeholder="Cualquier orden" class="w-full" />
-                    </div>
-                    <!--Editorial-->
-                    <div class="w-full">
-                        <LabelWithCounter label="Editorial" :size="state.publishers.length" />
-                        <USelect
-                            v-model="state.publishers"
-                            :items="publishers"
-                            multiple
-                            placeholder="Cualquier editorial"
-                            icon="lucide:building"
-                            class="w-full"
-                        />
-                    </div>
-                </div>
-                <USeparator class="my-3" />
-                <!--Botón reinicio filtros/ Buscar-->
-                <div class="flex w-full justify-end gap-3">
-                    <UButton label="Restablecer filtros" variant="subtle" color="error" :disabled="!isFiltering" @click="resetFilters" />
-                    <UButton label="Buscar" icon="lucide:search" variant="solid" @click="emit('filter', store.state)" />
-                </div>
-            </UCard>
-        </template>
-    </UAccordion>
+    <BaseFilters v-model="filters" :initial-state="magazineFiltersInitialState" @filter="emit('filter')">
+        <!--Demografía-->
+        <FilterSelect v-model="filters.demographies" :items="demographies" label="demografía" icon="lucide:square-user-round" />
+        <!--Fecha-->
+        <div class="w-full">
+            <p class="m-0.5">Fecha</p>
+            <DatePicker v-model="filters.date" class="w-full" />
+        </div>
+        <!--Periodicidad-->
+        <FilterSelect v-model="filters.frequencies" :items="frequencies" label="periodicidad" icon="lucide:calendar-1" />
+        <!--Orden-->
+        <div class="w-full">
+            <p class="m-0.5">Orden</p>
+            <USelect v-model="filters.order" :items="magazineSortable" :icon="sortIcon" placeholder="Cualquier orden" class="w-full" />
+        </div>
+        <!--Editorial-->
+        <FilterSelect v-model="filters.publishers" :items="publishers" label="editorial" icon="lucide:building" />
+    </BaseFilters>
 </template>

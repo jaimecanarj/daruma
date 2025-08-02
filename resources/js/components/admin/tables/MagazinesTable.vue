@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import DeleteModal from '@/components/admin/DeleteModal.vue';
-import FiltersHeader from '@/components/admin/filters/FiltersHeader.vue';
+import CreateButton from '@/components/admin/filters/CreateButton.vue';
 import MagazinesFilter from '@/components/admin/filters/MagazinesFilter.vue';
+import FiltersHeader from '@/components/FiltersHeader.vue';
 import { useFetchTable } from '@/composables/useFetchTable';
 import { Magazine } from '@/types';
 import { actionsCell, sortableHeader, sortablePinnableHeader } from '@/utils/tableColumns';
@@ -120,7 +121,10 @@ const table = useTemplateRef('table');
 </script>
 
 <template>
-    <FiltersHeader tab="magazine" v-model="globalFilter" filters><MagazinesFilter v-model="table" /></FiltersHeader>
+    <FiltersHeader v-model="globalFilter" filters class="mt-8 flex justify-between">
+        <template #rightSide><CreateButton tab="magazine" /></template>
+        <MagazinesFilter v-model="table" />
+    </FiltersHeader>
     <UTable
         ref="table"
         sticky

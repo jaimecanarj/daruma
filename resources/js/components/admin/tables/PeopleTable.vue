@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import DeleteModal from '@/components/admin/DeleteModal.vue';
-import FiltersHeader from '@/components/admin/filters/FiltersHeader.vue';
+import CreateButton from '@/components/admin/filters/CreateButton.vue';
+import FiltersHeader from '@/components/FiltersHeader.vue';
 import { useFetchTable } from '@/composables/useFetchTable';
 import { Person } from '@/types';
 import { actionsCell, sortableHeader, sortablePinnableHeader } from '@/utils/tableColumns';
@@ -68,7 +69,9 @@ const globalFilterFn: FilterFnOption<Person> = (row, columnId, filterValue) => {
 </script>
 
 <template>
-    <FiltersHeader tab="person" v-model="globalFilter" />
+    <FiltersHeader v-model="globalFilter" class="mt-8 flex justify-between">
+        <template #rightSide><CreateButton tab="person" /></template>
+    </FiltersHeader>
     <UTable
         sticky
         :loading="fetching"

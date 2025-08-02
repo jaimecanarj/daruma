@@ -32,7 +32,7 @@ class PersonController extends Controller
             return $query->paginate(24, page: $page);
         };
 
-        $props['pagination'] = Inertia::defer(fn() => $filterMangas($request))->deepMerge();
+        $props['paginatedResults'] = Inertia::defer(fn() => $filterMangas($request))->deepMerge();
 
         return Inertia::render('person/Index', $props);
     }

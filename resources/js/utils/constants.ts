@@ -15,9 +15,9 @@ export const frequencies = [
 ];
 
 export const languageOptions = [
-    { value: 'es', label: 'Español', emoji: '🇪🇸' },
-    { value: 'en', label: 'English', emoji: '🇬🇧' },
-    { value: 'jp', label: '日本語', emoji: '🇯🇵' },
+    { value: 'es', label: 'Español' },
+    { value: 'en', label: 'English' },
+    { value: 'jp', label: '日本語' },
 ];
 
 export const readingDirections = [

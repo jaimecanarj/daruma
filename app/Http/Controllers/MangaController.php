@@ -30,8 +30,6 @@ class MangaController extends Controller
         $filterMangas = function ($request) {
             $page = $request->input('page', 1);
             $search = $request->input('search');
-            $language = $request->input('language');
-            $finished = $request->input('finished');
 
             $query = Manga::with('tags', 'people', 'magazine');
 
@@ -68,8 +66,8 @@ class MangaController extends Controller
             }
 
             //Filtro de idioma
-            if (!empty($language)) {
-                $query->where('language', $language['value']);
+            if (!empty($request->language)) {
+                $query->whereIn('language', $request->language);
             }
 
             //Filtro de revistas
@@ -85,7 +83,7 @@ class MangaController extends Controller
             }
 
             //Filtro de estado
-            if (!empty($finished)) {
+            if (!empty($request->finished)) {
                 // Convertir los valores string 'true'/'false' a valores booleanos
                 $booleanValues = array_map(function ($value) {
                     if ($value === 'true') {
@@ -95,7 +93,7 @@ class MangaController extends Controller
                         return false;
                     }
                     return $value;
-                }, $finished);
+                }, $request->finished);
 
                 $query->whereIn('finished', $booleanValues);
             }
@@ -138,9 +136,9 @@ class MangaController extends Controller
             return $query->paginate(24, page: $page);
         };
 
-        $props['pagination'] = Inertia::defer(fn() => $filterMangas($request))->deepMerge();
+        $props['paginatedResults'] = Inertia::defer(fn() => $filterMangas($request))->deepMerge();
 
-        $props['filtersData'] = Inertia::defer(
+        $props['filterOptions'] = Inertia::defer(
             fn() => [
                 'people' => Person::all()->select('id', 'name', 'surname'),
                 'magazines' => Magazine::all()->select('id', 'name', 'demography'),

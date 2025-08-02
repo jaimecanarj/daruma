@@ -2,20 +2,22 @@
 import { breakpointsTailwind, refDebounced, useBreakpoints } from '@vueuse/core';
 import { ref, watch } from 'vue';
 
-defineProps<{ tab: string; filters?: boolean }>();
+const props = defineProps<{ filters?: boolean; class?: string }>();
+const emit = defineEmits(['search']);
 
-const globalFilter = defineModel<string>();
+const searchInput = defineModel<string>();
 
-const localInput = ref<string>(globalFilter.value || '');
+const localInput = ref<string>(searchInput.value || '');
 
 const activeBreakpoint = useBreakpoints(breakpointsTailwind).active();
 
 const showFilters = ref<string | undefined>(undefined);
 
-const globalFilterDebounced = refDebounced(localInput, 300);
+const searchInputDebounced = refDebounced(localInput, 300);
 
-watch(globalFilterDebounced, (newValue) => {
-    globalFilter.value = newValue;
+watch(searchInputDebounced, (newValue) => {
+    searchInput.value = newValue;
+    emit('search');
 });
 
 const toggleShowFilters = () => {
@@ -24,7 +26,7 @@ const toggleShowFilters = () => {
 </script>
 
 <template>
-    <div class="mt-8 flex justify-between">
+    <div :class="props.class">
         <div class="flex gap-2">
             <UInput
                 class="w-48 sm:w-60"
@@ -48,13 +50,9 @@ const toggleShowFilters = () => {
                 >{{ activeBreakpoint ? 'Filtros' : '' }}
             </UButton>
         </div>
-        <ULink :to="`/admin/create/${tab}`">
-            <UButton trailing-icon="lucide:square-plus" :size="activeBreakpoint ? 'xl' : 'lg'" class="font-semibold">{{
-                activeBreakpoint ? 'Crear' : ''
-            }}</UButton>
-        </ULink>
+        <slot name="rightSide" />
     </div>
-    <UAccordion v-model="showFilters" :items="[{}]" :ui="{ trigger: 'p-0', trailingIcon: 'size-0' }">
+    <UAccordion v-if="filters" v-model="showFilters" :items="[{}]" :ui="{ trigger: 'p-0', trailingIcon: 'size-0' }">
         <template #content>
             <UCard variant="subtle" class="rounded-xl">
                 <slot />

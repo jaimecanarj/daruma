@@ -144,12 +144,12 @@ export interface MangaFilters {
     date?: CalendarDate;
     tags: MultiValues[];
     order: string;
-    people: { label: string; value: number }[];
-    magazines: { label: string; value: number }[];
+    people: number[];
+    magazines: number[];
     demographies: string[];
     finished: boolean[];
     readingDirection: string[];
-    language?: { label: string; value: string; emoji: string };
+    language?: string[];
 }
 
 export interface MagazineFilters {
@@ -158,6 +158,7 @@ export interface MagazineFilters {
     order: string;
     date?: CalendarDate;
     publishers: string[];
+    frequencies: string[];
 }
 
 export type MultiValues = {

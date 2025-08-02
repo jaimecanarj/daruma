@@ -77,9 +77,9 @@ class MagazineController extends Controller
             return $query->paginate(24, page: $page);
         };
 
-        $props['pagination'] = Inertia::defer(fn() => $filterMangas($request))->deepMerge();
+        $props['paginatedResults'] = Inertia::defer(fn() => $filterMangas($request))->deepMerge();
 
-        $props['filtersData'] = Inertia::defer(
+        $props['filterOptions'] = Inertia::defer(
             fn() => [
                 'publishers' => Magazine::distinct()->pluck('publisher')->toArray(),
             ]
