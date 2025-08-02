@@ -59,9 +59,9 @@ class PersonController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Person $person)
+    public function show($id)
     {
-        return Inertia::render('person/Show', ['person' => $person]);
+        return Inertia::render('person/Show', ['person' => Inertia::defer(fn() => Person::find($id)->load('mangas'))]);
     }
 
     /**

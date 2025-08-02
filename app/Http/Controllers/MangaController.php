@@ -123,11 +123,11 @@ class MangaController extends Controller
                 case 'dateAsc':
                     $query->orderBy('start_date', 'asc');
                     break;
-                case 'volumeDesc':
-                    $query->orderBy('volumes', 'desc');
+                case 'volumesDesc':
+                    $query->orderBy('tankoubon', 'desc');
                     break;
-                case 'volumeAsc':
-                    $query->orderBy('volumes', 'asc');
+                case 'volumesAsc':
+                    $query->orderBy('tankoubon', 'asc');
                     break;
                 default:
                     $query->orderBy('updated_at', 'desc');
@@ -227,9 +227,9 @@ class MangaController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Manga $manga)
+    public function show($id)
     {
-        return Inertia::render('manga/Show', ['manga' => $manga]);
+        return Inertia::render('manga/Show', ['manga' => Inertia::defer(fn() => Manga::find($id))]);
     }
 
     /**

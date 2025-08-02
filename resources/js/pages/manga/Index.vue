@@ -1,16 +1,14 @@
 <script setup lang="ts">
+import DisplaySelector from '@/components/DisplaySelector.vue';
 import FiltersHeader from '@/components/FiltersHeader.vue';
 import InfiniteScroll from '@/components/InfiniteScroll.vue';
 import MangasCard from '@/components/mangas/MangasCard.vue';
 import MangasFilters from '@/components/mangas/MangasFilters.vue';
 import MangasGrid from '@/components/mangas/MangasGrid.vue';
-import MangaIndexSkeleton from '@/components/skeletons/MangaIndexSkeleton.vue';
+import MangasSkeleton from '@/components/skeletons/MangasSkeleton.vue';
 import { Magazine, Manga, MangaFilters, Person, Tag } from '@/types';
 import { Deferred, Head, router } from '@inertiajs/vue3';
-import { breakpointsTailwind, useBreakpoints } from '@vueuse/core';
 import { computed, ref } from 'vue';
-
-const activeBreakpoint = useBreakpoints(breakpointsTailwind).active();
 
 const props = defineProps<{
     paginatedResults?: { currentPage: number; lastPage: number; total: number; data: Manga[] };
@@ -62,34 +60,19 @@ const handleSearch = () => {
                     <span class="text-2xl font-semibold">{{ paginatedResults?.total ?? 0 }}</span> manga{{ paginatedResults?.total !== 1 ? 's' : '' }}
                 </h3>
                 <!--Selector de display-->
-                <UButtonGroup class="ml-auto">
-                    <UButton
-                        color="neutral"
-                        :variant="display === 'grid' ? 'solid' : 'subtle'"
-                        icon="lucide:grid-3x2"
-                        :size="activeBreakpoint ? 'xl' : 'lg'"
-                        @click="display = 'grid'"
-                    />
-                    <UButton
-                        color="neutral"
-                        :variant="display === 'list' ? 'solid' : 'subtle'"
-                        icon="lucide:layout-list"
-                        :size="activeBreakpoint ? 'xl' : 'lg'"
-                        @click="display = 'list'"
-                    />
-                </UButtonGroup>
+                <DisplaySelector v-model="display" />
             </div>
         </template>
         <MangasFilters v-model="filters" :filter-options="filterOptions" @filter="handleSearch" />
     </FiltersHeader>
     <USeparator class="my-6" />
     <template v-if="loading">
-        <MangaIndexSkeleton :display="display" />
+        <MangasSkeleton :display="display" />
     </template>
     <template v-else>
         <Deferred data="paginatedResults">
             <template #fallback>
-                <MangaIndexSkeleton :display="display" />
+                <MangasSkeleton :display="display" />
             </template>
             <!--Vistas-->
             <MangasGrid v-if="display === 'grid'" :mangas="mangas" />

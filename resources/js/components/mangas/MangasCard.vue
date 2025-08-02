@@ -16,7 +16,7 @@ defineProps<{ mangas?: Manga[] }>();
                 <!--Imagen-->
                 <div class="max-w-[150px] basis-1/4">
                     <img
-                        :src="`storage/${manga.cover}`"
+                        :src="`/storage/${manga.cover}`"
                         class="aspect-[1/1.4142] w-full cursor-pointer rounded-sm"
                         alt="Portada de manga"
                         @click="router.visit(route('mangas.show', manga.id))"
