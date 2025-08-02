@@ -33,7 +33,7 @@ const handleSearch = () => {
 <template>
     <Head title="Personas" />
     <!--Header-->
-    <FiltersHeader v-model="searchInput" class="my-6 flex flex-col justify-between gap-4 sm:flex-row" @search="handleSearch">
+    <FiltersHeader v-model="searchInput" class="mt-6 flex flex-col justify-between gap-4 sm:flex-row" @search="handleSearch">
         <template #rightSide>
             <h3>
                 <span class="text-2xl font-semibold">{{ paginatedResults?.total ?? 0 }}</span> persona{{ paginatedResults?.total !== 1 ? 's' : '' }}

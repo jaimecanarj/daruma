@@ -69,7 +69,7 @@ const globalFilterFn: FilterFnOption<Person> = (row, columnId, filterValue) => {
 </script>
 
 <template>
-    <FiltersHeader v-model="globalFilter" class="mt-8 flex justify-between">
+    <FiltersHeader v-model="globalFilter" class="mt-8 flex justify-between gap-2">
         <template #rightSide><CreateButton tab="person" /></template>
     </FiltersHeader>
     <UTable

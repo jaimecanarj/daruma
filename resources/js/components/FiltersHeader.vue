@@ -29,7 +29,7 @@ const toggleShowFilters = () => {
     <div :class="props.class">
         <div class="flex gap-2">
             <UInput
-                class="w-48 sm:w-60"
+                class="w-full sm:w-60"
                 v-model="localInput"
                 placeholder="Buscar..."
                 leading-icon="lucide:search"
@@ -42,7 +42,7 @@ const toggleShowFilters = () => {
             </UInput>
             <UButton
                 v-if="filters"
-                variant="soft"
+                :variant="showFilters === '0' ? 'solid' : 'soft'"
                 color="neutral"
                 trailing-icon="lucide:list-filter"
                 :size="activeBreakpoint ? 'xl' : 'lg'"
@@ -54,7 +54,7 @@ const toggleShowFilters = () => {
     </div>
     <UAccordion v-if="filters" v-model="showFilters" :items="[{}]" :ui="{ trigger: 'p-0', trailingIcon: 'size-0' }">
         <template #content>
-            <UCard variant="subtle" class="rounded-xl">
+            <UCard variant="subtle" class="mt-4 rounded-xl">
                 <slot />
             </UCard>
         </template>

@@ -76,7 +76,7 @@ const table = useTemplateRef('table');
 </script>
 
 <template>
-    <FiltersHeader v-model="globalFilter" filters class="mt-8 flex justify-between">
+    <FiltersHeader v-model="globalFilter" filters class="mt-8 flex justify-between gap-2">
         <template #rightSide><CreateButton tab="user" /></template>
         <UsersFilter v-model="table" />
     </FiltersHeader>

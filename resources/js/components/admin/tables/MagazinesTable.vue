@@ -121,7 +121,7 @@ const table = useTemplateRef('table');
 </script>
 
 <template>
-    <FiltersHeader v-model="globalFilter" filters class="mt-8 flex justify-between">
+    <FiltersHeader v-model="globalFilter" filters class="mt-8 flex justify-between gap-2">
         <template #rightSide><CreateButton tab="magazine" /></template>
         <MagazinesFilter v-model="table" />
     </FiltersHeader>

@@ -52,7 +52,7 @@ const handleSearch = () => {
 <template>
     <Head title="Mangas" />
     <!--Header-->
-    <FiltersHeader v-model="filters.search" filters class="my-6 flex flex-col justify-between gap-4 sm:flex-row" @search="handleSearch">
+    <FiltersHeader v-model="filters.search" filters class="mt-6 flex flex-col justify-between gap-4 sm:flex-row" @search="handleSearch">
         <template #rightSide>
             <div class="ml-1 flex items-center gap-4">
                 <!--Total de mangas-->
