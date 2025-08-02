@@ -56,7 +56,7 @@ const sortIcon = computed(() => mangaSortable.find((item) => item.value === orde
         <UCard variant="subtle" class="mt-14 flex justify-center rounded-xl sm:justify-start">
             <div class="mt-20 flex flex-col gap-4 sm:mt-0 sm:ml-40 lg:flex-row lg:items-center">
                 <p class="line-clamp-2 text-center text-3xl font-bold sm:text-start">{{ person?.name }} {{ person?.surname }}</p>
-                <p v-if="person?.kanjiName || person?.kanjiSurname" class="text-muted line-clamp-1 text-center text-2xl font-semibold sm:text-start">
+                <p v-if="person?.kanjiName || person?.kanjiSurname" class="text-muted line-clamp-1 text-center text-2xl sm:text-start">
                     「 {{ person?.kanjiName }} {{ person?.kanjiSurname }} 」
                 </p>
             </div>
