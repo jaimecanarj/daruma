@@ -111,9 +111,9 @@ class MagazineController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Magazine $magazine)
+    public function show($id)
     {
-        return Inertia::render('magazine/Show', ['magazine' => $magazine]);
+        return Inertia::render('magazine/Show', ['magazine' => Inertia::defer(fn() => Magazine::find($id)->load('mangas'))]);
     }
 
     /**
