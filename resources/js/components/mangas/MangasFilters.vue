@@ -3,7 +3,7 @@ import BaseFilters from '@/components/BaseFilters.vue';
 import DatePicker from '@/components/formComponents/DatePicker.vue';
 import FilterSelect from '@/components/formComponents/FilterSelect.vue';
 import { Magazine, MangaFilters, Person, Tag } from '@/types';
-import { demographies, languageOptions, mangaFiltersInitialState, mangaSortable, readingDirections } from '@/utils/constants';
+import { demographies, languages, mangaFiltersInitialState, mangaSorting, readingDirections, sortingIcons } from '@/utils/constants';
 import { computed } from 'vue';
 
 const props = defineProps<{ filterOptions?: { tags: Tag[]; people: Person[]; magazines: Magazine[] } }>();
@@ -36,7 +36,7 @@ const tags = computed(() =>
         : [],
 );
 
-const sortIcon = computed(() => mangaSortable.find((item) => item.value === filters.value.order)?.icon);
+const sortIcon = computed(() => sortingIcons.find((item) => item.value === filters.value.order)?.icon);
 
 const status = [
     { label: 'Completo', value: true },
@@ -64,12 +64,12 @@ const status = [
         <!--Orden-->
         <div class="w-full">
             <p class="m-0.5">Orden</p>
-            <USelect v-model="filters.order" :items="mangaSortable" :icon="sortIcon" placeholder="Cualquier orden" class="w-full" />
+            <USelect v-model="filters.order" :items="mangaSorting" :icon="sortIcon" placeholder="Cualquier orden" class="w-full" />
         </div>
         <!--Autores-->
         <FilterSelect v-model="filters.people" :items="people" label="autor" icon="lucide:users" />
         <!--Idioma-->
-        <FilterSelect v-model="filters.language" :items="languageOptions" label="idioma" icon="lucide:earth" />
+        <FilterSelect v-model="filters.language" :items="languages" label="idioma" icon="lucide:earth" />
         <!--Revistas-->
         <FilterSelect v-model="filters.magazines" :items="magazines" label="revista" icon="lucide:newspaper" />
         <!--Demografía-->

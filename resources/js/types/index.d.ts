@@ -34,6 +34,7 @@ export interface Manga {
     names?: Name[];
     people?: (Person & { pivot: { job: 'writer' | 'illustrator' | 'both' } })[];
     tags?: Tag[];
+    magazine?: Magazine;
     mangasRelated?: {
         id: number;
         name: string;
@@ -137,7 +138,7 @@ export interface TagForm {
     [key: string]: any;
 }
 
-//Utilidades
+//Filtros
 export interface MangaFilters {
     search?: string;
     volumes?: string;
@@ -161,6 +162,7 @@ export interface MagazineFilters {
     frequencies: string[];
 }
 
+//Utilidades
 export type MultiValues = {
     label: string;
     value?: number;

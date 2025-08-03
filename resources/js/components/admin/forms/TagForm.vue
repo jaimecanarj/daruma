@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import BaseForm from '@/components/admin/forms/BaseForm.vue';
 import { type Tag, TagForm } from '@/types';
-import { tagTypeOptions } from '@/utils/constants';
+import { tagTypes } from '@/utils/constants';
 import { tagSchema } from '@/utils/zodSchemas';
 
 const props = defineProps<{
@@ -32,7 +32,7 @@ const initialValues: TagForm = {
                 </UFormField>
 
                 <UFormField label="Tipo" name="type" class="w-full" required>
-                    <USelect v-model="form.type" :items="tagTypeOptions" placeholder="Selecciona un tipo" class="w-full" />
+                    <USelect v-model="form.type" :items="tagTypes" placeholder="Selecciona un tipo" class="w-full" />
                 </UFormField>
             </div>
         </template>

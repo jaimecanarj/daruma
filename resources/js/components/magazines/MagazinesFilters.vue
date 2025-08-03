@@ -3,7 +3,7 @@ import BaseFilters from '@/components/BaseFilters.vue';
 import DatePicker from '@/components/formComponents/DatePicker.vue';
 import FilterSelect from '@/components/formComponents/FilterSelect.vue';
 import { MagazineFilters } from '@/types';
-import { demographies, frequencies, magazineFiltersInitialState, magazineSortable } from '@/utils/constants';
+import { demographies, frequencies, magazineFiltersInitialState, magazineSorting, sortingIcons } from '@/utils/constants';
 import { computed } from 'vue';
 
 const props = defineProps<{ filterOptions?: { publishers: string[] } }>();
@@ -14,7 +14,7 @@ const filters = defineModel<MagazineFilters>({ default: magazineFiltersInitialSt
 //Valores de los selects
 const publishers = computed(() => (props.filterOptions?.publishers ? props.filterOptions.publishers.toSorted((a, b) => a.localeCompare(b)) : []));
 
-const sortIcon = computed(() => magazineSortable.find((item) => item.value === filters.value.order)?.icon);
+const sortIcon = computed(() => sortingIcons.find((item) => item.value === filters.value.order)?.icon);
 </script>
 
 <template>
@@ -31,7 +31,7 @@ const sortIcon = computed(() => magazineSortable.find((item) => item.value === f
         <!--Orden-->
         <div class="w-full">
             <p class="m-0.5">Orden</p>
-            <USelect v-model="filters.order" :items="magazineSortable" :icon="sortIcon" placeholder="Cualquier orden" class="w-full" />
+            <USelect v-model="filters.order" :items="magazineSorting" :icon="sortIcon" placeholder="Cualquier orden" class="w-full" />
         </div>
         <!--Editorial-->
         <FilterSelect v-model="filters.publishers" :items="publishers" label="editorial" icon="lucide:building" />

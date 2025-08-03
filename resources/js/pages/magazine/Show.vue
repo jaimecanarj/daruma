@@ -4,7 +4,7 @@ import MangasCard from '@/components/mangas/MangasCard.vue';
 import MangasGrid from '@/components/mangas/MangasGrid.vue';
 import MagazineSkeleton from '@/components/skeletons/MagazineSkeleton.vue';
 import { Magazine, Manga } from '@/types';
-import { frequencies, mangaSortable } from '@/utils/constants';
+import { frequencies, mangaSorting, sortingIcons } from '@/utils/constants';
 import { Deferred, Head } from '@inertiajs/vue3';
 import { parseDate } from '@internationalized/date';
 import { computed, ref } from 'vue';
@@ -42,7 +42,7 @@ const mangas = computed(() =>
         : [],
 );
 
-const sortIcon = computed(() => mangaSortable.find((item) => item.value === order.value)?.icon);
+const sortIcon = computed(() => sortingIcons.find((item) => item.value === order.value)?.icon);
 </script>
 
 <template>
@@ -85,7 +85,7 @@ const sortIcon = computed(() => mangaSortable.find((item) => item.value === orde
         <div class="mt-8 flex flex-col justify-between gap-4 sm:flex-row">
             <h2 class="text-3xl font-semibold">Mangas</h2>
             <div class="flex items-center gap-4">
-                <USelect v-model="order" :items="mangaSortable" placeholder="Ordenar por" :icon="sortIcon" class="w-48" />
+                <USelect v-model="order" :items="mangaSorting" placeholder="Ordenar por" :icon="sortIcon" class="w-48" />
                 <DisplaySelector v-model="display" />
             </div>
         </div>

@@ -2,7 +2,7 @@
 import DateRangePicker from '@/components/formComponents/DateRangePicker.vue';
 import { useTableFilters } from '@/composables/useTableFilters';
 import { Manga } from '@/types';
-import { languageOptions, readingDirections } from '@/utils/constants';
+import { languages, readingDirections } from '@/utils/constants';
 import { Table } from '@tanstack/table-core';
 import { DateRange } from 'reka-ui';
 
@@ -43,7 +43,7 @@ const { filters, setListFilter, setFilter, resetFilters } = useTableFilters(tabl
             <p>Idioma:</p>
             <USelect
                 v-model="filters!.find((item) => item.id === 'language')!.value as string"
-                :items="[{ label: 'Todos', value: 'all' }, ...languageOptions]"
+                :items="[{ label: 'Todos', value: 'all' }, ...languages]"
                 class="w-48"
                 :ui="{ content: 'z-[3]' }"
                 @change="setFilter('language')"

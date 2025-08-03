@@ -59,7 +59,7 @@ export const mangaSchema = z
     .object({
         name: z.string({ required_error: 'Obligatorio' }),
         alternativeNames: z.array(multiItemSchema),
-        authors: z.array(multiItemSchema).min(0, 'Debe haber un escritor y un ilustrador'),
+        authors: z.array(multiItemSchema).min(1, 'Selecciona al menos un autor'),
         tags: z.array(multiItemSchema),
         sinopsis: z.string().optional(),
         startDate: z.instanceof(CalendarDate).optional(),

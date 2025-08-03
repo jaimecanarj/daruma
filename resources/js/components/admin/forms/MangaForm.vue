@@ -4,7 +4,7 @@ import DatePicker from '@/components/formComponents/DatePicker.vue';
 import MultipleValuesInput from '@/components/formComponents/MultipleValuesInput.vue';
 import MultipleValuesSelect from '@/components/formComponents/MultipleValuesSelect.vue';
 import type { Manga, MangaForm } from '@/types';
-import { alternativeNamesOptions, authorsOptions, languageOptions, relatedMangasOptions } from '@/utils/constants';
+import { alternativeNames, authorJobs, languages, mangaRelations } from '@/utils/constants';
 import { mangaSchema } from '@/utils/zodSchemas';
 import { Deferred } from '@inertiajs/vue3';
 import { parseDate } from '@internationalized/date';
@@ -174,7 +174,7 @@ const baseForm = useTemplateRef('baseForm');
                     </UFormField>
                     <div class="flex justify-between gap-4">
                         <UFormField label="Idioma" name="language">
-                            <USelect v-model="form.language" :items="languageOptions" class="w-24 sm:w-28" />
+                            <USelect v-model="form.language" :items="languages" class="w-24 sm:w-28" />
                         </UFormField>
                         <UFormField label="Dir. lectura" name="readingDirection">
                             <div class="mt-3 flex items-center gap-2">
@@ -196,7 +196,7 @@ const baseForm = useTemplateRef('baseForm');
             </div>
             <USeparator :ui="{ border: 'border-accented' }" />
             <UFormField label="Nombres alternativos" name="alternativeNames">
-                <MultipleValuesInput v-model="form.alternativeNames" :type-options="alternativeNamesOptions" />
+                <MultipleValuesInput v-model="form.alternativeNames" :type-options="alternativeNames" />
             </UFormField>
             <UFormField label="Autores" name="authors" required>
                 <Deferred data="people">
@@ -209,7 +209,7 @@ const baseForm = useTemplateRef('baseForm');
                             <UButton icon="lucide:plus" color="neutral" class="size-12 justify-center md:size-auto" disabled />
                         </div>
                     </template>
-                    <MultipleValuesSelect v-model="form.authors" title="un autor" :input-options="people" :type-options="authorsOptions" />
+                    <MultipleValuesSelect v-model="form.authors" title="un autor" :input-options="people" :type-options="authorJobs" />
                 </Deferred>
             </UFormField>
             <UFormField label="Etiquetas" name="tags">
@@ -234,12 +234,7 @@ const baseForm = useTemplateRef('baseForm');
                             <UButton icon="lucide:plus" color="neutral" class="size-12 justify-center md:size-auto" disabled />
                         </div>
                     </template>
-                    <MultipleValuesSelect
-                        v-model="form.relatedMangas"
-                        title="un manga"
-                        :input-options="mangas"
-                        :type-options="relatedMangasOptions"
-                    />
+                    <MultipleValuesSelect v-model="form.relatedMangas" title="un manga" :input-options="mangas" :type-options="mangaRelations" />
                 </Deferred>
             </UFormField>
             <USeparator :ui="{ border: 'border-accented' }" />
