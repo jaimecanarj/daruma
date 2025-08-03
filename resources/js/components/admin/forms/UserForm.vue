@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import BaseForm from '@/components/admin/forms/BaseForm.vue';
 import SecretInput from '@/components/formComponents/SecretInput.vue';
-import UserImageSelector from '@/components/formComponents/UserImageSelector.vue';
 import { type User, UserForm } from '@/types';
 import { roles } from '@/utils/constants';
 import { userSchema } from '@/utils/zodSchemas';
@@ -38,7 +37,13 @@ const show = ref<boolean>();
         <template #default="{ form }">
             <div class="flex flex-col gap-6 sm:flex-row">
                 <UFormField name="avatar" required class="flex justify-center sm:basis-2/5">
-                    <UserImageSelector ref="avatar" v-model="form.avatar" :stored-image="props.item?.avatar" />
+                    <UFileUpload v-model="form.avatar" accept="image/*" label="Avatar" class="size-36">
+                        <template #default="{ open }">
+                            <div v-if="props.item?.avatar && !form.avatar" @click.prevent="open(undefined)">
+                                <img :src="`/storage/${props.item.avatar}`" class="size-36 rounded-lg object-cover" alt="avatar" />
+                            </div>
+                        </template>
+                    </UFileUpload>
                 </UFormField>
                 <div class="flex w-full flex-col gap-6 sm:basis-3/5">
                     <UFormField label="Nombre" name="name" class="w-full" required>

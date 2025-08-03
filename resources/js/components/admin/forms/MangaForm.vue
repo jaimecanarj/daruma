@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import BaseForm from '@/components/admin/forms/BaseForm.vue';
-import CoverImageSelector from '@/components/formComponents/CoverImageSelector.vue';
 import DatePicker from '@/components/formComponents/DatePicker.vue';
 import MultipleValuesInput from '@/components/formComponents/MultipleValuesInput.vue';
 import MultipleValuesSelect from '@/components/formComponents/MultipleValuesSelect.vue';
@@ -111,8 +110,6 @@ const initialValues: MangaForm = {
     purpose: props.purpose,
 };
 
-const coverComponent = useTemplateRef('cover');
-
 const formTransform = (data: any) => ({
     ...data,
     readingDirection: data.readingDirection ? 'ltr' : 'rtl',
@@ -137,12 +134,17 @@ const baseForm = useTemplateRef('baseForm');
         :schema="mangaSchema"
         :initial-values="initialValues"
         :form-transform="formTransform"
-        @success="coverComponent?.clear()"
     >
         <template #default="{ form }">
             <div class="flex flex-col gap-6 md:flex-row">
                 <UFormField name="cover" required class="md:basis-2/5">
-                    <CoverImageSelector ref="cover" v-model="form.cover" :stored-image="props.item?.cover" />
+                    <UFileUpload v-model="form.cover" accept="image/*" label="Portada" description="Máximo 2MB" class="aspect-[1/1.4142] max-w-72">
+                        <template #default="{ open }">
+                            <div v-if="props.item?.cover && !form.cover" @click.prevent="open(undefined)">
+                                <img :src="`/storage/${props.item.cover}`" class="h-full w-full rounded-lg object-cover" alt="cover" />
+                            </div>
+                        </template>
+                    </UFileUpload>
                 </UFormField>
                 <div class="flex flex-col gap-6 md:basis-3/5">
                     <UFormField label="Nombre" name="name" required>

@@ -6,7 +6,6 @@ export default { layout: AuthLayout };
 
 <script setup lang="ts">
 import SecretInput from '@/components/formComponents/SecretInput.vue';
-import UserImageSelector from '@/components/formComponents/UserImageSelector.vue';
 import { registerSchema } from '@/utils/zodSchemas';
 import { Head, useForm } from '@inertiajs/vue3';
 import { ref } from 'vue';
@@ -33,7 +32,7 @@ const onSubmit = () => {
 
     <UForm @submit="onSubmit" :state="form" :schema="registerSchema" class="mt-10">
         <UFormField name="avatar" class="flex justify-center">
-            <UserImageSelector v-model="form.avatar" />
+            <UFileUpload v-model="form.avatar" accept="image/*" label="Avatar" class="size-36" />
         </UFormField>
         <UFormField label="Nombre" name="name" class="mt-4" required>
             <UInput v-model="form.name" class="w-full" />
