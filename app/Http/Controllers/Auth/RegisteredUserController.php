@@ -45,8 +45,17 @@ class RegisteredUserController extends Controller
             $filename = time() . '-' . Str::random(10) . '.' . $validatedData['avatar']->getClientOriginalExtension();
             $path = 'avatars/' . $filename;
 
+            //Determinar si es local o producción
+            $isLocalEnvironment = app()->environment('local');
+
+            // Definir la ruta base según el entorno
+            if ($isLocalEnvironment) {
+                $directory = storage_path('app/public/avatars');
+            } else {
+                $directory = public_path('storage/avatars');
+            }
+
             // Crear la carpeta si no existe
-            $directory = storage_path('app/public/avatars');
             if (!file_exists($directory)) {
                 mkdir($directory, 0755, true);
             }

@@ -323,8 +323,18 @@ class MangaController extends Controller
         $filename = time() . '-' . Str::random(10) . '.webp';
         $path = 'covers/' . $filename;
 
+        //Determinar si es local o producción
+        $isLocalEnvironment = app()->environment('local');
+
+        // Definir la ruta base según el entorno
+        if ($isLocalEnvironment) {
+            $basePath = storage_path('app/public');
+        } else {
+            $basePath = public_path('storage');
+        }
+        $directory = $basePath . '/covers';
+
         // Crear la carpeta si no existe
-        $directory = storage_path('app/public/covers');
         if (!file_exists($directory)) {
             mkdir($directory, 0755, true);
         }
@@ -336,7 +346,7 @@ class MangaController extends Controller
         $image = $image->scale(width: 500);
 
         // Guardar como WebP con calidad 80 (buen equilibrio entre calidad y tamaño)
-        $image->toWebp(80)->save(storage_path('app/public/' . $path));
+        $image->toWebp(80)->save($basePath . '/' . $path);
 
         return $path;
     }
