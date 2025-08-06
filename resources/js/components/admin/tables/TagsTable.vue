@@ -73,7 +73,7 @@ const table = useTemplateRef('table');
         :columns="columns"
         :global-filter="globalFilter"
         :column-filters="filters"
-        :sorting="[{ id: 'name', desc: false }]"
+        :sorting="[{ id: 'id', desc: false }]"
         class="mt-6 h-[610px] flex-1"
     />
     <DeleteModal

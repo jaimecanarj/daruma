@@ -77,7 +77,7 @@ const globalFilterFn: FilterFnOption<Person> = (row, columnId, filterValue) => {
         :loading="fetching"
         :data="data"
         :columns="columns"
-        :sorting="[{ id: 'name', desc: false }]"
+        :sorting="[{ id: 'id', desc: false }]"
         :global-filter="globalFilter"
         :global-filter-options="{ globalFilterFn: globalFilterFn }"
         class="mt-6 h-[610px] flex-1"

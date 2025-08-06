@@ -87,7 +87,7 @@ const table = useTemplateRef('table');
         :data="data"
         :columns="columns"
         :column-filters="filters"
-        :sorting="[{ id: 'name', desc: false }]"
+        :sorting="[{ id: 'id', desc: false }]"
         :global-filter="globalFilter"
         class="mt-6 h-[610px] flex-1"
     />
