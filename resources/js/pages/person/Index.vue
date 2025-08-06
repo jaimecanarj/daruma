@@ -1,7 +1,10 @@
 <script setup lang="ts">
+import DisplaySelector from '@/components/DisplaySelector.vue';
 import FiltersHeader from '@/components/FiltersHeader.vue';
 import InfiniteScroll from '@/components/InfiniteScroll.vue';
-import GridSkeleton from '@/components/skeletons/GridSkeleton.vue';
+import PeopleCard from '@/components/people/PeopleCard.vue';
+import PeopleGrid from '@/components/people/PeopleGrid.vue';
+import IndexSkeleton from '@/components/skeletons/IndexSkeleton.vue';
 import { Person } from '@/types';
 import { Deferred, Head, router } from '@inertiajs/vue3';
 import { computed, ref } from 'vue';
@@ -10,7 +13,8 @@ const props = defineProps<{
     paginatedResults?: { currentPage: number; lastPage: number; total: number; data: Person[] };
 }>();
 
-const searchInput = ref('');
+const display = ref<'grid' | 'list'>('grid');
+const filters = ref({ search: '' });
 const loading = ref(false);
 
 const people = computed(() => props.paginatedResults?.data ?? []);
@@ -19,7 +23,7 @@ const handleSearch = () => {
     loading.value = true;
     router.reload({
         data: {
-            search: searchInput.value,
+            ...filters.value,
         },
         reset: ['paginatedResults'],
         preserveUrl: true,
@@ -33,45 +37,35 @@ const handleSearch = () => {
 <template>
     <Head title="Personas" />
     <!--Header-->
-    <FiltersHeader v-model="searchInput" class="mt-6 flex flex-col justify-between gap-4 sm:flex-row" @search="handleSearch">
+    <FiltersHeader v-model="filters.search" class="mt-6 flex flex-col justify-between gap-4 sm:flex-row" @search="handleSearch">
         <template #rightSide>
-            <h3>
-                <span class="text-2xl font-semibold">{{ paginatedResults?.total ?? 0 }}</span> persona{{ paginatedResults?.total !== 1 ? 's' : '' }}
-            </h3>
+            <div class="ml-1 flex items-center gap-4">
+                <!--Total de personas-->
+                <h3>
+                    <span class="text-2xl font-semibold">{{ paginatedResults?.total ?? 0 }}</span> persona{{
+                        paginatedResults?.total !== 1 ? 's' : ''
+                    }}
+                </h3>
+                <!--Selector de display-->
+                <DisplaySelector v-model="display" />
+            </div>
         </template>
     </FiltersHeader>
     <USeparator class="my-6" />
     <template v-if="loading">
-        <GridSkeleton />
+        <IndexSkeleton :display="display" size="sm" />
     </template>
     <template v-else>
         <Deferred data="paginatedResults">
             <template #fallback>
-                <GridSkeleton />
+                <IndexSkeleton :display="display" size="sm" />
             </template>
             <!--Vista-->
-            <div class="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
-                <UCard
-                    v-for="person of people"
-                    :key="person.id"
-                    variant="subtle"
-                    class="hover:bg-accented cursor-pointer shadow-md"
-                    @click="router.visit(route('people.show', person.id))"
-                >
-                    <div class="relative flex aspect-[1/1.4142] flex-col items-center justify-center pb-6">
-                        <div class="flex w-full flex-col items-center">
-                            <UIcon name="lucide:user" class="bg-accented my-3 size-20 rounded-full" />
-                            <p class="1. line-clamp-2 h-[2.5rem] text-center leading-tight font-semibold">{{ person.name }} {{ person.surname }}</p>
-                        </div>
-                        <div class="absolute bottom-0">
-                            <p class="line-clamp-1 text-center font-light">{{ person.kanjiName }} {{ person.kanjiSurname }}</p>
-                        </div>
-                    </div>
-                </UCard>
-            </div>
+            <PeopleGrid v-if="display === 'grid'" :people="people" />
+            <PeopleCard v-else :people="people" />
             <div v-if="people?.length === 0" class="text-muted text-center text-xl">No hay resultados</div>
         </Deferred>
         <!--Scroll infinito-->
-        <InfiniteScroll :current-page="paginatedResults?.currentPage" :last-page="paginatedResults?.lastPage" :filters="{ search: searchInput }" />
+        <InfiniteScroll :current-page="paginatedResults?.currentPage" :last-page="paginatedResults?.lastPage" :filters="filters" />
     </template>
 </template>

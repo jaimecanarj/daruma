@@ -5,7 +5,7 @@ import InfiniteScroll from '@/components/InfiniteScroll.vue';
 import MangasCard from '@/components/mangas/MangasCard.vue';
 import MangasFilters from '@/components/mangas/MangasFilters.vue';
 import MangasGrid from '@/components/mangas/MangasGrid.vue';
-import MangasSkeleton from '@/components/skeletons/MangasSkeleton.vue';
+import IndexSkeleton from '@/components/skeletons/IndexSkeleton.vue';
 import { Magazine, Manga, MangaFilters, Person, Tag } from '@/types';
 import { Deferred, Head, router } from '@inertiajs/vue3';
 import { computed, ref } from 'vue';
@@ -67,12 +67,12 @@ const handleSearch = () => {
     </FiltersHeader>
     <USeparator class="my-6" />
     <template v-if="loading">
-        <MangasSkeleton :display="display" />
+        <IndexSkeleton :display="display" size="lg" />
     </template>
     <template v-else>
         <Deferred data="paginatedResults">
             <template #fallback>
-                <MangasSkeleton :display="display" />
+                <IndexSkeleton :display="display" size="lg" />
             </template>
             <!--Vistas-->
             <MangasGrid v-if="display === 'grid'" :mangas="mangas" />

@@ -13,6 +13,6 @@ class Person extends Model
 
     public function mangas(): BelongsToMany
     {
-        return $this->belongsToMany(Manga::class);
+        return $this->belongsToMany(Manga::class)->withPivot('job');
     }
 }

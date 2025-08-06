@@ -56,6 +56,8 @@ export interface Person {
     surname: string;
     kanjiName: string;
     kanjiSurname: string;
+    writerCount?: number;
+    illustratorCount?: number;
 }
 
 export interface Magazine {
@@ -65,6 +67,7 @@ export interface Magazine {
     demography: 'shounen' | 'shoujo' | 'seinen' | 'josei';
     date: string;
     frequency: 'weekly' | 'biweekly' | 'monthly' | 'bimonthly' | 'quarterly' | 'irregular';
+    mangasCount?: number;
 }
 
 export interface User {

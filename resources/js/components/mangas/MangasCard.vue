@@ -32,17 +32,17 @@ defineProps<{ mangas?: Manga[] }>();
                         <UIcon :name="manga.finished ? 'lucide:badge-check' : 'lucide:badge'" class="ml-4 size-5 flex-shrink-0" />
                     </div>
                     <!--Fechas, tomos, capítulos-->
-                    <div class="flex gap-2 text-sm lg:text-base">
+                    <div class="flex gap-3.5 text-sm lg:text-base">
                         <p v-if="manga.startDate !== undefined">
-                            <UIcon name="lucide:calendar" class="mr-0.5 mb-1 inline" /> {{ manga.startDate.slice(fullYear ? 0 : 2, 4) }} -
+                            <UIcon name="lucide:calendar" class="mb-1 inline" /> {{ manga.startDate.slice(fullYear ? 0 : 2, 4) }} -
                             <span v-if="manga.endDate">{{ manga.endDate.slice(fullYear ? 0 : 2, 4) }}</span>
                         </p>
                         <p v-if="manga.tankoubon">
-                            <UIcon name="lucide:library-big" class="mr-0.5 mb-1 inline" /> {{ manga.tankoubon }}
+                            <UIcon name="lucide:library-big" class="mb-1 inline" /> {{ manga.tankoubon }}
                             {{ activeBreakpoint ? (manga.tankoubon > 1 ? 'vols' : 'vol') : '' }}
                         </p>
                         <p v-if="manga.chapters">
-                            <UIcon name="lucide:book-open-text" class="mr-0.5 mb-1 inline" />{{ manga.chapters }}
+                            <UIcon name="lucide:book-open-text" class="mr-1 mb-1 inline" />{{ manga.chapters }}
                             {{ activeBreakpoint ? (manga.chapters > 1 ? 'caps' : 'cap') : '' }}
                         </p>
                     </div>

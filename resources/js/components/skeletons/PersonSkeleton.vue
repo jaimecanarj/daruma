@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import MangasSkeleton from '@/components/skeletons/MangasSkeleton.vue';
+import IndexSkeleton from '@/components/skeletons/IndexSkeleton.vue';
 
 defineProps<{ display: 'grid' | 'list' }>();
 </script>
@@ -22,5 +22,5 @@ defineProps<{ display: 'grid' | 'list' }>();
         </div>
     </div>
     <USeparator class="my-5" />
-    <MangasSkeleton :display="display" />
+    <IndexSkeleton :display="display" size="lg" />
 </template>

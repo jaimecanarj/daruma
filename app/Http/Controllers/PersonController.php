@@ -22,7 +22,19 @@ class PersonController extends Controller
             $page = $request->input('page', 1);
             $search = $request->input('search');
 
-            $query = Person::query();
+            //Obtengo el total de mangas escritos/dibujados
+            $query = Person::query()->withCount([
+                'mangas as writer_count' => function ($query) {
+                    $query->where(function ($q) {
+                        $q->where('manga_person.job', 'writer')->orWhere('manga_person.job', 'both');
+                    });
+                },
+                'mangas as illustrator_count' => function ($query) {
+                    $query->where(function ($q) {
+                        $q->where('manga_person.job', 'illustrator')->orWhere('manga_person.job', 'both');
+                    });
+                },
+            ]);
 
             //Filtro de búsqueda
             if (!empty($search)) {
