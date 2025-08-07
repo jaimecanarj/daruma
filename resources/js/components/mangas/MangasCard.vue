@@ -10,7 +10,7 @@ defineProps<{ mangas?: Manga[] }>();
 </script>
 
 <template>
-    <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+    <div class="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
         <UCard v-for="manga in mangas" :key="manga.id" variant="subtle" class="shadow-md" :ui="{ body: 'p-2 sm:p-3' }">
             <div class="flex gap-2 overflow-hidden">
                 <!--Imagen-->
@@ -32,8 +32,8 @@ defineProps<{ mangas?: Manga[] }>();
                         <UIcon :name="manga.finished ? 'lucide:badge-check' : 'lucide:badge'" class="ml-4 size-5 flex-shrink-0" />
                     </div>
                     <!--Fechas, tomos, capítulos-->
-                    <div class="flex gap-3.5 text-sm lg:text-base">
-                        <p v-if="manga.startDate !== undefined">
+                    <div class="flex gap-3.5 text-sm lg:text-base xl:text-sm">
+                        <p v-if="manga.startDate">
                             <UIcon name="lucide:calendar" class="mb-1 inline" /> {{ manga.startDate.slice(fullYear ? 0 : 2, 4) }} -
                             <span v-if="manga.endDate">{{ manga.endDate.slice(fullYear ? 0 : 2, 4) }}</span>
                         </p>
