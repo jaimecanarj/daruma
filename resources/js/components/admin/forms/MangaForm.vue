@@ -160,13 +160,28 @@ const baseForm = useTemplateRef('baseForm');
                     </div>
                     <div class="flex justify-between gap-4">
                         <UFormField label="Tomos" name="volumes">
-                            <UInputNumber v-model="form.volumes" orientation="vertical" />
+                            <UInputNumber
+                                v-model="form.volumes"
+                                disable-wheel-change
+                                orientation="vertical"
+                                :ui="{ increment: 'hidden', decrement: 'hidden' }"
+                            />
                         </UFormField>
                         <UFormField label="Tankoubon" name="tankoubon">
-                            <UInputNumber v-model="form.tankoubon" orientation="vertical" />
+                            <UInputNumber
+                                v-model="form.tankoubon"
+                                disable-wheel-change
+                                orientation="vertical"
+                                :ui="{ increment: 'hidden', decrement: 'hidden' }"
+                            />
                         </UFormField>
                         <UFormField label="Capítulos" name="chapters">
-                            <UInputNumber v-model="form.chapters" orientation="vertical" />
+                            <UInputNumber
+                                v-model="form.chapters"
+                                disable-wheel-change
+                                orientation="vertical"
+                                :ui="{ increment: 'hidden', decrement: 'hidden' }"
+                            />
                         </UFormField>
                     </div>
                     <UFormField label="Sinopsis" name="sinopsis">
@@ -246,10 +261,22 @@ const baseForm = useTemplateRef('baseForm');
                     </Deferred>
                 </UFormField>
                 <UFormField label="MAL" name="mal">
-                    <UInputNumber v-model="form.mal" orientation="vertical" :format-options="{ useGrouping: false }" />
+                    <UInputNumber
+                        v-model="form.mal"
+                        orientation="vertical"
+                        disable-wheel-change
+                        :format-options="{ useGrouping: false }"
+                        :ui="{ increment: 'hidden', decrement: 'hidden' }"
+                    />
                 </UFormField>
                 <UFormField label="ListadoManga" name="listadoManga">
-                    <UInputNumber v-model="form.listadoManga" orientation="vertical" :format-options="{ useGrouping: false }" />
+                    <UInputNumber
+                        v-model="form.listadoManga"
+                        orientation="vertical"
+                        disable-wheel-change
+                        :format-options="{ useGrouping: false }"
+                        :ui="{ increment: 'hidden', decrement: 'hidden' }"
+                    />
                 </UFormField>
             </div>
         </template>
