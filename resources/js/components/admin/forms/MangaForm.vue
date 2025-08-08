@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import BaseForm from '@/components/admin/forms/BaseForm.vue';
+import CleanInputNumber from '@/components/formComponents/CleanInputNumber.vue';
 import DatePicker from '@/components/formComponents/DatePicker.vue';
 import MultipleValuesInput from '@/components/formComponents/MultipleValuesInput.vue';
 import MultipleValuesSelect from '@/components/formComponents/MultipleValuesSelect.vue';
+import MultipleValuesSelectSkeleton from '@/components/skeletons/MultipleValuesSelectSkeleton.vue';
 import type { Manga, MangaForm } from '@/types';
 import { alternativeNames, authorJobs, languages, mangaRelations } from '@/utils/constants';
 import { mangaSchema } from '@/utils/zodSchemas';
@@ -137,6 +139,7 @@ const baseForm = useTemplateRef('baseForm');
     >
         <template #default="{ form }">
             <div class="flex flex-col gap-6 md:flex-row">
+                <!--Portada-->
                 <UFormField name="cover" required class="md:basis-2/5">
                     <UFileUpload v-model="form.cover" accept="image/*" label="Portada" description="Máximo 2MB" class="aspect-[1/1.4142] max-w-72">
                         <template #default="{ open }">
@@ -147,50 +150,42 @@ const baseForm = useTemplateRef('baseForm');
                     </UFileUpload>
                 </UFormField>
                 <div class="flex flex-col gap-6 md:basis-3/5">
+                    <!--Nombre-->
                     <UFormField label="Nombre" name="name" required>
                         <UInput v-model="form.name" class="w-full" />
                     </UFormField>
                     <div class="flex gap-6">
+                        <!--Fecha de inicio-->
                         <UFormField label="Fecha de inicio" name="date" class="basis-1/2">
                             <DatePicker v-model="form.startDate" decades />
                         </UFormField>
+                        <!--Fecha de fin-->
                         <UFormField label="Fecha de fin" name="endDate" class="basis-1/2">
                             <DatePicker v-model="form.endDate" decades />
                         </UFormField>
                     </div>
+                    <!--Tomos, tankoubon, capitulos-->
                     <div class="flex justify-between gap-4">
                         <UFormField label="Tomos" name="volumes">
-                            <UInputNumber
-                                v-model="form.volumes"
-                                disable-wheel-change
-                                orientation="vertical"
-                                :ui="{ increment: 'hidden', decrement: 'hidden' }"
-                            />
+                            <CleanInputNumber v-model="form.volumes" />
                         </UFormField>
                         <UFormField label="Tankoubon" name="tankoubon">
-                            <UInputNumber
-                                v-model="form.tankoubon"
-                                disable-wheel-change
-                                orientation="vertical"
-                                :ui="{ increment: 'hidden', decrement: 'hidden' }"
-                            />
+                            <CleanInputNumber v-model="form.tankoubon" />
                         </UFormField>
                         <UFormField label="Capítulos" name="chapters">
-                            <UInputNumber
-                                v-model="form.chapters"
-                                disable-wheel-change
-                                orientation="vertical"
-                                :ui="{ increment: 'hidden', decrement: 'hidden' }"
-                            />
+                            <CleanInputNumber v-model="form.chapters" />
                         </UFormField>
                     </div>
+                    <!--Sinopsis-->
                     <UFormField label="Sinopsis" name="sinopsis">
                         <UTextarea v-model="form.sinopsis" class="w-full" />
                     </UFormField>
                     <div class="flex justify-between gap-4">
+                        <!--Idioma-->
                         <UFormField label="Idioma" name="language">
                             <USelect v-model="form.language" :items="languages" class="w-24 sm:w-28" />
                         </UFormField>
+                        <!--Dirección de lectura-->
                         <UFormField label="Dir. lectura" name="readingDirection">
                             <div class="mt-3 flex items-center gap-2">
                                 <p class="font-semibold">I</p>
@@ -203,6 +198,7 @@ const baseForm = useTemplateRef('baseForm');
                                 <p class="font-semibold">D</p>
                             </div>
                         </UFormField>
+                        <!--Estado-->
                         <UFormField label="Estado" name="finished">
                             <UCheckbox v-model="form.finished" label="Completo" class="mt-3" />
                         </UFormField>
@@ -210,73 +206,47 @@ const baseForm = useTemplateRef('baseForm');
                 </div>
             </div>
             <USeparator :ui="{ border: 'border-accented' }" />
+            <!--Nombres alternativos-->
             <UFormField label="Nombres alternativos" name="alternativeNames">
                 <MultipleValuesInput v-model="form.alternativeNames" :type-options="alternativeNames" />
             </UFormField>
+            <!--Autores-->
             <UFormField label="Autores" name="authors" required>
                 <Deferred data="people">
-                    <template #fallback>
-                        <div class="flex items-center gap-2">
-                            <div class="flex flex-1 flex-col gap-2 md:flex-row">
-                                <USelect disabled class="w-full" />
-                                <USelect class="min-w-48" disabled />
-                            </div>
-                            <UButton icon="lucide:plus" color="neutral" class="size-12 justify-center md:size-auto" disabled />
-                        </div>
-                    </template>
+                    <template #fallback><MultipleValuesSelectSkeleton types /></template>
                     <MultipleValuesSelect v-model="form.authors" title="un autor" :input-options="people" :type-options="authorJobs" />
                 </Deferred>
             </UFormField>
+            <!--Etiquetas-->
             <UFormField label="Etiquetas" name="tags">
                 <Deferred data="tags">
-                    <template #fallback>
-                        <div class="flex items-center gap-2">
-                            <USelect disabled class="w-full" />
-                            <UButton icon="lucide:plus" color="neutral" class="size-12 justify-center md:size-auto" disabled />
-                        </div>
-                    </template>
+                    <template #fallback><MultipleValuesSelectSkeleton /></template>
                     <MultipleValuesSelect v-model="form.tags" title="una etiqueta" :input-options="tags" />
                 </Deferred>
             </UFormField>
+            <!--Mangas relacionados-->
             <UFormField label="Mangas relacionados" name="relatedMangas">
                 <Deferred data="mangas">
-                    <template #fallback>
-                        <div class="flex items-center gap-2">
-                            <div class="flex flex-1 flex-col gap-2 md:flex-row">
-                                <USelect disabled class="w-full" />
-                                <USelect class="min-w-48" disabled />
-                            </div>
-                            <UButton icon="lucide:plus" color="neutral" class="size-12 justify-center md:size-auto" disabled />
-                        </div>
-                    </template>
+                    <template #fallback><MultipleValuesSelectSkeleton types /></template>
                     <MultipleValuesSelect v-model="form.relatedMangas" title="un manga" :input-options="mangas" :type-options="mangaRelations" />
                 </Deferred>
             </UFormField>
             <USeparator :ui="{ border: 'border-accented' }" />
             <div class="grid grid-cols-3 gap-4">
+                <!--Revista-->
                 <UFormField label="Revista" name="magazineId">
                     <Deferred data="magazines">
                         <template #fallback><USelect disabled class="w-full" /></template>
                         <USelectMenu v-model="form.magazineId" :items="magazines" placeholder="Selecciona una revista" class="w-full" />
                     </Deferred>
                 </UFormField>
+                <!--MAL-->
                 <UFormField label="MAL" name="mal">
-                    <UInputNumber
-                        v-model="form.mal"
-                        orientation="vertical"
-                        disable-wheel-change
-                        :format-options="{ useGrouping: false }"
-                        :ui="{ increment: 'hidden', decrement: 'hidden' }"
-                    />
+                    <CleanInputNumber v-model="form.mal" :format-options="{ useGrouping: false }" />
                 </UFormField>
+                <!--Listado manga-->
                 <UFormField label="ListadoManga" name="listadoManga">
-                    <UInputNumber
-                        v-model="form.listadoManga"
-                        orientation="vertical"
-                        disable-wheel-change
-                        :format-options="{ useGrouping: false }"
-                        :ui="{ increment: 'hidden', decrement: 'hidden' }"
-                    />
+                    <CleanInputNumber v-model="form.listadoManga" :format-options="{ useGrouping: false }" />
                 </UFormField>
             </div>
         </template>
