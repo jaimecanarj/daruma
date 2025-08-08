@@ -1,7 +1,7 @@
 <script setup lang="ts">
-defineProps<{ items: (string | { label: string; value: string | number | boolean })[]; label: string; icon: string }>();
+defineProps<{ items: (string | { label: string; value: string | number | boolean })[]; label: string; icon: string; searchable?: boolean }>();
 
-const model = defineModel<(string | number | boolean)[]>({ default: [] });
+const model = defineModel<any[]>({ default: [] });
 </script>
 
 <template>
@@ -12,6 +12,7 @@ const model = defineModel<(string | number | boolean)[]>({ default: [] });
             </p>
             <UButton v-if="model.length > 0" class="p-0.5" color="neutral" variant="link" size="sm" icon="lucide:circle-x" @click="model = []" />
         </div>
-        <USelect v-model="model" :items="items" multiple :placeholder="`Cualquier ${label}`" :icon="icon" class="w-full" />
+        <USelectMenu v-if="searchable" v-model="model" :items="items" multiple :placeholder="`Cualquier ${label}`" :icon="icon" class="w-full" />
+        <USelect v-else v-model="model" :items="items" multiple :placeholder="`Cualquier ${label}`" :icon="icon" class="w-full" />
     </div>
 </template>

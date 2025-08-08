@@ -67,11 +67,11 @@ const status = [
             <USelect v-model="filters.order" :items="mangaSorting" :icon="sortIcon" placeholder="Cualquier orden" class="w-full" />
         </div>
         <!--Autores-->
-        <FilterSelect v-model="filters.people" :items="people" label="autor" icon="lucide:users" />
+        <FilterSelect v-model="filters.people" :items="people" label="autor" icon="lucide:users" searchable />
         <!--Idioma-->
         <FilterSelect v-model="filters.language" :items="languages" label="idioma" icon="lucide:earth" />
         <!--Revistas-->
-        <FilterSelect v-model="filters.magazines" :items="magazines" label="revista" icon="lucide:newspaper" />
+        <FilterSelect v-model="filters.magazines" :items="magazines" label="revista" icon="lucide:newspaper" searchable />
         <!--Demografía-->
         <FilterSelect v-model="filters.demographies" :items="demographies" label="demografía" icon="lucide:square-user-round" />
         <!--Finalizado-->
