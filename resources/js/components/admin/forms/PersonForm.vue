@@ -32,13 +32,13 @@ const initialValues: PersonForm = {
                     <UInput v-model="form.name" class="w-full" />
                 </UFormField>
 
-                <UFormField label="Nombre 「漢字」" name="kanjiName" class="w-full">
-                    <UInput v-model="form.kanjiName" class="w-full" />
+                <UFormField label="Apellido" name="surname" class="w-full">
+                    <UInput v-model="form.surname" class="w-full" />
                 </UFormField>
             </div>
             <div class="flex w-full flex-col gap-6 sm:flex-row">
-                <UFormField label="Apellido" name="surname" class="w-full">
-                    <UInput v-model="form.surname" class="w-full" />
+                <UFormField label="Nombre 「漢字」" name="kanjiName" class="w-full">
+                    <UInput v-model="form.kanjiName" class="w-full" />
                 </UFormField>
 
                 <UFormField label="Apellido 「漢字」" name="kanjiSurname" class="w-full">
