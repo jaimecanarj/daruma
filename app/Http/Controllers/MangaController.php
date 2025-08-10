@@ -229,7 +229,9 @@ class MangaController extends Controller
      */
     public function show($id)
     {
-        return Inertia::render('manga/Show', ['manga' => Inertia::defer(fn() => Manga::find($id))]);
+        return Inertia::render('manga/Show', [
+            'manga' => Inertia::defer(fn() => Manga::find($id)->load('tags', 'people', 'magazine', 'names', 'mangasRelated')),
+        ]);
     }
 
     /**

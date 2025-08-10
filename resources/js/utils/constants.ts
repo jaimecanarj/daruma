@@ -15,9 +15,9 @@ export const frequencies = [
 ];
 
 export const languages = [
-    { value: 'es', label: 'Español' },
-    { value: 'en', label: 'English' },
-    { value: 'jp', label: '日本語' },
+    { value: 'es', label: 'Español', emoji: '🇪🇸' },
+    { value: 'en', label: 'English', emoji: '🇬🇧' },
+    { value: 'jp', label: '日本語', emoji: '🇯🇵' },
 ];
 
 export const readingDirections = [
@@ -34,7 +34,7 @@ export const alternativeNames = [
 export const authorJobs = [
     { label: 'Escritor', value: 'writer', color: 'primary' },
     { label: 'Ilustrador', value: 'illustrator', color: 'secondary' },
-    { label: 'Ambos', value: 'both', color: 'info' },
+    { label: 'Escritor e ilustrador', value: 'both', color: 'info' },
 ];
 
 export const mangaRelations = [

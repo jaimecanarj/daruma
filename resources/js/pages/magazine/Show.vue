@@ -1,48 +1,14 @@
 <script setup lang="ts">
-import DisplaySelector from '@/components/DisplaySelector.vue';
-import MangasCard from '@/components/mangas/MangasCard.vue';
-import MangasGrid from '@/components/mangas/MangasGrid.vue';
+import MangasDisplay from '@/components/MangasDisplay.vue';
 import MagazineSkeleton from '@/components/skeletons/MagazineSkeleton.vue';
 import { Magazine, Manga } from '@/types';
-import { frequencies, mangaSorting, sortingIcons } from '@/utils/constants';
+import { frequencies } from '@/utils/constants';
 import { Deferred, Head } from '@inertiajs/vue3';
-import { parseDate } from '@internationalized/date';
-import { computed, ref } from 'vue';
+import { ref } from 'vue';
 
-const props = defineProps<{ magazine?: Magazine & { mangas: Manga[] } }>();
+defineProps<{ magazine?: Magazine & { mangas: Manga[] } }>();
 
-const order = ref('dateDesc');
 const display = ref<'grid' | 'list'>('grid');
-
-const mangas = computed(() =>
-    props.magazine?.mangas
-        ? props.magazine.mangas.toSorted((a, b) => {
-              switch (order.value) {
-                  case 'updateDesc':
-                      return parseDate(b.updatedAt).compare(parseDate(a.updatedAt));
-                  case 'updateAsc':
-                      return parseDate(a.updatedAt).compare(parseDate(b.updatedAt));
-                  case 'nameDesc':
-                      return b.name.localeCompare(a.name);
-                  case 'nameAsc':
-                      return a.name.localeCompare(b.name);
-                  case 'dateDesc':
-                      return parseDate(b.startDate).compare(parseDate(a.startDate));
-
-                  case 'dateAsc':
-                      return parseDate(a.startDate).compare(parseDate(b.startDate));
-                  case 'volumesDesc':
-                      return b.tankoubon - a.tankoubon;
-                  case 'volumesAsc':
-                      return a.tankoubon - b.tankoubon;
-                  default:
-                      return a.name.localeCompare(b.name);
-              }
-          })
-        : [],
-);
-
-const sortIcon = computed(() => sortingIcons.find((item) => item.value === order.value)?.icon);
 </script>
 
 <template>
@@ -82,16 +48,6 @@ const sortIcon = computed(() => sortingIcons.find((item) => item.value === order
             </div>
         </UCard>
         <!--Mangas-->
-        <div class="mt-8 flex flex-col justify-between gap-4 sm:flex-row">
-            <h2 class="text-3xl font-semibold">Mangas</h2>
-            <div class="flex items-center gap-4">
-                <USelect v-model="order" :items="mangaSorting" placeholder="Ordenar por" :icon="sortIcon" class="w-48" />
-                <DisplaySelector v-model="display" />
-            </div>
-        </div>
-        <USeparator class="my-5" />
-        <MangasGrid v-if="display === 'grid'" :mangas="mangas" />
-        <MangasCard v-else :mangas="mangas" />
-        <div v-if="mangas?.length === 0" class="text-muted text-center text-xl">No hay resultados</div>
+        <MangasDisplay :mangas="magazine?.mangas" :display="display" title />
     </Deferred>
 </template>

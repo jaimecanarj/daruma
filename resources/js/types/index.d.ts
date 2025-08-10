@@ -35,13 +35,11 @@ export interface Manga {
     people?: (Person & { pivot: { job: 'writer' | 'illustrator' | 'both' } })[];
     tags?: Tag[];
     magazine?: Magazine;
-    mangasRelated?: {
-        id: number;
-        name: string;
+    mangasRelated?: (Manga & {
         pivot: {
             relation: 'prequel' | 'sequel' | 'spin-off' | 'main story';
         };
-    }[];
+    })[];
 }
 
 export interface Name {
