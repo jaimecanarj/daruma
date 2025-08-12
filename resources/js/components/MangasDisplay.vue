@@ -40,6 +40,8 @@ const mangas = computed(() =>
         : [],
 );
 
+const sorting = computed(() => mangaSorting.map((item) => ({ ...item, icon: sortingIcons.find((icon) => icon.value === item.value)?.icon })));
+
 const sortIcon = computed(() => sortingIcons.find((item) => item.value === order.value)?.icon);
 </script>
 
@@ -47,7 +49,7 @@ const sortIcon = computed(() => sortingIcons.find((item) => item.value === order
     <div :class="[{ 'justify-end': !title }, 'mt-8 flex w-full flex-col justify-between gap-4 sm:flex-row']">
         <h2 v-if="title" class="text-3xl font-semibold">Mangas</h2>
         <div class="flex items-center gap-4">
-            <USelect v-model="order" :items="mangaSorting" placeholder="Ordenar por" :icon="sortIcon" class="w-48" />
+            <USelect v-model="order" :items="sorting" placeholder="Ordenar por" :icon="sortIcon" class="w-48" />
             <DisplaySelector v-model="display" />
         </div>
     </div>

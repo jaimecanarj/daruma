@@ -36,6 +36,8 @@ const tags = computed(() =>
         : [],
 );
 
+const sorting = computed(() => mangaSorting.map((item) => ({ ...item, icon: sortingIcons.find((icon) => icon.value === item.value)?.icon })));
+
 const sortIcon = computed(() => sortingIcons.find((item) => item.value === filters.value.order)?.icon);
 
 const status = [
@@ -64,7 +66,7 @@ const status = [
         <!--Orden-->
         <div class="w-full">
             <p class="m-0.5">Orden</p>
-            <USelect v-model="filters.order" :items="mangaSorting" :icon="sortIcon" placeholder="Cualquier orden" class="w-full" />
+            <USelect v-model="filters.order" :items="sorting" :icon="sortIcon" placeholder="Cualquier orden" class="w-full" />
         </div>
         <!--Autores-->
         <FilterSelect v-model="filters.people" :items="people" label="autor" icon="lucide:users" searchable />
