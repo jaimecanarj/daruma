@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Person;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 
 class PersonController extends Controller
@@ -62,10 +64,22 @@ class PersonController extends Controller
             'kanji_surname' => 'string|nullable',
         ]);
 
-        // Almacenar en la base de datos
-        Person::create($validatedData);
+        try {
+            // Almacenar en la base de datos
+            Person::create($validatedData);
 
-        return to_route('admin.create', ['tab' => 'person']);
+            return to_route('admin.create', ['tab' => 'person']);
+        } catch (QueryException $e) {
+            // Verificar si es un error de entrada duplicada
+            if ($e->getCode() == 23000 || str_contains($e->getMessage(), 'Duplicate entry')) {
+                throw ValidationException::withMessages([
+                    'general' => ['Esta persona ya existe en la base de datos.'],
+                ]);
+            }
+
+            // Para otros errores de base de datos, relanzar la excepción
+            throw $e;
+        }
     }
 
     /**

@@ -1,6 +1,8 @@
 <script setup lang="ts">
-import { useForm } from '@inertiajs/vue3';
+import { useForm, usePage } from '@inertiajs/vue3';
 import { computed } from 'vue';
+
+const page = usePage();
 
 const props = defineProps<{
     item?: any;
@@ -28,12 +30,16 @@ const onSubmit = () => {
         onSuccess: () => {
             form.reset();
             toast.add({
-                title: `${props.resourceName} ${props.purpose == 'create' ? 'cread' : 'actualizad'}${props.resourceGender === 'masculine' ? 'o' : 'a'} satisfactoriamente.`,
+                title: `${props.purpose === 'create' ? 'Creación' : 'Actualización'} satisfactoria`,
+                description: `${props.resourceName} ${props.purpose === 'create' ? 'cread' : 'actualizad'}${props.resourceGender === 'masculine' ? 'o' : 'a'} satisfactoriamente.`,
+                icon: 'lucide:circle-check-big',
+                color: 'success',
             });
             emit('success');
         },
         onError: () => {
-            toast.add({ title: 'Hubo algún problema.' });
+            const error = Object.values(page.props.errors)[0];
+            toast.add({ title: 'Hubo un problema.', description: error, icon: 'lucide:server-crash', color: 'error' });
             emit('error', form);
         },
     };
