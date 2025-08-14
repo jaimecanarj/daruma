@@ -10,9 +10,6 @@ use Inertia\Inertia;
 
 class PersonController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
         return Person::all();
@@ -51,18 +48,24 @@ class PersonController extends Controller
         return Inertia::render('person/Index', $props);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         // Validar los datos recibidos
-        $validatedData = $request->validate([
-            'name' => 'required|string',
-            'kanji_name' => 'string|nullable',
-            'surname' => 'string|nullable',
-            'kanji_surname' => 'string|nullable',
-        ]);
+        $validatedData = $request->validate(
+            [
+                'name' => 'required|string',
+                'kanji_name' => 'string|nullable',
+                'surname' => 'string|nullable',
+                'kanji_surname' => 'string|nullable',
+            ],
+            [],
+            [
+                'name' => 'nombre',
+                'kanji_name' => 'nombre (漢字)',
+                'surname' => 'apellido',
+                'kanji_surname' => 'apellido (漢字)',
+            ]
+        );
 
         try {
             // Almacenar en la base de datos
@@ -82,34 +85,47 @@ class PersonController extends Controller
         }
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show($id)
     {
         return Inertia::render('person/Show', ['person' => Inertia::defer(fn() => Person::find($id)->load('mangas'))]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, Person $person)
     {
-        $validatedData = $request->validate([
-            'name' => 'required|string',
-            'kanji_name' => 'string|nullable',
-            'surname' => 'string|nullable',
-            'kanji_surname' => 'string|nullable',
-        ]);
+        $validatedData = $request->validate(
+            [
+                'name' => 'required|string',
+                'kanji_name' => 'string|nullable',
+                'surname' => 'string|nullable',
+                'kanji_surname' => 'string|nullable',
+            ],
+            [],
+            [
+                'name' => 'nombre',
+                'kanji_name' => 'nombre (漢字)',
+                'surname' => 'apellido',
+                'kanji_surname' => 'apellido (漢字)',
+            ]
+        );
 
-        $person->update($validatedData);
+        try {
+            //Actualizar persona
+            $person->update($validatedData);
 
-        return to_route('admin.index', ['tab' => 'person']);
+            return to_route('admin.index', ['tab' => 'person']);
+        } catch (QueryException $e) {
+            // Verificar si es un error de entrada duplicada
+            if ($e->getCode() == 23000 || str_contains($e->getMessage(), 'Duplicate entry')) {
+                throw ValidationException::withMessages([
+                    'general' => ['Esta persona ya existe en la base de datos.'],
+                ]);
+            }
+
+            // Para otros errores de base de datos, relanzar la excepción
+            throw $e;
+        }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Request $request)
     {
         $validatedData = $request->validate([
@@ -119,11 +135,19 @@ class PersonController extends Controller
         $person = Person::find($validatedData['id']);
 
         if (!$person) {
-            return response()->json(['message' => 'Persona no encontrada'], 404);
+            throw ValidationException::withMessages([
+                'general' => ['Persona no encontrada.'],
+            ]);
         }
 
-        $person->delete();
+        try {
+            $person->delete();
 
-        return to_route('admin.index');
+            return to_route('admin.index');
+        } catch (\Exception $e) {
+            throw ValidationException::withMessages([
+                'general' => ['Error al eliminar la persona. Por favor, inténtalo de nuevo.'],
+            ]);
+        }
     }
 }

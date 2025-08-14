@@ -13,9 +13,9 @@ return new class extends Migration {
         Schema::create('people', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('kanji_name')->nullable();
-            $table->string('surname')->nullable();
-            $table->string('kanji_surname')->nullable();
+            $table->string('kanji_name')->default('');
+            $table->string('surname')->default('');
+            $table->string('kanji_surname')->default('');
 
             // Añadir restricción única para los cuatro campos
             $table->unique(['name', 'kanji_name', 'surname', 'kanji_surname'], 'unique_person_constraint');

@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { useForm } from '@inertiajs/vue3';
+import { useForm, usePage } from '@inertiajs/vue3';
 import { ref } from 'vue';
 
+const page = usePage();
 const toast = useToast();
 
 const props = defineProps<{ deleteRoute: string; deleteDesc: string; deleteSuccessMessage: string }>();
@@ -19,6 +20,10 @@ const deleteItem = () => {
             deleteForm.reset();
             toast.add({ title: props.deleteSuccessMessage });
             emit('itemDeleted');
+        },
+        onError: () => {
+            const error = Object.values(page.props.errors)[0];
+            toast.add({ title: 'Hubo un problema', description: error, icon: 'lucide:server-crash', color: 'error' });
         },
     });
 };
