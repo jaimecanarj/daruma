@@ -18,7 +18,7 @@ const deleteItem = () => {
         onSuccess: () => {
             deleteFormOpen.value = false;
             deleteForm.reset();
-            toast.add({ title: props.deleteSuccessMessage });
+            toast.add({ title: 'Borrado satisfactorio', description: props.deleteSuccessMessage, icon: 'lucide:circle-check-big', color: 'success' });
             emit('itemDeleted');
         },
         onError: () => {

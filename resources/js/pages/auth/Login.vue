@@ -25,7 +25,12 @@ const form = useForm({
 const onSubmit = () => {
     form.post(route('login'), {
         onError: () => {
-            toast.add({ title: 'El usuario o la contraseña son incorrectos' });
+            toast.add({
+                title: 'Hubo un problema.',
+                description: 'El usuario o la contraseña son incorrectos',
+                icon: 'lucide:circle-x',
+                color: 'error',
+            });
         },
         onFinish: () => {
             form.reset('password');
