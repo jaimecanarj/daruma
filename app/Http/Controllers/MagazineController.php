@@ -3,15 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\Magazine;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 
 class MagazineController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
         return Magazine::all();
@@ -88,9 +87,6 @@ class MagazineController extends Controller
         return Inertia::render('magazine/Index', $props);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         //Validar los datos recibidos
@@ -102,23 +98,23 @@ class MagazineController extends Controller
             'date' => 'nullable|date',
         ]);
 
-        //Almacenar en la base de datos
-        Magazine::create($validatedData);
+        try {
+            //Almacenar en la base de datos
+            Magazine::create($validatedData);
 
-        return to_route('admin.create', ['tab' => 'magazine']);
+            return to_route('admin.create', ['tab' => 'magazine']);
+        } catch (QueryException $e) {
+            throw ValidationException::withMessages([
+                'general' => ['Error al crear la revista. Por favor, inténtalo de nuevo.'],
+            ]);
+        }
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show($id)
     {
         return Inertia::render('magazine/Show', ['magazine' => Inertia::defer(fn() => Magazine::find($id)->load('mangas'))]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, Magazine $magazine)
     {
         $validatedData = $request->validate([
@@ -129,14 +125,17 @@ class MagazineController extends Controller
             'date' => 'nullable|date',
         ]);
 
-        $magazine->update($validatedData);
+        try {
+            $magazine->update($validatedData);
 
-        return to_route('admin.index', ['tab' => 'magazine']);
+            return to_route('admin.index', ['tab' => 'magazine']);
+        } catch (QueryException $e) {
+            throw ValidationException::withMessages([
+                'general' => ['Error al actualizar la revista. Por favor, inténtalo de nuevo.'],
+            ]);
+        }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Request $request)
     {
         $validatedData = $request->validate([
@@ -146,11 +145,19 @@ class MagazineController extends Controller
         $magazine = Magazine::find($validatedData['id']);
 
         if (!$magazine) {
-            return response()->json(['message' => 'Revista no encontrada'], 404);
+            throw ValidationException::withMessages([
+                'general' => ['Revista no encontrada.'],
+            ]);
         }
 
-        $magazine->delete();
+        try {
+            $magazine->delete();
 
-        return to_route('admin.index');
+            return to_route('admin.index');
+        } catch (\Exception $e) {
+            throw ValidationException::withMessages([
+                'general' => ['Error al eliminar la revista. Por favor, inténtalo de nuevo.'],
+            ]);
+        }
     }
 }

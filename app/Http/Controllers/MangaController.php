@@ -6,18 +6,17 @@ use App\Models\Magazine;
 use App\Models\Manga;
 use App\Models\Person;
 use App\Models\Tag;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Str;
+use Illuminate\Validation\ValidationException;
 use Intervention\Image\Laravel\Facades\Image;
 use Inertia\Inertia;
 
 class MangaController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
         return Manga::all();
@@ -149,9 +148,6 @@ class MangaController extends Controller
         return Inertia::render('manga/Index', $props);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         //Validamos los datos recibidos
@@ -183,50 +179,53 @@ class MangaController extends Controller
             'related_mangas.*.category' => ['required_with:related_mangas', 'string', Rule::in(['prequel', 'sequel', 'main story', 'spin-off'])],
         ]);
 
-        if ($request->hasFile('cover')) {
-            // Procesar y optimizar la imagen
-            $path = $this->processImage($request->file('cover'));
+        try {
+            if ($request->hasFile('cover')) {
+                // Procesar y optimizar la imagen
+                $path = $this->processImage($request->file('cover'));
 
-            // Reemplazar con la ruta del archivo optimizado
-            $validatedData['cover'] = $path;
-        }
-
-        //Almacenamos en la base de datos
-        $manga = Manga::create($validatedData);
-
-        if (isset($validatedData['alternative_names'])) {
-            foreach ($validatedData['alternative_names'] as $alternativeName) {
-                $manga->names()->create([
-                    'name' => $alternativeName['label'],
-                    'type' => $alternativeName['category'],
-                ]);
+                // Reemplazar con la ruta del archivo optimizado
+                $validatedData['cover'] = $path;
             }
-        }
 
-        if (isset($validatedData['authors'])) {
-            foreach ($validatedData['authors'] as $author) {
-                $manga->people()->attach($author['value'], ['job' => $author['category']]);
+            //Almacenamos en la base de datos
+            $manga = Manga::create($validatedData);
+
+            if (isset($validatedData['alternative_names'])) {
+                foreach ($validatedData['alternative_names'] as $alternativeName) {
+                    $manga->names()->create([
+                        'name' => $alternativeName['label'],
+                        'type' => $alternativeName['category'],
+                    ]);
+                }
             }
-        }
 
-        if (isset($validatedData['tags'])) {
-            foreach ($validatedData['tags'] as $tag) {
-                $manga->tags()->attach($tag['value']);
+            if (isset($validatedData['authors'])) {
+                foreach ($validatedData['authors'] as $author) {
+                    $manga->people()->attach($author['value'], ['job' => $author['category']]);
+                }
             }
-        }
 
-        if (isset($validatedData['related_mangas'])) {
-            foreach ($validatedData['related_mangas'] as $relatedManga) {
-                $manga->mangasRelated()->attach($relatedManga['value'], ['relation' => $relatedManga['category']]);
+            if (isset($validatedData['tags'])) {
+                foreach ($validatedData['tags'] as $tag) {
+                    $manga->tags()->attach($tag['value']);
+                }
             }
-        }
 
-        return to_route('admin.create', ['tab' => 'manga']);
+            if (isset($validatedData['related_mangas'])) {
+                foreach ($validatedData['related_mangas'] as $relatedManga) {
+                    $manga->mangasRelated()->attach($relatedManga['value'], ['relation' => $relatedManga['category']]);
+                }
+            }
+
+            return to_route('admin.create', ['tab' => 'manga']);
+        } catch (QueryException $e) {
+            throw ValidationException::withMessages([
+                'general' => ['Error al guardar el manga. Por favor, inténtalo de nuevo.'],
+            ]);
+        }
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show($id)
     {
         return Inertia::render('manga/Show', [
@@ -234,9 +233,6 @@ class MangaController extends Controller
         ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, Manga $manga)
     {
         $validatedData = $request->validate([
@@ -267,36 +263,39 @@ class MangaController extends Controller
             'related_mangas.*.category' => ['required_with:related_mangas', 'string', Rule::in(['prequel', 'sequel', 'main story', 'spin-off'])],
         ]);
 
-        //Compruebo que se ha pasado una nueva cover
-        if ($request->hasFile('cover') && $request->file('cover')->getSize() > 0) {
-            //Borro el cover actual
-            if (Storage::disk('public')->exists($manga->cover)) {
-                Storage::disk('public')->delete($manga->cover);
+        try {
+            //Compruebo que se ha pasado una nueva cover
+            if ($request->hasFile('cover') && $request->file('cover')->getSize() > 0) {
+                //Borro el cover actual
+                if (Storage::disk('public')->exists($manga->cover)) {
+                    Storage::disk('public')->delete($manga->cover);
+                }
+
+                // Procesar y optimizar la imagen
+                $path = $this->processImage($request->file('cover'));
+
+                // Reemplazar con la ruta del archivo optimizado
+                $validatedData['cover'] = $path;
+            } else {
+                $validatedData['cover'] = $manga->cover;
             }
 
-            // Procesar y optimizar la imagen
-            $path = $this->processImage($request->file('cover'));
+            $manga->update($validatedData);
 
-            // Reemplazar con la ruta del archivo optimizado
-            $validatedData['cover'] = $path;
-        } else {
-            $validatedData['cover'] = $manga->cover;
+            // Actualizar relaciones
+            $this->syncAlternativeNames($manga, $validatedData['alternative_names'] ?? null);
+            $this->syncRelation($manga, 'people', $validatedData['authors'] ?? null, 'job');
+            $this->syncRelation($manga, 'tags', $validatedData['tags'] ?? null);
+            $this->syncRelation($manga, 'mangasRelated', $validatedData['related_mangas'] ?? null, 'relation');
+
+            return to_route('admin.index', ['tab' => 'manga']);
+        } catch (QueryException $e) {
+            throw ValidationException::withMessages([
+                'general' => ['Error al actualizar el manga. Por favor, inténtalo de nuevo.'],
+            ]);
         }
-
-        $manga->update($validatedData);
-
-        // Actualizar relaciones
-        $this->syncAlternativeNames($manga, $validatedData['alternative_names'] ?? null);
-        $this->syncRelation($manga, 'people', $validatedData['authors'] ?? null, 'job');
-        $this->syncRelation($manga, 'tags', $validatedData['tags'] ?? null);
-        $this->syncRelation($manga, 'mangasRelated', $validatedData['related_mangas'] ?? null, 'relation');
-
-        return to_route('admin.index', ['tab' => 'manga']);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Request $request)
     {
         $validatedData = $request->validate([
@@ -306,17 +305,24 @@ class MangaController extends Controller
         $manga = Manga::find($validatedData['id']);
 
         if (!$manga) {
-            return response()->json(['message' => 'Manga no encontrado'], 404);
+            throw ValidationException::withMessages([
+                'general' => ['Manga no encontrado.'],
+            ]);
         }
+        try {
+            // Eliminar la cover
+            if ($manga->cover && Storage::disk('public')->exists($manga->cover)) {
+                Storage::disk('public')->delete($manga->cover);
+            }
 
-        // Eliminar la cover
-        if ($manga->cover && Storage::disk('public')->exists($manga->cover)) {
-            Storage::disk('public')->delete($manga->cover);
+            $manga->delete();
+
+            return to_route('admin.index');
+        } catch (\Exception $e) {
+            throw ValidationException::withMessages([
+                'general' => ['Error al eliminar el manga. Por favor, inténtalo de nuevo.'],
+            ]);
         }
-
-        $manga->delete();
-
-        return to_route('admin.index');
     }
 
     private function processImage($file)

@@ -3,22 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Models\Tag;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
 
 class TagController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
         return Tag::all();
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         //Validar los datos recibidos
@@ -27,15 +23,18 @@ class TagController extends Controller
             'type' => ['required', 'string', Rule::in(['genre', 'theme'])],
         ]);
 
-        //Almacenar en la base de datos
-        Tag::create($validatedData);
+        try {
+            //Almacenar en la base de datos
+            Tag::create($validatedData);
 
-        return to_route('admin.create', ['tab' => 'tag']);
+            return to_route('admin.create', ['tab' => 'tag']);
+        } catch (QueryException $e) {
+            throw ValidationException::withMessages([
+                'general' => ['Error al crear la etiqueta. Por favor, inténtalo de nuevo.'],
+            ]);
+        }
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, Tag $tag)
     {
         $validatedData = $request->validate([
@@ -43,14 +42,17 @@ class TagController extends Controller
             'type' => ['required', 'string', Rule::in(['genre', 'theme'])],
         ]);
 
-        $tag->update($validatedData);
+        try {
+            $tag->update($validatedData);
 
-        return to_route('admin.index', ['tab' => 'tag']);
+            return to_route('admin.index', ['tab' => 'tag']);
+        } catch (QueryException $e) {
+            throw ValidationException::withMessages([
+                'general' => ['Error al crear la etiqueta. Por favor, inténtalo de nuevo.'],
+            ]);
+        }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Request $request)
     {
         $validatedData = $request->validate([
@@ -60,11 +62,19 @@ class TagController extends Controller
         $tag = Tag::find($validatedData['id']);
 
         if (!$tag) {
-            return response()->json(['message' => 'Etiqueta no encontrada'], 404);
+            throw ValidationException::withMessages([
+                'general' => ['Etiqueta no encontrada.'],
+            ]);
         }
 
-        $tag->delete();
+        try {
+            $tag->delete();
 
-        return to_route('admin.index');
+            return to_route('admin.index');
+        } catch (\Exception $e) {
+            throw ValidationException::withMessages([
+                'general' => ['Error al eliminar la etiqueta. Por favor, inténtalo de nuevo.'],
+            ]);
+        }
     }
 }

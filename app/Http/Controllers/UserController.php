@@ -3,24 +3,20 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rules;
+use Illuminate\Validation\ValidationException;
 
 class UserController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
         return User::all();
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         //Validar los datos recibidos
@@ -31,45 +27,48 @@ class UserController extends Controller
             'password' => ['required', 'min:8', 'confirmed', Rules\Password::defaults()],
         ]);
 
-        //Compruebo que se ha pasado un avatar
-        if ($request->hasFile('avatar') && $request->file('avatar')->getSize() > 0) {
-            // Crear un nombre de archivo único basado en timestamp y un string aleatorio
-            $filename = time() . '-' . Str::random(10) . '.' . $validatedData['avatar']->getClientOriginalExtension();
-            $path = 'avatars/' . $filename;
+        try {
+            //Compruebo que se ha pasado un avatar
+            if ($request->hasFile('avatar') && $request->file('avatar')->getSize() > 0) {
+                // Crear un nombre de archivo único basado en timestamp y un string aleatorio
+                $filename = time() . '-' . Str::random(10) . '.' . $validatedData['avatar']->getClientOriginalExtension();
+                $path = 'avatars/' . $filename;
 
-            //Determinar si es local o producción
-            $isLocalEnvironment = app()->environment('local');
+                //Determinar si es local o producción
+                $isLocalEnvironment = app()->environment('local');
 
-            // Definir la ruta base según el entorno
-            if ($isLocalEnvironment) {
-                $directory = storage_path('app/public/avatars');
-            } else {
-                $directory = public_path('storage/avatars');
+                // Definir la ruta base según el entorno
+                if ($isLocalEnvironment) {
+                    $directory = storage_path('app/public/avatars');
+                } else {
+                    $directory = public_path('storage/avatars');
+                }
+
+                // Crear la carpeta si no existe
+                if (!file_exists($directory)) {
+                    mkdir($directory, 0755, true);
+                }
+
+                // Guardar avatar
+                Storage::disk('public')->putFileAs('avatars', $validatedData['avatar'], $filename);
+
+                // Reemplazar con la ruta del archivo
+                $validatedData['avatar'] = $path;
             }
 
-            // Crear la carpeta si no existe
-            if (!file_exists($directory)) {
-                mkdir($directory, 0755, true);
-            }
+            //Almacenar en la base de datos
+            $user = User::create($validatedData);
 
-            // Guardar avatar
-            Storage::disk('public')->putFileAs('avatars', $validatedData['avatar'], $filename);
+            $user->assignRole('user');
 
-            // Reemplazar con la ruta del archivo
-            $validatedData['avatar'] = $path;
+            return to_route('admin.create', ['tab' => 'user']);
+        } catch (QueryException $e) {
+            throw ValidationException::withMessages([
+                'general' => ['Error al guardar el usuario. Por favor, inténtalo de nuevo.'],
+            ]);
         }
-
-        //Almacenar en la base de datos
-        $user = User::create($validatedData);
-
-        $user->assignRole('user');
-
-        return to_route('admin.create', ['tab' => 'user']);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, User $user)
     {
         $validatedData = $request->validate([
@@ -78,34 +77,37 @@ class UserController extends Controller
             'avatar' => 'nullable|file|mimes:jpg,jpeg,png,jxl',
         ]);
 
-        //Compruebo que se ha pasado un nuevo avatar
-        if ($request->hasFile('avatar') && $request->file('avatar')->getSize() > 0) {
-            //Borro el cover actual
-            if ($user->avatar && Storage::disk('public')->exists($user->avatar)) {
-                Storage::disk('public')->delete($user->avatar);
+        try {
+            //Compruebo que se ha pasado un nuevo avatar
+            if ($request->hasFile('avatar') && $request->file('avatar')->getSize() > 0) {
+                //Borro el cover actual
+                if ($user->avatar && Storage::disk('public')->exists($user->avatar)) {
+                    Storage::disk('public')->delete($user->avatar);
+                }
+
+                // Crear un nombre de archivo único basado en timestamp y un string aleatorio
+                $filename = time() . '-' . Str::random(10) . '.' . $validatedData['avatar']->getClientOriginalExtension();
+                $path = 'avatars/' . $filename;
+
+                // Guardar avatar
+                Storage::disk('public')->putFileAs('avatars', $validatedData['avatar'], $filename);
+
+                // Reemplazar con la ruta del archivo
+                $validatedData['avatar'] = $path;
+            } else {
+                $validatedData['avatar'] = $user->avatar;
             }
 
-            // Crear un nombre de archivo único basado en timestamp y un string aleatorio
-            $filename = time() . '-' . Str::random(10) . '.' . $validatedData['avatar']->getClientOriginalExtension();
-            $path = 'avatars/' . $filename;
+            $user->update($validatedData);
 
-            // Guardar avatar
-            Storage::disk('public')->putFileAs('avatars', $validatedData['avatar'], $filename);
-
-            // Reemplazar con la ruta del archivo
-            $validatedData['avatar'] = $path;
-        } else {
-            $validatedData['avatar'] = $user->avatar;
+            return to_route('admin.index', ['tab' => 'user']);
+        } catch (QueryException $e) {
+            throw ValidationException::withMessages([
+                'general' => ['Error al actualizar el usuario. Por favor, inténtalo de nuevo.'],
+            ]);
         }
-
-        $user->update($validatedData);
-
-        return to_route('admin.index', ['tab' => 'user']);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Request $request)
     {
         $validatedData = $request->validate([
@@ -115,11 +117,19 @@ class UserController extends Controller
         $user = User::find($validatedData['id']);
 
         if (!$user) {
-            return response()->json(['message' => 'Usuario no encontrado'], 404);
+            throw ValidationException::withMessages([
+                'general' => ['Usuario no encontrado.'],
+            ]);
         }
 
-        $user->delete();
+        try {
+            $user->delete();
 
-        return to_route('admin.index');
+            return to_route('admin.index');
+        } catch (\Exception $e) {
+            throw ValidationException::withMessages([
+                'general' => ['Error al eliminar el usuario. Por favor, inténtalo de nuevo.'],
+            ]);
+        }
     }
 }
