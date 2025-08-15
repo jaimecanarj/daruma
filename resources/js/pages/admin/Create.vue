@@ -41,7 +41,7 @@ const activeBreakpoint = useBreakpoints(breakpointsTailwind).active();
 
 <template>
     <Head title="Creación" />
-    <UBreadcrumb :items="breadcrumbItems" :ui="{ linkLeadingIcon: 'size-8' }" />
+    <UBreadcrumb :items="breadcrumbItems" :ui="{ linkLeadingIcon: 'size-8' }" class="select-none" />
     <UTabs
         :items="adminTabItems"
         class="mt-8"

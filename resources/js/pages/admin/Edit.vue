@@ -46,7 +46,7 @@ switch (page.props.ziggy.location.split('/')[2]) {
 
 <template>
     <Head title="Edición" />
-    <UBreadcrumb :items="breadcrumbItems" :ui="{ linkLeadingIcon: 'size-8' }" />
+    <UBreadcrumb :items="breadcrumbItems" :ui="{ linkLeadingIcon: 'size-8' }" class="select-none" />
     <Deferred data="item">
         <template #fallback>
             <USkeleton class="mx-auto mt-10 h-[750px] w-full md:max-w-3xl" />

@@ -19,7 +19,7 @@ const slideOver = ref(false);
 
 <template>
     <nav class="border-default bg-default/60 sticky top-0 z-[1] border-b backdrop-blur">
-        <UContainer class="flex items-center justify-between py-3">
+        <UContainer class="flex items-center justify-between py-3 select-none">
             <template v-if="activeBreakpoint">
                 <!--Logo-->
                 <div class="flex items-center gap-2">
