@@ -10,7 +10,7 @@ import { computed, ref } from 'vue';
 const props = defineProps<{ mangas?: Manga[]; title?: boolean }>();
 
 const order = ref('dateDesc');
-const display = defineModel<'grid' | 'list'>({ default: 'grid' });
+const display = defineModel<'grid' | 'list'>('display', { default: 'grid' });
 
 const mangas = computed(() =>
     props?.mangas

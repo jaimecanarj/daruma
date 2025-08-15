@@ -174,7 +174,7 @@ const redirect = (web: string) => {
         <UTabs color="neutral" variant="link" :items="mangaTabs" class="mt-8 w-full">
             <template #volumes></template>
             <template #related>
-                <MangasDisplay :mangas="manga?.mangasRelated" :display="display" />
+                <MangasDisplay :mangas="manga?.mangasRelated" v-model:display="display" />
             </template>
         </UTabs>
     </Deferred>

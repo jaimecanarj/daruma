@@ -16,38 +16,44 @@ const display = ref<'grid' | 'list'>('grid');
         <template #fallback><MagazineSkeleton :display="display" /> </template>
         <Head :title="magazine?.name" />
         <!--Cabecera-->
-        <div class="absolute top-22 left-1/2 -translate-x-1/2 sm:left-auto sm:ml-8 sm:translate-0">
-            <UIcon name="lucide:book-image" class="bg-elevated size-28 rounded-lg p-2" />
-        </div>
-        <UCard variant="subtle" class="mt-14 flex flex-col justify-center rounded-xl sm:justify-start">
-            <div class="mt-20 flex flex-col gap-4 sm:mt-0 sm:ml-40 lg:flex-row lg:items-center">
-                <p class="line-clamp-2 text-center text-3xl font-bold sm:text-start">{{ magazine?.name }}</p>
-                <p class="text-muted line-clamp-1 text-center text-2xl sm:text-start">「 {{ magazine?.publisher }} 」</p>
-            </div>
-            <div class="mt-6 flex flex-col items-center gap-2 sm:ml-40 sm:flex-row sm:gap-4">
-                <div class="flex items-center gap-1">
-                    <UIcon name="lucide:square-user-round" class="size-5" />
-                    <p class="capitalize">{{ magazine?.demography }}</p>
+        <UCard variant="subtle" class="mt-20 overflow-visible rounded-xl sm:mt-16">
+            <div class="flex flex-col gap-4 sm:flex-row">
+                <!--Portada-->
+                <div class="mx-auto -mt-16 w-32 sm:mx-0 sm:-mt-14">
+                    <UIcon name="lucide:book-image" class="bg-elevated size-28 rounded-lg p-2" />
                 </div>
-                <div v-if="magazine?.date" class="flex items-center gap-1">
-                    <UIcon name="lucide:calendar" class="size-5" />
-                    <p>
-                        {{
-                            new Intl.DateTimeFormat('es-ES', {
-                                day: 'numeric',
-                                month: 'short',
-                                year: 'numeric',
-                            }).format(new Date(magazine.date))
-                        }}
-                    </p>
-                </div>
-                <div class="flex items-center gap-1">
-                    <UIcon name="lucide:calendar-1" class="size-5" />
-                    <p>{{ frequencies.find((frequency) => frequency.value === magazine?.frequency)?.label }}</p>
+                <!--Datos-->
+                <div class="flex flex-col justify-center sm:justify-start">
+                    <div class="flex flex-col gap-4 lg:flex-row lg:items-center">
+                        <p class="line-clamp-2 text-center text-3xl font-bold sm:text-start">{{ magazine?.name }}</p>
+                        <p class="text-muted line-clamp-1 text-center text-2xl sm:text-start">「 {{ magazine?.publisher }} 」</p>
+                    </div>
+                    <div class="mt-6 flex flex-col items-center gap-2 sm:flex-row sm:gap-4">
+                        <div class="flex items-center gap-1">
+                            <UIcon name="lucide:square-user-round" class="size-5" />
+                            <p class="capitalize">{{ magazine?.demography }}</p>
+                        </div>
+                        <div v-if="magazine?.date" class="flex items-center gap-1">
+                            <UIcon name="lucide:calendar" class="size-5" />
+                            <p>
+                                {{
+                                    new Intl.DateTimeFormat('es-ES', {
+                                        day: 'numeric',
+                                        month: 'short',
+                                        year: 'numeric',
+                                    }).format(new Date(magazine.date))
+                                }}
+                            </p>
+                        </div>
+                        <div class="flex items-center gap-1">
+                            <UIcon name="lucide:calendar-1" class="size-5" />
+                            <p>{{ frequencies.find((frequency) => frequency.value === magazine?.frequency)?.label }}</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </UCard>
         <!--Mangas-->
-        <MangasDisplay :mangas="magazine?.mangas" :display="display" title />
+        <MangasDisplay :mangas="magazine?.mangas" v-model:display="display" title />
     </Deferred>
 </template>

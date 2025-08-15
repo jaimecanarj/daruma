@@ -15,18 +15,22 @@ const display = ref<'grid' | 'list'>('grid');
         <template #fallback><PersonSkeleton :display="display" /> </template>
         <Head :title="`${person?.name} ${person?.surname}`" />
         <!--Cabecera-->
-        <div class="absolute top-22 left-1/2 -translate-x-1/2 sm:left-auto sm:ml-8 sm:translate-0">
-            <UIcon name="lucide:user" class="bg-elevated size-28 rounded-full p-2" />
-        </div>
-        <UCard variant="subtle" class="mt-14 flex justify-center rounded-xl sm:justify-start">
-            <div class="mt-20 flex flex-col gap-4 sm:mt-0 sm:ml-40 lg:flex-row lg:items-center">
-                <p class="line-clamp-2 text-center text-3xl font-bold sm:text-start">{{ person?.name }} {{ person?.surname }}</p>
-                <p v-if="person?.kanjiName || person?.kanjiSurname" class="text-muted line-clamp-1 text-center text-2xl sm:text-start">
-                    「 {{ person?.kanjiName }} {{ person?.kanjiSurname }} 」
-                </p>
+        <UCard variant="subtle" class="mt-20 overflow-visible rounded-xl sm:mt-16">
+            <div class="flex flex-col gap-4 sm:flex-row">
+                <!--Portada-->
+                <div class="mx-auto -mt-16 w-32 sm:mx-0 sm:-mt-14">
+                    <UIcon name="lucide:user" class="bg-elevated size-28 rounded-full p-2" />
+                </div>
+                <!--Datos-->
+                <div class="flex flex-col gap-4 lg:flex-row lg:items-center">
+                    <p class="line-clamp-2 text-center text-3xl font-bold sm:text-start">{{ person?.name }} {{ person?.surname }}</p>
+                    <p v-if="person?.kanjiName || person?.kanjiSurname" class="text-muted line-clamp-1 text-center text-2xl sm:text-start">
+                        「 {{ person?.kanjiName }} {{ person?.kanjiSurname }} 」
+                    </p>
+                </div>
             </div>
         </UCard>
         <!--Mangas-->
-        <MangasDisplay :mangas="person?.mangas" :display="display" title />
+        <MangasDisplay :mangas="person?.mangas" v-model:display="display" title />
     </Deferred>
 </template>
