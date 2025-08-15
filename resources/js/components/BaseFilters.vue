@@ -42,7 +42,7 @@ const emit = defineEmits(['filter']);
     </div>
     <USeparator class="my-3" />
     <div class="flex w-full justify-end gap-3">
-        <UButton label="Restablecer filtros" variant="subtle" color="error" :disabled="!isFiltering" @click="resetFilters" />
+        <UButton v-if="isFiltering" label="Restablecer filtros" variant="subtle" color="error" @click="resetFilters" />
         <UButton label="Buscar" icon="lucide:search" variant="solid" @click="emit('filter')" />
     </div>
 </template>
