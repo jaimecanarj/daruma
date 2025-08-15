@@ -15,20 +15,24 @@ defineProps<{ mangas?: Manga[] }>();
             <div class="flex gap-2 overflow-hidden">
                 <!--Imagen-->
                 <div class="max-w-[150px] basis-1/4">
-                    <img
-                        :src="`/storage/${manga.cover}`"
-                        class="aspect-[1/1.4142] w-full cursor-pointer rounded-sm"
-                        alt="Portada de manga"
-                        @click="router.visit(route('mangas.show', manga.id))"
-                    />
+                    <ULink :to="`mangas/${manga.id}`">
+                        <img
+                            :src="`/storage/${manga.cover}`"
+                            class="aspect-[1/1.4142] w-full cursor-pointer rounded-sm"
+                            alt="Portada de manga"
+                            @click="router.visit(route('mangas.show', manga.id))"
+                        />
+                    </ULink>
                 </div>
                 <!--Datos-->
                 <div class="flex min-w-0 basis-3/4 flex-col gap-1 px-1">
                     <!--Nombre-->
                     <div class="flex w-full items-center">
-                        <h3 class="min-w-0 flex-1 cursor-pointer truncate text-lg font-bold" @click="router.visit(route('mangas.show', manga.id))">
-                            {{ manga.name }}
-                        </h3>
+                        <ULink :to="`mangas/${manga.id}`" class="min-w-0 flex-1 cursor-pointer">
+                            <h3 class="truncate text-lg font-bold">
+                                {{ manga.name }}
+                            </h3>
+                        </ULink>
                         <UIcon :name="manga.finished ? 'lucide:badge-check' : 'lucide:badge'" class="ml-4 size-5 flex-shrink-0" />
                     </div>
                     <!--Fechas, tomos, capítulos-->

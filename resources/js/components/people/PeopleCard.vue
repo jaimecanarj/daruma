@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { Person } from '@/types';
-import { router } from '@inertiajs/vue3';
 
 defineProps<{ people?: Person[] }>();
 </script>
@@ -11,19 +10,17 @@ defineProps<{ people?: Person[] }>();
             <div class="flex gap-2 overflow-hidden">
                 <!--Imagen-->
                 <div class="max-w-[150px] basis-1/4">
-                    <UIcon
-                        name="lucide:user"
-                        class="bg-accented mx-auto size-20 cursor-pointer rounded-full p-2"
-                        @click="router.visit(route('people.show', person.id))"
-                    />
+                    <ULink :to="`people/${person.id}`">
+                        <UIcon name="lucide:user" class="bg-accented mx-auto size-20 cursor-pointer rounded-full p-2" />
+                    </ULink>
                 </div>
                 <!--Datos-->
                 <div class="flex min-w-0 basis-3/4 flex-col gap-1 px-1">
                     <!--Nombre-->
                     <div class="flex items-center">
-                        <h3 class="min-w-0 flex-1 cursor-pointer truncate text-lg font-bold" @click="router.visit(route('people.show', person.id))">
-                            {{ person.name }} {{ person.surname }}
-                        </h3>
+                        <ULink :to="`people/${person.id}`" class="min-w-0 flex-1 cursor-pointer">
+                            <h3 class="truncate text-lg font-bold">{{ person.name }} {{ person.surname }}</h3>
+                        </ULink>
                     </div>
                     <!--Editorial-->
                     <div class="text-muted -mt-2 flex items-center text-sm lg:text-base">

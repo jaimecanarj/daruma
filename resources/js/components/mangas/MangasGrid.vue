@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { Manga } from '@/types';
-import { router } from '@inertiajs/vue3';
 
 defineProps<{ mangas?: Manga[] }>();
 </script>
@@ -11,12 +10,12 @@ defineProps<{ mangas?: Manga[] }>();
             <!--Imagen-->
             <img :src="`/storage/${manga.cover}`" class="size-full rounded-md object-cover" alt="Portada" />
             <!--Efecto hover-->
-            <div
+            <ULink
+                :to="`mangas/${manga.id}`"
                 class="absolute inset-0 flex flex-col items-center justify-center bg-black/70 p-3 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-                @click="router.visit(route('mangas.show', manga.id))"
             >
                 <h3 class="line-clamp-2 text-center text-base font-bold text-white/90 select-none sm:text-lg">{{ manga.name }}</h3>
-            </div>
+            </ULink>
         </div>
     </div>
 </template>
