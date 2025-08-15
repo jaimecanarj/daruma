@@ -13,7 +13,7 @@ const display = ref<'grid' | 'list'>('grid');
 const mangaTabs = computed(() => {
     const tabs = [
         {
-            label: 'Volúmenes',
+            label: 'Tomos',
             icon: 'lucide:book',
             slot: 'volumes',
         },
@@ -100,10 +100,10 @@ const redirect = (web: string) => {
                             <!--Fecha-->
                             <div class="flex items-center gap-1"><UIcon name="lucide:calendar-days" />{{ dates }}</div>
                             <template v-if="manga?.volumes">
-                                <!--Volúmenes-->
+                                <!--Tomos-->
                                 <USeparator orientation="vertical" class="bg-accented hidden h-6 sm:block" size="sm" />
                                 <div class="flex items-center gap-1">
-                                    <UIcon name="lucide:library-big" />Volúmenes: {{ manga?.tankoubon }} ({{ manga?.volumes }})
+                                    <UIcon name="lucide:library-big" />Tomos: {{ manga?.tankoubon }} ({{ manga?.volumes }})
                                 </div>
                             </template>
                             <!--Capítulos-->
