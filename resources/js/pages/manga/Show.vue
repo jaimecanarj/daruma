@@ -92,7 +92,7 @@ const redirect = (web: string) => {
                     </div>
                 </div>
                 <!--Datos-->
-                <div class="w-full sm:w-fit">
+                <div class="w-full">
                     <div class="flex flex-col items-center gap-2 sm:items-start">
                         <!--Nombre-->
                         <p class="text-center text-2xl leading-normal font-bold sm:text-start sm:text-3xl lg:text-4xl">{{ manga?.name }}</p>
