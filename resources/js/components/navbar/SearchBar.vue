@@ -15,6 +15,12 @@ watch(modalOpen, async (isOpen) => {
     }
 });
 
+defineShortcuts({
+    meta_k: () => {
+        modalOpen.value = !modalOpen.value;
+    },
+});
+
 //Función que formatea nombres de mangas para buscar por ellos
 const formatNames = (names: Name[] | undefined) => {
     if (names === undefined || names.length === 0) return '';
