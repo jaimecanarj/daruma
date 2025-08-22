@@ -13,6 +13,9 @@ watch(modalOpen, async (isOpen) => {
     if (isOpen && searchResults.value.length === 0) {
         await fetchSearchData();
     }
+    if (!isOpen) {
+        searchTerm.value = '';
+    }
 });
 
 defineShortcuts({
