@@ -57,6 +57,18 @@ const redirect = (web: string) => {
             break;
     }
 };
+
+const covers = computed(() => {
+    if (props.manga?.volumesData) {
+        const covers = [];
+        for (const volume of props.manga.volumesData) {
+            covers.push(volume.cover);
+        }
+        return covers;
+    } else {
+        return [props.manga?.cover];
+    }
+});
 </script>
 
 <template>
@@ -68,7 +80,14 @@ const redirect = (web: string) => {
             <div class="flex flex-col gap-4 sm:flex-row">
                 <!--Portada-->
                 <div class="mx-auto -mt-16 w-52 sm:mx-0 sm:-mt-14 sm:w-64 lg:w-80">
-                    <img :src="`/storage/${manga?.cover}`" class="aspect-[1/1.4142] rounded-lg" alt="Portada" />
+                    <UModal :ui="{ content: 'max-w-[500px] bg-transparent overflow-visible ring-0' }">
+                        <img :src="`/storage/${manga?.cover}`" class="aspect-[1/1.4142] cursor-pointer rounded-lg" alt="Portada" />
+                        <template #content>
+                            <UCarousel v-slot="{ item }" arrows :items="covers" class="mx-auto w-full">
+                                <img :src="`/storage/${item}`" width="500" class="aspect-[1/1.4142] rounded-lg" />
+                            </UCarousel>
+                        </template>
+                    </UModal>
                     <!--Dirección, estado, idioma, enlaces-->
                     <div class="mt-6 hidden flex-col gap-1 px-1 sm:flex">
                         <div class="flex flex-col items-center justify-center gap-2 md:flex-row lg:gap-3">
