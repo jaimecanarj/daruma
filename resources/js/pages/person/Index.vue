@@ -18,6 +18,7 @@ const filters = ref({ search: '' });
 const loading = ref(false);
 
 const people = computed(() => props.paginatedResults?.data ?? []);
+const peopleIds = computed(() => people.value.map((person) => person.id));
 
 const handleSearch = () => {
     loading.value = true;
@@ -37,7 +38,13 @@ const handleSearch = () => {
 <template>
     <Head title="Personas" />
     <!--Header-->
-    <FiltersHeader v-model="filters.search" class="mt-6 flex flex-col justify-between gap-4 sm:flex-row" @search="handleSearch">
+    <FiltersHeader
+        v-model="filters.search"
+        class="mt-6 flex flex-col justify-between gap-4 sm:flex-row"
+        @search="handleSearch"
+        :items-ids="peopleIds"
+        items-type="person"
+    >
         <template #rightSide>
             <div class="ml-1 flex items-center gap-4">
                 <!--Total de personas-->

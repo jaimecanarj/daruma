@@ -27,6 +27,7 @@ const filters = ref<MagazineFilters>({
 });
 
 const magazines = computed(() => props.paginatedResults?.data ?? []);
+const magazinesIds = computed(() => magazines.value.map((magazine) => magazine.id));
 
 const handleSearch = () => {
     loading.value = true;
@@ -47,7 +48,14 @@ const handleSearch = () => {
 <template>
     <Head title="Revistas" />
     <!--Header-->
-    <FiltersHeader v-model="filters.search" filters class="mt-6 flex flex-col justify-between gap-4 sm:flex-row" @search="handleSearch">
+    <FiltersHeader
+        v-model="filters.search"
+        filters
+        class="mt-6 flex flex-col justify-between gap-4 sm:flex-row"
+        @search="handleSearch"
+        :items-ids="magazinesIds"
+        items-type="magazine"
+    >
         <template #rightSide>
             <div class="ml-1 flex items-center gap-4">
                 <!--Total de personas-->

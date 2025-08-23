@@ -1,15 +1,16 @@
 <script setup lang="ts">
+import { router } from '@inertiajs/vue3';
 import { breakpointsTailwind, refDebounced, useBreakpoints } from '@vueuse/core';
 import { ref, watch } from 'vue';
 
-const props = defineProps<{ filters?: boolean; class?: string }>();
+const props = defineProps<{ filters?: boolean; class?: string; itemsIds: number[]; itemsType: 'manga' | 'person' | 'magazine' }>();
 const emit = defineEmits(['search']);
 
 const searchInput = defineModel<string>();
 
 const localInput = ref<string>(searchInput.value || '');
 
-const activeBreakpoint = useBreakpoints(breakpointsTailwind).active();
+const activeBreakpoint = useBreakpoints(breakpointsTailwind).smaller('md');
 
 const showFilters = ref<string | undefined>(undefined);
 
@@ -22,6 +23,24 @@ watch(searchInputDebounced, (newValue) => {
 
 const toggleShowFilters = () => {
     showFilters.value = showFilters.value === '0' ? undefined : '0';
+};
+
+const selectRandomItem = () => {
+    const randomIndex = Math.floor(Math.random() * props.itemsIds.length);
+    const randomId = props.itemsIds[randomIndex];
+    let route = '';
+    switch (props.itemsType) {
+        case 'manga':
+            route = `/mangas/${randomId}`;
+            break;
+        case 'person':
+            route = `/people/${randomId}`;
+            break;
+        case 'magazine':
+            route = `/magazines/${randomId}`;
+            break;
+    }
+    router.visit(route);
 };
 </script>
 
@@ -45,10 +64,11 @@ const toggleShowFilters = () => {
                 :variant="showFilters === '0' ? 'solid' : 'soft'"
                 color="neutral"
                 trailing-icon="lucide:list-filter"
-                :size="activeBreakpoint ? 'xl' : 'lg'"
+                :size="activeBreakpoint ? 'lg' : 'xl'"
                 @click="toggleShowFilters"
-                >{{ activeBreakpoint ? 'Filtros' : '' }}
+                >{{ activeBreakpoint ? '' : 'Filtros' }}
             </UButton>
+            <UButton icon="lucide:dices" variant="outline" color="neutral" class="px-3" @click="selectRandomItem" />
         </div>
         <slot name="rightSide" />
     </div>
