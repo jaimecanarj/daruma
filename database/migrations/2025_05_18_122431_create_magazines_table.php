@@ -18,6 +18,9 @@ return new class extends Migration
             $table->enum('demography', ['shounen', 'shoujo', 'seinen', 'josei']);
             $table->enum('frequency', ['weekly', 'biweekly', 'monthly', 'bimonthly', 'quarterly', 'irregular']);
             $table->date('date')->nullable();
+
+            // Añadir restricción única para los cuatro campos
+            $table->unique(['name', 'publisher'], 'unique_magazine_constraint');
         });
     }
 

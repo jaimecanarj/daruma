@@ -80,8 +80,9 @@ class PersonController extends Controller
                 ]);
             }
 
-            // Para otros errores de base de datos, relanzar la excepción
-            throw $e;
+            throw ValidationException::withMessages([
+                'general' => ['Error al crear la persona. Por favor, inténtalo de nuevo.'],
+            ]);
         }
     }
 
@@ -121,8 +122,9 @@ class PersonController extends Controller
                 ]);
             }
 
-            // Para otros errores de base de datos, relanzar la excepción
-            throw $e;
+            throw ValidationException::withMessages([
+                'general' => ['Error al actualizar la persona. Por favor, inténtalo de nuevo.'],
+            ]);
         }
     }
 

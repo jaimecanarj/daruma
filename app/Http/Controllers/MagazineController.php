@@ -104,6 +104,13 @@ class MagazineController extends Controller
 
             return to_route('admin.create', ['tab' => 'magazine']);
         } catch (QueryException $e) {
+            // Verificar si es un error de entrada duplicada
+            if ($e->getCode() == 23000 || str_contains($e->getMessage(), 'Duplicate entry')) {
+                throw ValidationException::withMessages([
+                    'general' => ['Esta revista ya existe en la base de datos.'],
+                ]);
+            }
+
             throw ValidationException::withMessages([
                 'general' => ['Error al crear la revista. Por favor, inténtalo de nuevo.'],
             ]);
@@ -130,6 +137,13 @@ class MagazineController extends Controller
 
             return to_route('admin.index', ['tab' => 'magazine']);
         } catch (QueryException $e) {
+            // Verificar si es un error de entrada duplicada
+            if ($e->getCode() == 23000 || str_contains($e->getMessage(), 'Duplicate entry')) {
+                throw ValidationException::withMessages([
+                    'general' => ['Esta revista ya existe en la base de datos.'],
+                ]);
+            }
+
             throw ValidationException::withMessages([
                 'general' => ['Error al actualizar la revista. Por favor, inténtalo de nuevo.'],
             ]);
