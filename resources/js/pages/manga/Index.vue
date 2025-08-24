@@ -57,6 +57,7 @@ const handleSearch = () => {
         v-model="filters.search"
         filters
         class="mt-6 flex flex-col justify-between gap-4 sm:flex-row"
+        random
         :items-ids="mangasIds"
         items-type="manga"
         @search="handleSearch"

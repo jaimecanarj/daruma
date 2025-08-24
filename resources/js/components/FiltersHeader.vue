@@ -3,7 +3,13 @@ import { router } from '@inertiajs/vue3';
 import { breakpointsTailwind, refDebounced, useBreakpoints } from '@vueuse/core';
 import { ref, watch } from 'vue';
 
-const props = defineProps<{ filters?: boolean; class?: string; itemsIds: number[]; itemsType: 'manga' | 'person' | 'magazine' }>();
+const props = defineProps<{
+    filters?: boolean;
+    class?: string;
+    random?: boolean;
+    itemsIds?: number[];
+    itemsType?: 'manga' | 'person' | 'magazine';
+}>();
 const emit = defineEmits(['search']);
 
 const searchInput = defineModel<string>();
@@ -26,8 +32,8 @@ const toggleShowFilters = () => {
 };
 
 const selectRandomItem = () => {
-    const randomIndex = Math.floor(Math.random() * props.itemsIds.length);
-    const randomId = props.itemsIds[randomIndex];
+    const randomIndex = Math.floor(Math.random() * (props.itemsIds?.length ?? 0));
+    const randomId = props.itemsIds?.[randomIndex];
     let route = '';
     switch (props.itemsType) {
         case 'manga':
@@ -39,8 +45,11 @@ const selectRandomItem = () => {
         case 'magazine':
             route = `/magazines/${randomId}`;
             break;
+        default:
     }
-    router.visit(route);
+    if (route) {
+        router.visit(route);
+    }
 };
 </script>
 
@@ -68,7 +77,7 @@ const selectRandomItem = () => {
                 @click="toggleShowFilters"
                 >{{ activeBreakpoint ? '' : 'Filtros' }}
             </UButton>
-            <UButton icon="lucide:dices" variant="outline" color="neutral" class="px-3" @click="selectRandomItem" />
+            <UButton v-if="random" icon="lucide:dices" variant="outline" color="neutral" class="px-3" @click="selectRandomItem" />
         </div>
         <slot name="rightSide" />
     </div>

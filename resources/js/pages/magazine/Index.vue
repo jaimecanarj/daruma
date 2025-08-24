@@ -53,6 +53,7 @@ const handleSearch = () => {
         filters
         class="mt-6 flex flex-col justify-between gap-4 sm:flex-row"
         @search="handleSearch"
+        random
         :items-ids="magazinesIds"
         items-type="magazine"
     >

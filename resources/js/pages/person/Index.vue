@@ -42,6 +42,7 @@ const handleSearch = () => {
         v-model="filters.search"
         class="mt-6 flex flex-col justify-between gap-4 sm:flex-row"
         @search="handleSearch"
+        random
         :items-ids="peopleIds"
         items-type="person"
     >
