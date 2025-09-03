@@ -11,7 +11,7 @@ trait ImageProcessorTrait
     {
         // Crear un nombre de archivo único basado en timestamp y un string aleatorio
         $filename = time() . '-' . Str::random(10) . '.webp';
-        $path = 'covers/' . $filename;
+        $path = $folder . '/' . $filename;
 
         //Determinar si es local o producción
         $isLocalEnvironment = app()->environment('local');
@@ -22,7 +22,7 @@ trait ImageProcessorTrait
         } else {
             $basePath = public_path('storage');
         }
-        $directory = $basePath . $folder;
+        $directory = $basePath . '/' . $folder;
 
         // Crear la carpeta si no existe
         if (!file_exists($directory)) {

@@ -195,7 +195,7 @@ class MangaController extends Controller
             DB::transaction(function () use ($validatedData, $request) {
                 if ($request->hasFile('cover')) {
                     // Procesar y optimizar la imagen
-                    $path = $this->processImage($request->file('cover'), '/covers');
+                    $path = $this->processImage($request->file('cover'), 'covers');
 
                     // Reemplazar con la ruta del archivo optimizado
                     $validatedData['cover'] = $path;
@@ -317,7 +317,7 @@ class MangaController extends Controller
                 }
 
                 // Procesar y optimizar la imagen
-                $path = $this->processImage($request->file('cover'), '/covers');
+                $path = $this->processImage($request->file('cover'), 'covers');
 
                 // Reemplazar con la ruta del archivo optimizado
                 $validatedData['cover'] = $path;

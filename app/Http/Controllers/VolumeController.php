@@ -38,7 +38,7 @@ class VolumeController extends Controller
             //Guardar portada
             if ($request->hasFile('cover')) {
                 // Procesar y optimizar la imagen
-                $path = $this->processImage($request->file('cover'), '/covers/volumes');
+                $path = $this->processImage($request->file('cover'), 'covers/volumes');
 
                 // Reemplazar con la ruta del archivo optimizado
                 $validatedData['cover'] = $path;
@@ -99,7 +99,7 @@ class VolumeController extends Controller
                 }
 
                 // Procesar y optimizar la imagen
-                $path = $this->processImage($request->file('cover'), '/covers/volumes');
+                $path = $this->processImage($request->file('cover'), 'covers/volumes');
 
                 // Reemplazar con la ruta del archivo optimizado
                 $validatedData['cover'] = $path;
