@@ -46,12 +46,12 @@ class Manga extends Model
         return $this->belongsTo(Magazine::class);
     }
 
-    public function volumes(): HasMany
+    public function volumesData(): HasMany
     {
         return $this->hasMany(Volume::class);
     }
 
-    public function chapters(): HasMany
+    public function chaptersData(): HasMany
     {
         return $this->hasMany(Chapter::class);
     }

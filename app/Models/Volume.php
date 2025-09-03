@@ -8,6 +8,10 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Volume extends Model
 {
+    protected $primaryKey = ['manga_id', 'order'];
+    public $incrementing = false;
+    protected $fillable = ['name', 'cover', 'order', 'date', 'pages', 'manga_id'];
+
     public function manga(): BelongsTo
     {
         return $this->belongsTo(Manga::class);
@@ -15,6 +19,6 @@ class Volume extends Model
 
     public function chapters(): HasMany
     {
-        return $this->hasMany(Chapter::class);
+        return $this->hasMany(Chapter::class, 'manga_id', 'manga_id')->where('volume_order', $this->order);
     }
 }

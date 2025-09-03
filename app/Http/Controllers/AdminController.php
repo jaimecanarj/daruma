@@ -53,7 +53,9 @@ class AdminController extends Controller
                 $props['item'] = Inertia::defer(fn() => $models[$tab]::find($id));
             } else {
                 // En caso de ser manga, cargar modelo y datos extra
-                $props['item'] = Inertia::defer(fn() => Manga::find($id)->load('names', 'people', 'tags', 'mangasRelated'));
+                $props['item'] = Inertia::defer(
+                    fn() => Manga::find($id)->load('names', 'people', 'tags', 'mangasRelated', 'volumesData', 'chaptersData')
+                );
                 $props['mangas'] = Inertia::defer(fn() => Manga::all()->select('id', 'name'));
                 $props['people'] = Inertia::defer(fn() => Person::all()->select('id', 'name', 'surname'));
                 $props['magazines'] = Inertia::defer(fn() => Magazine::all()->select('id', 'name'));

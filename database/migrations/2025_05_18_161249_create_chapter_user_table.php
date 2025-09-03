@@ -2,21 +2,30 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
     public function up(): void
     {
         Schema::create('chapter_user', function (Blueprint $table) {
-            $table->foreignId('chapter_id')->constrained('chapters')->onDelete('cascade');
+            $table->smallInteger('chapter_order');
+            $table->unsignedBigInteger('manga_id');
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            $table->primary(['chapter_id', 'user_id']);
+            $table->primary(['manga_id', 'chapter_order', 'user_id']);
             $table->timestamps();
         });
+
+        DB::statement('
+            ALTER TABLE chapter_user
+            ADD CONSTRAINT fk_chapter_user_chapter
+            FOREIGN KEY (manga_id, chapter_order)
+            REFERENCES chapters(manga_id, `order`)
+            ON DELETE CASCADE
+        ');
     }
 
     /**

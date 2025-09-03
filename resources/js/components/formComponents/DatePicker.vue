@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { DateFormatter, getLocalTimeZone, today, type CalendarDate } from '@internationalized/date';
+import { twJoin } from 'tailwind-merge';
 
-defineProps<{ decades?: boolean }>();
+const props = defineProps<{ decades?: boolean; class?: string }>();
 
 const date = defineModel<CalendarDate | undefined>();
 
@@ -18,11 +19,15 @@ const nextDecade = () => {
     }
     date.value = date.value.add({ years: 10 });
 };
+
+const resetDate = () => {
+    date.value = undefined;
+};
 </script>
 
 <template>
-    <UPopover>
-        <UButton color="neutral" variant="subtle" icon="lucide:calendar" class="focus-visible:ring-primary w-full">
+    <UPopover v-bind="$attrs">
+        <UButton color="neutral" variant="subtle" icon="lucide:calendar" :class="twJoin('focus-visible:ring-primary w-full', props.class)">
             {{
                 date && typeof date?.toDate === 'function'
                     ? new DateFormatter('es-ES', { dateStyle: 'medium' }).format(date.toDate(getLocalTimeZone()))
@@ -40,6 +45,11 @@ const nextDecade = () => {
                 </UButton>
             </div>
             <UCalendar v-model="date" class="p-2" />
+            <div class="mx-2 flex justify-end pb-2">
+                <UButton color="neutral" variant="ghost" class="p-1.5" @click="resetDate">
+                    Borrar <UIcon name="lucide:trash-2" class="size-5" />
+                </UButton>
+            </div>
         </template>
     </UPopover>
 </template>

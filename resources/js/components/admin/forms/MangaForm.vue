@@ -5,6 +5,7 @@ import DatePicker from '@/components/formComponents/DatePicker.vue';
 import MultipleValuesInput from '@/components/formComponents/MultipleValuesInput.vue';
 import MultipleValuesSelect from '@/components/formComponents/MultipleValuesSelect.vue';
 import MultipleValuesSelectSkeleton from '@/components/skeletons/MultipleValuesSelectSkeleton.vue';
+import VolumesForm from '@/components/VolumesForm.vue';
 import type { Manga, MangaForm } from '@/types';
 import { alternativeNames, authorJobs, languages, mangaRelations } from '@/utils/constants';
 import { mangaSchema } from '@/utils/zodSchemas';
@@ -109,6 +110,19 @@ const initialValues: MangaForm = {
         : [],
     mal: props.item?.mal ?? undefined,
     listadoManga: props.item?.listadoManga ?? undefined,
+    volumesData: props.item?.volumesData
+        ? props.item.volumesData.map((volume) => ({
+              name: volume.name,
+              cover: undefined,
+              coverUrl: volume.cover,
+              order: volume.order,
+              date: volume.date ? parseDate(volume.date) : undefined,
+              pages: volume.pages,
+              chapters: props.item?.chaptersData
+                  ? props.item.chaptersData.filter((chapter) => chapter.volumeOrder === volume.order).sort((a, b) => a.order - b.order)
+                  : [],
+          }))
+        : [],
     purpose: props.purpose,
 };
 
@@ -119,9 +133,18 @@ const formTransform = (data: any) => ({
     endDate: data.endDate?.toString(),
     cover: data.cover ? data.cover : undefined,
     magazineId: data.magazineId ? data.magazineId.value : undefined,
+    volumesData: (() => {
+        let chapterOrder = 1;
+        return data.volumesData.map((volume: any) => ({
+            ...volume,
+            date: volume.date?.toString(),
+            chapters: volume.chapters?.map((chapter: any) => ({ ...chapter, order: chapterOrder++ })) || [],
+        }));
+    })(),
 });
 
 const baseForm = useTemplateRef('baseForm');
+const errors = computed(() => baseForm.value?.errors ?? []);
 </script>
 
 <template>
@@ -141,7 +164,13 @@ const baseForm = useTemplateRef('baseForm');
             <div class="flex flex-col gap-6 md:flex-row">
                 <!--Portada-->
                 <UFormField name="cover" required class="md:basis-2/5">
-                    <UFileUpload v-model="form.cover" accept="image/*" label="Portada" description="Máximo 2MB" class="aspect-[1/1.4142] max-w-72">
+                    <UFileUpload
+                        v-model="form.cover"
+                        accept="image/*"
+                        label="Portada"
+                        description="Máximo 2MB"
+                        class="mx-auto aspect-[1/1.4142] max-w-72"
+                    >
                         <template #default="{ open }">
                             <div v-if="props.item?.cover && !form.cover" @click.prevent="open(undefined)">
                                 <img :src="`/storage/${props.item.cover}`" class="h-full w-full rounded-lg object-cover" alt="cover" />
@@ -167,6 +196,9 @@ const baseForm = useTemplateRef('baseForm');
                     <!--Tomos, tankoubon, capitulos-->
                     <div class="flex justify-between gap-4">
                         <UFormField label="Tomos" name="volumes">
+                            <template #hint>
+                                <VolumesForm v-model="form.volumesData" :errors="errors" />
+                            </template>
                             <CleanInputNumber v-model="form.volumes" />
                         </UFormField>
                         <UFormField label="Tankoubon" name="tankoubon">

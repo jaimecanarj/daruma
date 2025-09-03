@@ -40,6 +40,8 @@ export interface Manga {
             relation: 'prequel' | 'sequel' | 'spin-off' | 'main story';
         };
     })[];
+    volumesData?: Volume[];
+    chaptersData?: Chapter[];
 }
 
 export interface Name {
@@ -84,6 +86,24 @@ export interface Tag {
     type: 'genre' | 'theme';
 }
 
+export interface Volume {
+    name: string;
+    cover: string;
+    order: number;
+    date?: string;
+    pages: number;
+    mangaId: number;
+    createdAt: string;
+    updatedAt: string;
+}
+
+export interface Chapter {
+    name: string;
+    order: number;
+    mangaId: number;
+    volumeOrder: number;
+}
+
 //Formularios
 export interface MangaForm {
     cover?: File;
@@ -104,7 +124,21 @@ export interface MangaForm {
     relatedMangas?: MultiValues[];
     mal?: number;
     listadoManga?: number;
+    volumesData?: VolumeForm[];
     [key: string]: any;
+}
+
+export interface VolumeForm {
+    name?: string;
+    cover?: File;
+    coverUrl?: string;
+    order?: number;
+    date?: CalendarDate;
+    pages?: number;
+    chapters: {
+        name?: string;
+        order?: number;
+    }[];
 }
 
 export interface PersonForm {

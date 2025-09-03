@@ -55,6 +55,40 @@ export const userSchema = z
         path: ['passwordConfirmation'],
     });
 
+const volumesSchema = z
+    .object({
+        name: z.string({ required_error: 'Obligatorio' }).min(1, 'Obligatorio'),
+        cover: z.custom<File | undefined>(
+            (val) => {
+                if (val === undefined) return true;
+                if (!(val instanceof File)) return false;
+                if (!val.type.startsWith('image/')) return false;
+                return val.size <= 2 * 1024 * 1024; // 2MB
+            },
+            { message: 'Selecciona una imagen válida' },
+        ),
+        coverUrl: z.string().optional(),
+        order: z.number(),
+        date: z.instanceof(CalendarDate).optional(),
+        pages: z.number({ required_error: 'Obligatorio' }),
+        chapters: z
+            .array(
+                z.object({
+                    name: z.string().min(1),
+                }),
+            )
+            .optional(),
+    })
+    .refine(
+        (data) => {
+            // Si no hay coverUrl (se está creando el tomo), entonces cover debe existir
+            return data.coverUrl !== undefined || data.cover !== undefined;
+        },
+        {
+            message: 'Selecciona una imagen',
+            path: ['cover'],
+        },
+    );
 export const mangaSchema = z
     .object({
         name: z.string({ required_error: 'Obligatorio' }),
@@ -72,9 +106,10 @@ export const mangaSchema = z
             (val) => {
                 if (val === undefined) return true;
                 if (!(val instanceof File)) return false;
-                return val.type.startsWith('image/');
+                if (!val.type.startsWith('image/')) return false;
+                return val.size <= 2 * 1024 * 1024; // 2MB
             },
-            { message: 'Selecciona una imagen' },
+            { message: 'Selecciona una imagen válida' },
         ),
         volumes: optionalNumberSchema,
         tankoubon: optionalNumberSchema,
@@ -82,6 +117,7 @@ export const mangaSchema = z
         readingDirection: z.boolean(),
         language: z.enum(['es', 'en', 'jp'], { required_error: 'Obligatorio' }),
         finished: z.boolean(),
+        volumesData: z.array(volumesSchema).optional(),
         purpose: z.enum(['create', 'edit']),
     })
     .refine(
@@ -89,7 +125,7 @@ export const mangaSchema = z
             return !(data.purpose === 'create' && !data.cover);
         },
         {
-            message: 'Selecciona una imagen',
+            message: 'Selecciona una imagen válida',
             path: ['cover'],
         },
     );

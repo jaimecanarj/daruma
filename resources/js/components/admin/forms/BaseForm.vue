@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useForm, usePage } from '@inertiajs/vue3';
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 
 const page = usePage();
 
@@ -59,12 +59,18 @@ const onSubmit = () => {
     }
 };
 
-defineExpose({ form });
+const errors = ref(null);
+
+const onError = (event: any) => {
+    errors.value = event.errors;
+};
+
+defineExpose({ form, errors });
 </script>
 
 <template>
     <UCard class="bg-muted mx-auto mt-10 w-full md:max-w-3xl">
-        <UForm :schema="props.schema" class="mt-4 flex flex-col gap-4 md:gap-8" :state="form" @submit="onSubmit">
+        <UForm :schema="props.schema" class="mt-4 flex flex-col gap-4 md:gap-8" :state="form" @submit="onSubmit" @error="onError">
             <slot :form="form"></slot>
 
             <UButton type="submit" class="text-md mt-4 justify-center" :loading="form.processing">

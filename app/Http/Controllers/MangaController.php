@@ -6,17 +6,20 @@ use App\Models\Magazine;
 use App\Models\Manga;
 use App\Models\Person;
 use App\Models\Tag;
+use App\Models\Volume;
+use App\Traits\ImageProcessorTrait;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
-use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
-use Intervention\Image\Laravel\Facades\Image;
 use Inertia\Inertia;
 
 class MangaController extends Controller
 {
+    use ImageProcessorTrait;
+
     public function index()
     {
         return Manga::all();
@@ -177,46 +180,76 @@ class MangaController extends Controller
             'related_mangas' => 'nullable|array',
             'related_mangas.*.value' => 'required_with:related_mangas|integer',
             'related_mangas.*.category' => ['required_with:related_mangas', 'string', Rule::in(['prequel', 'sequel', 'main story', 'spin-off'])],
+            'volumes_data' => 'nullable|array',
+            'volumes_data.*.name' => 'required_with:volumes_data|string',
+            'volumes_data.*.cover' => 'required|file|mimes:jpg,jpeg,png,jxl',
+            'volumes_data.*.order' => 'required_with:volumes_data|integer|min:1',
+            'volumes_data.*.date' => 'nullable|date',
+            'volumes_data.*.pages' => 'required_with:volumes_data|integer|min:1',
+            'volumes_data.*.chapters' => 'nullable|array',
+            'volumes_data.*.chapters.*.name' => 'required_with:volumesData.*.chapters|string',
+            'volumes_data.*.chapters.*.order' => 'required_with:volumesData.*.chapters|integer|min:1',
         ]);
 
         try {
-            if ($request->hasFile('cover')) {
-                // Procesar y optimizar la imagen
-                $path = $this->processImage($request->file('cover'));
+            DB::transaction(function () use ($validatedData, $request) {
+                if ($request->hasFile('cover')) {
+                    // Procesar y optimizar la imagen
+                    $path = $this->processImage($request->file('cover'), '/covers');
 
-                // Reemplazar con la ruta del archivo optimizado
-                $validatedData['cover'] = $path;
-            }
-
-            //Almacenamos en la base de datos
-            $manga = Manga::create($validatedData);
-
-            if (isset($validatedData['alternative_names'])) {
-                foreach ($validatedData['alternative_names'] as $alternativeName) {
-                    $manga->names()->create([
-                        'name' => $alternativeName['label'],
-                        'type' => $alternativeName['category'],
-                    ]);
+                    // Reemplazar con la ruta del archivo optimizado
+                    $validatedData['cover'] = $path;
                 }
-            }
 
-            if (isset($validatedData['authors'])) {
-                foreach ($validatedData['authors'] as $author) {
-                    $manga->people()->attach($author['value'], ['job' => $author['category']]);
-                }
-            }
+                //Almacenamos en la base de datos
+                $manga = Manga::create($validatedData);
 
-            if (isset($validatedData['tags'])) {
-                foreach ($validatedData['tags'] as $tag) {
-                    $manga->tags()->attach($tag['value']);
+                if (isset($validatedData['alternative_names'])) {
+                    foreach ($validatedData['alternative_names'] as $alternativeName) {
+                        $manga->names()->create([
+                            'name' => $alternativeName['label'],
+                            'type' => $alternativeName['category'],
+                        ]);
+                    }
                 }
-            }
 
-            if (isset($validatedData['related_mangas'])) {
-                foreach ($validatedData['related_mangas'] as $relatedManga) {
-                    $manga->mangasRelated()->attach($relatedManga['value'], ['relation' => $relatedManga['category']]);
+                if (isset($validatedData['authors'])) {
+                    foreach ($validatedData['authors'] as $author) {
+                        $manga->people()->attach($author['value'], ['job' => $author['category']]);
+                    }
                 }
-            }
+
+                if (isset($validatedData['tags'])) {
+                    foreach ($validatedData['tags'] as $tag) {
+                        $manga->tags()->attach($tag['value']);
+                    }
+                }
+
+                if (isset($validatedData['related_mangas'])) {
+                    foreach ($validatedData['related_mangas'] as $relatedManga) {
+                        $manga->mangasRelated()->attach($relatedManga['value'], ['relation' => $relatedManga['category']]);
+                    }
+                }
+
+                if (isset($validatedData['volumes_data'])) {
+                    $volumeController = app(VolumeController::class);
+
+                    foreach ($validatedData['volumes_data'] as $index => $volumeData) {
+                        $volumeData['manga_id'] = $manga->id;
+
+                        // Crear una nueva request con los datos
+                        $volumeRequest = new Request($volumeData);
+
+                        // Adjuntar la portada a la nueva request
+                        if ($request->hasFile("volumesData.{$index}.cover")) {
+                            $file = $request->file("volumesData.{$index}.cover");
+                            $volumeRequest->files->set('cover', $file);
+                        }
+
+                        $volumeController->store($volumeRequest);
+                    }
+                }
+            });
 
             return to_route('admin.create', ['tab' => 'manga']);
         } catch (QueryException $e) {
@@ -229,7 +262,9 @@ class MangaController extends Controller
     public function show($id)
     {
         return Inertia::render('manga/Show', [
-            'manga' => Inertia::defer(fn() => Manga::find($id)->load('tags', 'people', 'magazine', 'names', 'mangasRelated')),
+            'manga' => Inertia::defer(
+                fn() => Manga::find($id)->load('tags', 'people', 'magazine', 'names', 'mangasRelated', 'volumesData', 'chaptersData')
+            ),
         ]);
     }
 
@@ -261,6 +296,16 @@ class MangaController extends Controller
             'related_mangas' => 'nullable|array',
             'related_mangas.*.value' => 'required_with:related_mangas|integer',
             'related_mangas.*.category' => ['required_with:related_mangas', 'string', Rule::in(['prequel', 'sequel', 'main story', 'spin-off'])],
+            'volumes_data' => 'nullable|array',
+            'volumes_data.*.name' => 'required_with:volumes_data|string',
+            'volumes_data.*.cover' => 'nullable|file|mimes:jpg,jpeg,png,jxl',
+            'volumes_data.*.cover_url' => 'nullable|string',
+            'volumes_data.*.order' => 'required_with:volumes_data|integer|min:1',
+            'volumes_data.*.date' => 'nullable|date',
+            'volumes_data.*.pages' => 'required_with:volumes_data|integer|min:1',
+            'volumes_data.*.chapters' => 'nullable|array',
+            'volumes_data.*.chapters.*.name' => 'required_with:volumes_data.*.chapters|string',
+            'volumes_data.*.chapters.*.order' => 'required_with:volumesData.*.chapters|integer|min:1',
         ]);
 
         try {
@@ -272,7 +317,7 @@ class MangaController extends Controller
                 }
 
                 // Procesar y optimizar la imagen
-                $path = $this->processImage($request->file('cover'));
+                $path = $this->processImage($request->file('cover'), '/covers');
 
                 // Reemplazar con la ruta del archivo optimizado
                 $validatedData['cover'] = $path;
@@ -287,6 +332,31 @@ class MangaController extends Controller
             $this->syncRelation($manga, 'people', $validatedData['authors'] ?? null, 'job');
             $this->syncRelation($manga, 'tags', $validatedData['tags'] ?? null);
             $this->syncRelation($manga, 'mangasRelated', $validatedData['related_mangas'] ?? null, 'relation');
+
+            if (isset($validatedData['volumes_data'])) {
+                $volumeController = app(VolumeController::class);
+
+                // Hacer todas las llamadas en una sola transacción
+                DB::transaction(function () use ($volumeController, $validatedData, $manga, $request) {
+                    // Eliminar todos los volúmenes existentes
+                    $manga->volumesData()->delete();
+
+                    foreach ($validatedData['volumes_data'] as $index => $volumeData) {
+                        $volumeData['manga_id'] = $manga->id;
+
+                        // Crear una nueva request con los datos
+                        $volumeRequest = new Request($volumeData);
+
+                        // Adjuntar la portada a la nueva request
+                        if ($request->hasFile("volumesData.{$index}.cover")) {
+                            $file = $request->file("volumesData.{$index}.cover");
+                            $volumeRequest->files->set('cover', $file);
+                        }
+
+                        $volumeController->update($volumeRequest);
+                    }
+                });
+            }
 
             return to_route('admin.index', ['tab' => 'manga']);
         } catch (QueryException $e) {
@@ -323,40 +393,6 @@ class MangaController extends Controller
                 'general' => ['Error al eliminar el manga. Por favor, inténtalo de nuevo.'],
             ]);
         }
-    }
-
-    private function processImage($file)
-    {
-        // Crear un nombre de archivo único basado en timestamp y un string aleatorio
-        $filename = time() . '-' . Str::random(10) . '.webp';
-        $path = 'covers/' . $filename;
-
-        //Determinar si es local o producción
-        $isLocalEnvironment = app()->environment('local');
-
-        // Definir la ruta base según el entorno
-        if ($isLocalEnvironment) {
-            $basePath = storage_path('app/public');
-        } else {
-            $basePath = public_path('storage');
-        }
-        $directory = $basePath . '/covers';
-
-        // Crear la carpeta si no existe
-        if (!file_exists($directory)) {
-            mkdir($directory, 0755, true);
-        }
-
-        // Procesar la imagen con Intervention Image
-        $image = Image::read($file->getRealPath());
-
-        // Redimensionar a 500px de ancho manteniendo la proporción
-        $image = $image->scale(width: 500);
-
-        // Guardar como WebP con calidad 80 (buen equilibrio entre calidad y tamaño)
-        $image->toWebp(80)->save($basePath . '/' . $path);
-
-        return $path;
     }
 
     private function syncRelation($manga, $relation, $items = null, $pivotField = null, $valueField = 'value', $categoryField = 'category'): void
