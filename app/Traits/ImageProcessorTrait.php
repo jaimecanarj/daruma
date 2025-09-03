@@ -35,8 +35,8 @@ trait ImageProcessorTrait
         // Redimensionar a 500px de ancho manteniendo la proporción
         $image = $image->scale(width: 500);
 
-        // Guardar como WebP con calidad 80 (buen equilibrio entre calidad y tamaño)
-        $image->toWebp(80)->save($basePath . '/' . $path);
+        // Guardar como WebP
+        $image->toWebp()->save($basePath . '/' . $path);
 
         return $path;
     }

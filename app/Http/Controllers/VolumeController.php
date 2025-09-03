@@ -24,7 +24,7 @@ class VolumeController extends Controller
         //Validamos los datos recibidos
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
-            'cover' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'cover' => 'required|image|mimes:jpeg,png,jpg,jxl,webp|max:2048',
             'order' => 'required|integer|min:1',
             'date' => 'nullable|date',
             'pages' => 'required|integer|min:1',
@@ -77,7 +77,7 @@ class VolumeController extends Controller
         //Validamos los datos recibidos
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
-            'cover' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'cover' => 'nullable|image|mimes:jpeg,png,jpg,jxl,webp|max:2048',
             'cover_url' => 'nullable|string',
             'order' => 'required|integer|min:1',
             'date' => 'nullable|date',

@@ -155,7 +155,7 @@ class MangaController extends Controller
     {
         //Validamos los datos recibidos
         $validatedData = $request->validate([
-            'cover' => 'required|file|mimes:jpg,jpeg,png,jxl',
+            'cover' => 'required|file|mimes:jpg,jpeg,png,jxl,webp',
             'name' => 'required|string',
             'start_date' => 'nullable|date',
             'end_date' => 'nullable|date|after_or_equal:startDate',
@@ -182,7 +182,7 @@ class MangaController extends Controller
             'related_mangas.*.category' => ['required_with:related_mangas', 'string', Rule::in(['prequel', 'sequel', 'main story', 'spin-off'])],
             'volumes_data' => 'nullable|array',
             'volumes_data.*.name' => 'required_with:volumes_data|string',
-            'volumes_data.*.cover' => 'required|file|mimes:jpg,jpeg,png,jxl',
+            'volumes_data.*.cover' => 'required|file|mimes:jpg,jpeg,png,jxl,webp',
             'volumes_data.*.order' => 'required_with:volumes_data|integer|min:1',
             'volumes_data.*.date' => 'nullable|date',
             'volumes_data.*.pages' => 'required_with:volumes_data|integer|min:1',
@@ -271,7 +271,7 @@ class MangaController extends Controller
     public function update(Request $request, Manga $manga)
     {
         $validatedData = $request->validate([
-            'cover' => 'nullable|file|mimes:jpg,jpeg,png,jxl',
+            'cover' => 'nullable|file|mimes:jpg,jpeg,png,jxl,webp',
             'name' => 'required|string',
             'start_date' => 'nullable|date',
             'end_date' => 'nullable|date|after_or_equal:startDate',
@@ -298,7 +298,7 @@ class MangaController extends Controller
             'related_mangas.*.category' => ['required_with:related_mangas', 'string', Rule::in(['prequel', 'sequel', 'main story', 'spin-off'])],
             'volumes_data' => 'nullable|array',
             'volumes_data.*.name' => 'required_with:volumes_data|string',
-            'volumes_data.*.cover' => 'nullable|file|mimes:jpg,jpeg,png,jxl',
+            'volumes_data.*.cover' => 'nullable|file|mimes:jpg,jpeg,png,jxl,webp',
             'volumes_data.*.cover_url' => 'nullable|string',
             'volumes_data.*.order' => 'required_with:volumes_data|integer|min:1',
             'volumes_data.*.date' => 'nullable|date',
@@ -340,6 +340,7 @@ class MangaController extends Controller
                 DB::transaction(function () use ($volumeController, $validatedData, $manga, $request) {
                     // Eliminar todos los volúmenes existentes
                     $manga->volumesData()->delete();
+                    //TODO: No borrar los tomos que ya tienen un volumen asociado porque destroza los timestamps
 
                     foreach ($validatedData['volumes_data'] as $index => $volumeData) {
                         $volumeData['manga_id'] = $manga->id;
