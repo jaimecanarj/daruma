@@ -65,8 +65,10 @@ const covers = computed(() => {
             covers.push(volume.cover);
         }
         return covers;
+    } else if (props.manga?.cover) {
+        return [props.manga.cover];
     } else {
-        return [props.manga?.cover];
+        return [];
     }
 });
 </script>

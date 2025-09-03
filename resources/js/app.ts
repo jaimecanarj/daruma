@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import '../css/app.css';
 
 import MainLayout from '@/layouts/MainLayout.vue';
@@ -9,6 +10,7 @@ import { createApp, h } from 'vue';
 import { ZiggyVue } from 'ziggy-js';
 
 // Extend ImportMeta interface for Vite...
+// @ts-ignore
 declare module 'vite/client' {
     interface ImportMetaEnv {
         readonly VITE_APP_NAME: string;
