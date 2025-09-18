@@ -92,7 +92,7 @@ const resetSearch = () => {
                 placeholder="Buscar..."
                 :loading="isLoading"
                 :groups="searchResults"
-                :fuse="{ fuseOptions: { keys: ['label', 'names', 'suffix'] } }"
+                :fuse="{ fuseOptions: { keys: ['label', 'names', 'suffix'], threshold: 0.3 } }"
                 @update:model-value="resetSearch"
                 class="h-80"
             />
