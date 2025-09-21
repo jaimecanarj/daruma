@@ -49,6 +49,12 @@ class MagazineController extends Controller
                 $query->whereIn('publisher', $request->publishers);
             }
 
+            //Listado completo
+            $magazinesIds = [];
+            if ($page == 1) {
+                $magazinesIds = (clone $query)->pluck('id')->toArray();
+            }
+
             //Orden
             switch ($request->order) {
                 case 'updateDesc':
@@ -73,7 +79,9 @@ class MagazineController extends Controller
                     $query->orderBy('name', 'asc');
             }
 
-            return $query->paginate(24, page: $page);
+            $paginatedResults = $query->paginate(24, page: $page)->toArray();
+
+            return [...$paginatedResults, 'magazines_ids' => $magazinesIds];
         };
 
         $props['paginatedResults'] = Inertia::defer(fn() => $filterMangas($request))->deepMerge();

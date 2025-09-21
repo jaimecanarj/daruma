@@ -129,6 +129,12 @@ class MangaController extends Controller
                 $query->whereIn('reading_direction', $request->reading_direction);
             }
 
+            //Listado completo
+            $mangasIds = [];
+            if ($page == 1) {
+                $mangasIds = (clone $query)->pluck('id')->toArray();
+            }
+
             //Orden
             switch ($request->order) {
                 case 'updateDesc':
@@ -159,7 +165,9 @@ class MangaController extends Controller
                     $query->orderBy('updated_at', 'desc');
             }
 
-            return $query->paginate(24, page: $page);
+            $paginatedResults = $query->paginate(24, page: $page)->toArray();
+
+            return [...$paginatedResults, 'mangas_ids' => $mangasIds];
         };
 
         $props['paginatedResults'] = Inertia::defer(fn() => $filterMangas($request))->deepMerge();

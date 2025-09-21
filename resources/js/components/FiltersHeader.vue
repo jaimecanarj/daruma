@@ -77,7 +77,15 @@ const selectRandomItem = () => {
                 @click="toggleShowFilters"
                 >{{ activeBreakpoint ? '' : 'Filtros' }}
             </UButton>
-            <UButton v-if="random" icon="lucide:dices" variant="outline" color="neutral" class="px-3" @click="selectRandomItem" />
+            <UButton
+                v-if="random"
+                icon="lucide:dices"
+                variant="outline"
+                color="neutral"
+                class="px-3"
+                @click="selectRandomItem"
+                :disabled="!(itemsIds && itemsIds?.length > 0)"
+            />
         </div>
         <slot name="rightSide" />
     </div>

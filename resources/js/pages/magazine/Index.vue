@@ -11,7 +11,7 @@ import { Deferred, Head, router } from '@inertiajs/vue3';
 import { computed, ref } from 'vue';
 
 const props = defineProps<{
-    paginatedResults?: { currentPage: number; lastPage: number; total: number; data: Magazine[] };
+    paginatedResults?: { currentPage: number; lastPage: number; total: number; data: Magazine[]; magazinesIds: number[] };
     filterOptions?: { publishers: string[] };
 }>();
 
@@ -27,7 +27,6 @@ const filters = ref<MagazineFilters>({
 });
 
 const magazines = computed(() => props.paginatedResults?.data ?? []);
-const magazinesIds = computed(() => magazines.value.map((magazine) => magazine.id));
 
 const handleSearch = () => {
     loading.value = true;
@@ -54,7 +53,7 @@ const handleSearch = () => {
         class="mt-6 flex flex-col justify-between gap-4 sm:flex-row"
         @search="handleSearch"
         random
-        :items-ids="magazinesIds"
+        :items-ids="paginatedResults?.magazinesIds"
         items-type="magazine"
     >
         <template #rightSide>
