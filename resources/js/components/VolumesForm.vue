@@ -2,7 +2,7 @@
 import CleanInputNumber from '@/components/formComponents/CleanInputNumber.vue';
 import DatePicker from '@/components/formComponents/DatePicker.vue';
 import { VolumeForm } from '@/types';
-import { useTemplateRef } from 'vue';
+import { nextTick, useTemplateRef } from 'vue';
 
 const volumes = defineModel<VolumeForm[]>({ default: [] });
 
@@ -10,22 +10,36 @@ defineProps<{ errors: any[] | undefined }>();
 
 const volumeList = useTemplateRef('volumeList');
 
-const addVolume = () => {
-    const volumeOrder = (volumes.value?.[volumes.value.length - 1]?.order ?? 0) + 1;
-    volumes.value.push({ name: 'Tomo ', cover: undefined, date: undefined, order: volumeOrder, pages: undefined, chapters: [] });
+const addVolume = async () => {
+    const newVolume = { name: 'Tomo ', cover: undefined, date: undefined, order: 0, pages: undefined, chapters: [] };
+
+    //Obtengo el orden siguiente al último tomo
+    newVolume.order = (volumes.value?.[volumes.value.length - 1]?.order ?? 0) + 1;
+
+    //Obtengo el nombre del último tomo
+    const info = extractNameInfo(volumes.value[volumes.value.length - 1]?.name);
+    if (info) {
+        newVolume.name = `${info.prefix}${info.number + 1}`;
+    }
+
+    //Lo añado a la lista de tomos
+    volumes.value.push(newVolume);
 
     //Timeout para que se ejecute el desplazamiento una vez se ha añadido
-    setTimeout(() => {
-        volumeList.value?.[volumeOrder - 1]?.$el?.scrollIntoView({ behavior: 'smooth' });
-    }, 50);
+    await nextTick();
+    volumeList.value
+        ?.find((vol) => {
+            return vol?.$el?.dataset?.order === newVolume.order.toString();
+        })
+        ?.$el?.scrollIntoView({ behavior: 'smooth', block: 'center' });
 };
 
 const deleteVolume = (volumeIndex: number) => {
     volumes.value.splice(volumeIndex, 1);
 };
 
-const extractChapterInfo = (chapterName?: string) => {
-    const match = chapterName?.match(/(\D+)(\d+):/);
+const extractNameInfo = (name?: string) => {
+    const match = name?.match(/(\D+)(\d+)/);
     return match ? { prefix: match[1], number: parseInt(match[2]) } : null;
 };
 
@@ -35,11 +49,11 @@ const addChapter = (volumeIndex: number) => {
     // Comprobar capítulos existentes
     if (volumes.value[volumeIndex].chapters.length > 0) {
         const lastChapter = volumes.value[volumeIndex].chapters[volumes.value[volumeIndex].chapters.length - 1];
-        const info = extractChapterInfo(lastChapter.name);
+        const info = extractNameInfo(lastChapter.name);
         if (info) newChapterInfo = info;
     } else if (volumeIndex > 0 && volumes.value[volumeIndex - 1].chapters.length > 0) {
         const prevLastChapter = volumes.value[volumeIndex - 1].chapters[volumes.value[volumeIndex - 1].chapters.length - 1];
-        const info = extractChapterInfo(prevLastChapter.name);
+        const info = extractNameInfo(prevLastChapter.name);
         if (info) newChapterInfo = info;
     }
 
@@ -53,7 +67,7 @@ const deleteChapter = (volumeIndex: number, chapterIndex: number) => {
     volumes.value[volumeIndex].chapters.splice(chapterIndex, 1);
 };
 
-const volumeOrderUp = (volumeIndex: number) => {
+const volumeOrderUp = async (volumeIndex: number) => {
     const volume = volumes.value[volumeIndex];
     //En caso del tomo ser el primero o estar solo, no obtengo el anterior
     if (volumes.value.length > 1 && volumeIndex !== 0) {
@@ -70,15 +84,16 @@ const volumeOrderUp = (volumeIndex: number) => {
     //Reordeno la lista por el nuevo orden
     volumes.value = volumes.value.sort((a, b) => a.order! - b.order!);
 
-    const volumeNewIndex = volumes.value.findIndex((vol) => vol.order === volume.order!);
-
     //Timeout para que se ejecute el desplazamiento una vez se ha reordenado
-    setTimeout(() => {
-        volumeList.value?.[volumeNewIndex]?.$el?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }, 50);
+    await nextTick();
+    volumeList.value
+        ?.find((vol) => {
+            return vol?.$el?.dataset?.order === volume?.order?.toString();
+        })
+        ?.$el?.scrollIntoView({ behavior: 'smooth', block: 'center' });
 };
 
-const volumeOrderDown = (volumeIndex: number) => {
+const volumeOrderDown = async (volumeIndex: number) => {
     const volume = volumes.value[volumeIndex];
     //En caso del tomo ser el último o estar solo, no obtengo el siguiente
     if (volumes.value.length > 1 && volumeIndex !== volumes.value.length - 1) {
@@ -95,15 +110,16 @@ const volumeOrderDown = (volumeIndex: number) => {
     //Reordeno la lista por el nuevo orden
     volumes.value = volumes.value.sort((a, b) => a.order! - b.order!);
 
-    const volumeNewIndex = volumes.value.findIndex((vol) => vol.order === volume.order!);
-
     //Timeout para que se ejecute el desplazamiento una vez se ha reordenado
-    setTimeout(() => {
-        volumeList.value?.[volumeNewIndex]?.$el?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }, 50);
+    await nextTick();
+    volumeList.value
+        ?.find((vol) => {
+            return vol?.$el?.dataset?.order === volume?.order?.toString();
+        })
+        ?.$el?.scrollIntoView({ behavior: 'smooth', block: 'center' });
 };
 
-const volumeOrderChange = (volumeIndex: number, event: Event) => {
+const volumeOrderChange = async (volumeIndex: number, event: Event) => {
     const input = event?.target as HTMLInputElement;
     const newOrder = parseInt(input.value);
 
@@ -125,6 +141,8 @@ const volumeOrderChange = (volumeIndex: number, event: Event) => {
             return vol;
         });
 
+        await nextTick(); //Actualiza el valor de volumes.value antes de añadir el tomo
+
         //Actualizar el orden del tomo y volver a añadirlo
         volumes.value.push({ ...volume, order: newOrder });
     }
@@ -132,12 +150,13 @@ const volumeOrderChange = (volumeIndex: number, event: Event) => {
     //Reordenar
     volumes.value = volumes.value.sort((a, b) => a.order! - b.order!);
 
-    const volumeNewIndex = volumes.value.findIndex((vol) => vol.order === newOrder);
-
     //Timeout para que se ejecute el desplazamiento una vez se ha reordenado
-    setTimeout(() => {
-        volumeList.value?.[volumeNewIndex]?.$el?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }, 50);
+    await nextTick();
+    volumeList.value
+        ?.find((vol) => {
+            return vol?.$el?.dataset?.order === newOrder.toString();
+        })
+        ?.$el?.scrollIntoView({ behavior: 'smooth', block: 'center' });
 };
 </script>
 
@@ -150,7 +169,14 @@ const volumeOrderChange = (volumeIndex: number, event: Event) => {
                     <UIcon name="lucide:book-dashed" class="text-muted size-10" />
                     <p class="text-muted select-none">No hay ningún tomo</p>
                 </div>
-                <UCard v-for="(volume, index) in volumes" :key="volume.order" ref="volumeList" variant="soft" class="w-full overflow-visible">
+                <UCard
+                    v-for="(volume, index) in volumes"
+                    :key="volume.order"
+                    ref="volumeList"
+                    variant="soft"
+                    class="w-full overflow-visible"
+                    :data-order="volume.order"
+                >
                     <div class="flex flex-col gap-2 sm:flex-row">
                         <div class="flex h-full flex-col sm:w-56">
                             <UFormField :name="`volumesData.${index}.cover`" class="mx-auto">
