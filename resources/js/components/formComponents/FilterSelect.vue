@@ -1,7 +1,11 @@
 <script setup lang="ts">
+import { computed } from 'vue';
+
 defineProps<{ items: (string | { label: string; value: string | number | boolean })[]; label: string; icon: string; searchable?: boolean }>();
 
 const model = defineModel<any[]>({ default: [] });
+
+const filterActive = computed(() => model.value.length > 0);
 </script>
 
 <template>
@@ -12,7 +16,25 @@ const model = defineModel<any[]>({ default: [] });
             </p>
             <UButton v-if="model.length > 0" class="p-0.5" color="neutral" variant="link" size="sm" icon="lucide:circle-x" @click="model = []" />
         </div>
-        <USelectMenu v-if="searchable" v-model="model" :items="items" multiple :placeholder="`Cualquier ${label}`" :icon="icon" class="w-full" />
-        <USelect v-else v-model="model" :items="items" multiple :placeholder="`Cualquier ${label}`" :icon="icon" class="w-full" />
+        <USelectMenu
+            v-if="searchable"
+            v-model="model"
+            :items="items"
+            multiple
+            :placeholder="`Cualquier ${label}`"
+            :icon="icon"
+            class="w-full"
+            :ui="{ leadingIcon: filterActive ? 'text-default' : '' }"
+        />
+        <USelect
+            v-else
+            v-model="model"
+            :items="items"
+            multiple
+            :placeholder="`Cualquier ${label}`"
+            :icon="icon"
+            class="w-full"
+            :ui="{ leadingIcon: filterActive ? 'text-defalt' : '' }"
+        />
     </div>
 </template>

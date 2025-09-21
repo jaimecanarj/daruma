@@ -2,7 +2,7 @@
 import { DateFormatter, getLocalTimeZone, today, type CalendarDate } from '@internationalized/date';
 import { twJoin } from 'tailwind-merge';
 
-const props = defineProps<{ decades?: boolean; class?: string }>();
+const props = defineProps<{ decades?: boolean; filter?: boolean; class?: string }>();
 
 const date = defineModel<CalendarDate | undefined>();
 
@@ -27,7 +27,28 @@ const resetDate = () => {
 
 <template>
     <UPopover v-bind="$attrs">
-        <UButton color="neutral" variant="subtle" icon="lucide:calendar" :class="twJoin('focus-visible:ring-primary w-full', props.class)">
+        <UButton
+            v-if="filter"
+            color="neutral"
+            variant="outline"
+            icon="lucide:calendar"
+            trailing-icon="lucide:chevron-down"
+            class="focus-visible:ring-primary w-full"
+            :ui="{
+                leadingIcon: date ? 'text-default' : 'text-dimmed',
+                trailingIcon: 'text-dimmed',
+            }"
+        >
+            <p class="w-full text-start">
+                {{
+                    date && typeof date?.toDate === 'function'
+                        ? new DateFormatter('es-ES', { dateStyle: 'medium' }).format(date.toDate(getLocalTimeZone()))
+                        : ''
+                }}
+                <span v-if="!date" class="text-dimmed font-normal">{{ 'Cualquier fecha' }}</span>
+            </p>
+        </UButton>
+        <UButton v-else color="neutral" variant="subtle" icon="lucide:calendar" :class="twJoin('focus-visible:ring-primary w-full', props.class)">
             {{
                 date && typeof date?.toDate === 'function'
                     ? new DateFormatter('es-ES', { dateStyle: 'medium' }).format(date.toDate(getLocalTimeZone()))

@@ -21,7 +21,7 @@ const filters = ref<MangaFilters>({
     search: '',
     volumes: undefined,
     date: undefined,
-    tags: [],
+    tags: { include: [], exclude: [] },
     order: 'updateDesc',
     people: [],
     language: undefined,

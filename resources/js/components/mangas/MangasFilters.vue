@@ -2,6 +2,7 @@
 import BaseFilters from '@/components/BaseFilters.vue';
 import DatePicker from '@/components/formComponents/DatePicker.vue';
 import FilterSelect from '@/components/formComponents/FilterSelect.vue';
+import TagsFilter from '@/components/mangas/TagsFilter.vue';
 import { Magazine, MangaFilters, Person, Tag } from '@/types';
 import { demographies, languages, mangaFiltersInitialState, mangaSorting, readingDirections, sortingIcons } from '@/utils/constants';
 import { computed } from 'vue';
@@ -51,22 +52,32 @@ const status = [
         <!--Tomos-->
         <div class="w-full">
             <p class="m-0.5">Tomos</p>
-            <UInput v-model="filters.volumes" class="w-full" placeholder="Número de tomos" icon="lucide:book" />
+            <UInput
+                v-model="filters.volumes"
+                class="w-full"
+                placeholder="Número de tomos"
+                icon="lucide:book"
+                :ui="{ leadingIcon: filters.volumes ? 'text-default' : '' }"
+            />
         </div>
         <!--Fecha-->
         <div class="w-full">
             <p class="m-0.5">Fecha</p>
-            <DatePicker v-model="filters.date" class="w-full" />
+            <DatePicker v-model="filters.date" filter class="w-full" />
         </div>
         <!--Etiquetas-->
-        <div class="w-full">
-            <p class="m-0.5">Etiquetas</p>
-            <USelectMenu :items="tags" placeholder="Cualquier etiqueta" icon="lucide:tag" class="w-full" disabled />
-        </div>
+        <TagsFilter v-model="filters.tags" :items="tags" />
         <!--Orden-->
         <div class="w-full">
             <p class="m-0.5">Orden</p>
-            <USelect v-model="filters.order" :items="sorting" :icon="sortIcon" placeholder="Cualquier orden" class="w-full" />
+            <USelect
+                v-model="filters.order"
+                :items="sorting"
+                :icon="sortIcon"
+                placeholder="Cualquier orden"
+                class="w-full"
+                :ui="{ leadingIcon: 'text-default' }"
+            />
         </div>
         <!--Autores-->
         <FilterSelect v-model="filters.people" :items="people" label="autor" icon="lucide:users" searchable />

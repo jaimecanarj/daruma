@@ -178,7 +178,7 @@ export interface MangaFilters {
     search?: string;
     volumes?: string;
     date?: CalendarDate;
-    tags: MultiValues[];
+    tags: { include: number[]; exclude: number[] };
     order: string;
     people: number[];
     magazines: number[];

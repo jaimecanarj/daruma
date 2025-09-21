@@ -60,6 +60,30 @@ class MangaController extends Controller
                 });
             }
 
+            //Filtro de etiquetas
+            if (!empty($request->tags)) {
+                // Si hay etiquetas para incluir
+                if (!empty($request->tags['include'])) {
+                    $includeTags = $request->tags['include'];
+                    $query->whereHas(
+                        'tags',
+                        function ($q) use ($includeTags) {
+                            $q->whereIn('id', $includeTags);
+                        },
+                        '=',
+                        count($includeTags)
+                    );
+                }
+
+                // Si hay etiquetas para excluir
+                if (!empty($request->tags['exclude'])) {
+                    $excludeTags = $request->tags['exclude'];
+                    $query->whereDoesntHave('tags', function ($q) use ($excludeTags) {
+                        $q->whereIn('id', $excludeTags);
+                    });
+                }
+            }
+
             //Filtro de autores
             if (!empty($request->people)) {
                 $query->whereHas('people', function ($q) use ($request) {
