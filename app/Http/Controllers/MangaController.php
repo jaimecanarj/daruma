@@ -187,7 +187,7 @@ class MangaController extends Controller
     {
         //Validamos los datos recibidos
         $validatedData = $request->validate([
-            'cover' => 'required|file|mimes:jpg,jpeg,png,jxl,webp',
+            'cover' => 'required|file|mimes:jpg,jpeg,png,jxl,webp|max:5120',
             'name' => 'required|string',
             'start_date' => 'nullable|date',
             'end_date' => 'nullable|date|after_or_equal:startDate',
@@ -303,7 +303,7 @@ class MangaController extends Controller
     public function update(Request $request, Manga $manga)
     {
         $validatedData = $request->validate([
-            'cover' => 'nullable|file|mimes:jpg,jpeg,png,jxl,webp',
+            'cover' => 'nullable|file|mimes:jpg,jpeg,png,jxl,webp|max:5120',
             'name' => 'required|string',
             'start_date' => 'nullable|date',
             'end_date' => 'nullable|date|after_or_equal:startDate',

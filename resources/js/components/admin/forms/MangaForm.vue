@@ -168,7 +168,7 @@ const errors = computed(() => baseForm.value?.errors ?? []);
                         v-model="form.cover"
                         accept="image/*"
                         label="Portada"
-                        description="Máximo 2MB"
+                        description="Máximo 5MB"
                         class="mx-auto aspect-[1/1.4142] max-w-72"
                     >
                         <template #default="{ open }">

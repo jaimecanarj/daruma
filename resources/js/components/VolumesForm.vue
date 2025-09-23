@@ -184,7 +184,7 @@ const volumeOrderChange = async (volumeIndex: number, event: Event) => {
                                     v-model="volume.cover"
                                     accept="image/*"
                                     label="Portada"
-                                    description="Máximo 2MB"
+                                    description="Máximo 5MB"
                                     class="aspect-[1/1.4142] sm:w-full"
                                 >
                                     <template #default="{ open }">

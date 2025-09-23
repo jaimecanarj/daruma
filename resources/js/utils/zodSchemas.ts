@@ -63,7 +63,7 @@ const volumesSchema = z
                 if (val === undefined) return true;
                 if (!(val instanceof File)) return false;
                 if (!val.type.startsWith('image/')) return false;
-                return val.size <= 2 * 1024 * 1024; // 2MB
+                return val.size <= 5 * 1024 * 1024; // 5MB
             },
             { message: 'Selecciona una imagen válida' },
         ),
@@ -107,7 +107,7 @@ export const mangaSchema = z
                 if (val === undefined) return true;
                 if (!(val instanceof File)) return false;
                 if (!val.type.startsWith('image/')) return false;
-                return val.size <= 2 * 1024 * 1024; // 2MB
+                return val.size <= 5 * 1024 * 1024; // 5MB
             },
             { message: 'Selecciona una imagen válida' },
         ),
