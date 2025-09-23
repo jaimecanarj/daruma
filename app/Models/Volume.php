@@ -10,7 +10,7 @@ class Volume extends Model
 {
     protected $primaryKey = ['manga_id', 'order'];
     public $incrementing = false;
-    protected $fillable = ['name', 'cover', 'order', 'date', 'pages', 'manga_id'];
+    protected $fillable = ['name', 'cover', 'order', 'pages', 'manga_id'];
 
     public function manga(): BelongsTo
     {

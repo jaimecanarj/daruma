@@ -14,7 +14,6 @@ return new class extends Migration {
             $table->string('name');
             $table->string('cover');
             $table->smallInteger('order');
-            $table->date('date')->nullable();
             $table->smallInteger('pages');
             $table->foreignId('manga_id')->constrained('mangas')->onDelete('cascade');
             $table->timestamps();

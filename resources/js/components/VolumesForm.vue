@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import CleanInputNumber from '@/components/formComponents/CleanInputNumber.vue';
-import DatePicker from '@/components/formComponents/DatePicker.vue';
 import { VolumeForm } from '@/types';
 import { nextTick, useTemplateRef } from 'vue';
 
@@ -213,10 +212,10 @@ const volumeOrderChange = async (volumeIndex: number, event: Event) => {
                             </UButtonGroup>
                         </div>
                         <div class="w-full">
-                            <UFormField :name="`volumesData.${index}.name`">
-                                <UInput v-model="volume.name" variant="none" class="w-full font-bold" :ui="{ base: 'text-lg sm:text-xl' }" />
-                            </UFormField>
-                            <div class="mt-2 flex justify-between sm:ps-4">
+                            <div class="flex items-center justify-between">
+                                <UFormField :name="`volumesData.${index}.name`">
+                                    <UInput v-model="volume.name" variant="none" class="w-full font-bold" :ui="{ base: 'text-lg sm:text-xl' }" />
+                                </UFormField>
                                 <UFormField :name="`volumesData.${index}.pages`">
                                     <div class="flex items-center gap-2">
                                         <CleanInputNumber
@@ -229,12 +228,9 @@ const volumeOrderChange = async (volumeIndex: number, event: Event) => {
                                         <p class="select-none">págs</p>
                                     </div>
                                 </UFormField>
-                                <UFormField :name="`volumesData.${index}.date`">
-                                    <DatePicker v-model="volume.date" decades class="w-36 py-1 sm:py-1.5" :ui="{ content: 'z-[6]' }" />
-                                </UFormField>
                             </div>
                             <USeparator class="my-2" />
-                            <div class="flex h-32 flex-col overflow-y-scroll">
+                            <div class="flex h-[154px] flex-col overflow-y-scroll">
                                 <div v-if="volume.chapters.length === 0" class="flex h-full items-center justify-center gap-4">
                                     <UIcon name="lucide:book-open-text" class="text-muted size-6" />
                                     <p class="text-muted select-none">No hay ningún capítulo</p>

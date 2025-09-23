@@ -116,7 +116,6 @@ const initialValues: MangaForm = {
               cover: undefined,
               coverUrl: volume.cover,
               order: volume.order,
-              date: volume.date ? parseDate(volume.date) : undefined,
               pages: volume.pages,
               chapters: props.item?.chaptersData
                   ? props.item.chaptersData.filter((chapter) => chapter.volumeOrder === volume.order).sort((a, b) => a.order - b.order)
@@ -137,7 +136,6 @@ const formTransform = (data: any) => ({
         let chapterOrder = 1;
         return data.volumesData.map((volume: any) => ({
             ...volume,
-            date: volume.date?.toString(),
             chapters: volume.chapters?.map((chapter: any) => ({ ...chapter, order: chapterOrder++ })) || [],
         }));
     })(),

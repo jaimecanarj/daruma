@@ -69,7 +69,6 @@ const volumesSchema = z
         ),
         coverUrl: z.string().optional(),
         order: z.number(),
-        date: z.instanceof(CalendarDate).optional(),
         pages: z.number({ required_error: 'Obligatorio' }),
         chapters: z
             .array(

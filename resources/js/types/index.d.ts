@@ -90,7 +90,6 @@ export interface Volume {
     name: string;
     cover: string;
     order: number;
-    date?: string;
     pages: number;
     mangaId: number;
     createdAt: string;
@@ -133,7 +132,6 @@ export interface VolumeForm {
     cover?: File;
     coverUrl?: string;
     order?: number;
-    date?: CalendarDate;
     pages?: number;
     chapters: {
         name?: string;

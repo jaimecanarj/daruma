@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { Chapter, Volume } from '@/types';
-import { DateFormatter } from '@internationalized/date';
 import { breakpointsTailwind, useBreakpoints } from '@vueuse/core';
 import { computed } from 'vue';
 
@@ -19,11 +18,6 @@ const volumeContent = computed(() => {
         ? { align: 'start' as const, side: 'right' as const }
         : { align: 'center' as const, side: 'bottom' as const };
 });
-
-const formatDate = (date: string) => {
-    const df = new DateFormatter('es-ES', { dateStyle: 'medium' });
-    return df.format(new Date(date));
-};
 </script>
 
 <template>
@@ -41,14 +35,11 @@ const formatDate = (date: string) => {
             </div>
             <template #content>
                 <div class="w-80 p-4 sm:w-96">
-                    <h3 class="text-lg font-semibold sm:text-xl">{{ volume.name }}</h3>
-                    <div class="mt-1 flex gap-4 text-sm">
-                        <div class="text-muted flex items-center gap-1">
+                    <div class="flex items-center justify-between gap-4">
+                        <h3 class="text-lg font-semibold sm:text-xl">{{ volume.name }}</h3>
+                        <div class="text-muted flex items-center gap-1 text-sm">
                             <UIcon name="lucide:sticky-note" />
                             <p>{{ volume.pages }} págs</p>
-                        </div>
-                        <div v-if="volume.date" class="text-muted flex items-center gap-1">
-                            <UIcon name="lucide:calendar" />{{ formatDate(volume.date) }}
                         </div>
                     </div>
                     <USeparator class="my-2" />
