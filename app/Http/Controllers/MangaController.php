@@ -359,6 +359,9 @@ class MangaController extends Controller
 
             $manga->update($validatedData);
 
+            // Forzar actualización del timestamp
+            $manga->touch();
+
             // Actualizar relaciones
             $this->syncAlternativeNames($manga, $validatedData['alternative_names'] ?? null);
             $this->syncRelation($manga, 'people', $validatedData['authors'] ?? null, 'job');

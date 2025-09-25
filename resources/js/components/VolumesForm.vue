@@ -1,16 +1,24 @@
 <script setup lang="ts">
 import CleanInputNumber from '@/components/formComponents/CleanInputNumber.vue';
 import { VolumeForm } from '@/types';
-import { nextTick, useTemplateRef } from 'vue';
+import { nextTick, ref, useTemplateRef } from 'vue';
 
 const volumes = defineModel<VolumeForm[]>({ default: [] });
 
 defineProps<{ errors: any[] | undefined }>();
 
+const volumeNumber = ref<number>();
+
 const volumeList = useTemplateRef('volumeList');
 
+const addVolumes = (volumesToAdd: number = 1) => {
+    for (let i = 0; i < volumesToAdd; i++) {
+        addVolume();
+    }
+    volumeNumber.value = undefined;
+};
 const addVolume = async () => {
-    const newVolume = { name: 'Tomo ', cover: undefined, date: undefined, order: 0, pages: undefined, chapters: [] };
+    const newVolume = { name: 'Tomo 1', cover: undefined, date: undefined, order: 0, pages: undefined, chapters: [] };
 
     //Obtengo el orden siguiente al último tomo
     newVolume.order = (volumes.value?.[volumes.value.length - 1]?.order ?? 0) + 1;
@@ -293,7 +301,12 @@ const volumeOrderChange = async (volumeIndex: number, event: Event) => {
                         </UButtonGroup>
                     </div>
                 </UCard>
-                <UButton trailing-icon="lucide:plus" size="xl" label="Añadir un tomo" class="mx-auto my-6" @click="addVolume" />
+                <div class="my-4 flex justify-center gap-4">
+                    <UButtonGroup>
+                        <UInput v-model.number="volumeNumber" class="w-20" color="neutral" variant="subtle" placeholder="1 tomo" />
+                        <UButton color="neutral" label="Añadir" trailing-icon="lucide:plus" @click="addVolumes(volumeNumber)" />
+                    </UButtonGroup>
+                </div>
             </div>
         </template>
     </UModal>
