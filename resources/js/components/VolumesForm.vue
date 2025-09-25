@@ -201,7 +201,7 @@ const volumeOrderChange = async (volumeIndex: number, event: Event) => {
                                     </template>
                                 </UFileUpload>
                             </UFormField>
-                            <UButtonGroup class="mt-4 hidden justify-center sm:flex">
+                            <UFieldGroup class="mt-4 hidden justify-center sm:flex">
                                 <UButton
                                     icon="lucide:arrow-up"
                                     size="sm"
@@ -217,7 +217,7 @@ const volumeOrderChange = async (volumeIndex: number, event: Event) => {
                                     @change="volumeOrderChange(index, $event)"
                                 />
                                 <UButton icon="lucide:arrow-down" size="sm" variant="subtle" color="neutral" @click="volumeOrderDown(index)" />
-                            </UButtonGroup>
+                            </UFieldGroup>
                         </div>
                         <div class="w-full">
                             <div class="flex items-center justify-between">
@@ -282,7 +282,7 @@ const volumeOrderChange = async (volumeIndex: number, event: Event) => {
                                 </UButton>
                             </div>
                         </div>
-                        <UButtonGroup class="mt-4 flex justify-center sm:hidden">
+                        <UFieldGroup class="mt-4 flex justify-center sm:hidden">
                             <UButton
                                 icon="lucide:arrow-up"
                                 size="sm"
@@ -298,14 +298,14 @@ const volumeOrderChange = async (volumeIndex: number, event: Event) => {
                                 @change="volumeOrderChange(index, $event)"
                             />
                             <UButton icon="lucide:arrow-down" size="sm" variant="subtle" color="neutral" @click="volumeOrderDown(index)" />
-                        </UButtonGroup>
+                        </UFieldGroup>
                     </div>
                 </UCard>
                 <div class="my-4 flex justify-center gap-4">
-                    <UButtonGroup>
+                    <UFieldGroup>
                         <UInput v-model.number="volumeNumber" class="w-20" color="neutral" variant="subtle" placeholder="1 tomo" />
                         <UButton color="neutral" label="Añadir" trailing-icon="lucide:plus" @click="addVolumes(volumeNumber)" />
-                    </UButtonGroup>
+                    </UFieldGroup>
                 </div>
             </div>
         </template>
