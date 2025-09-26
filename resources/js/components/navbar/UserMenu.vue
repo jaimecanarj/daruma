@@ -73,7 +73,9 @@ const guestItems = ref<DropdownMenuItem[][]>([
             content: 'w-48',
         }"
     >
-        <UAvatar v-if="user" :src="`storage/${user.avatar}`" :alt="user.name" class="cursor-pointer" />
-        <UButton v-else icon="lucide:user" class="rounded-full" variant="subtle" color="neutral" />
+        <div class="cursor-pointer">
+            <UAvatar v-if="user" :src="`storage/${user.avatar}`" :alt="user.name" class="cursor-pointer" />
+            <UButton v-else icon="lucide:user" class="rounded-full" variant="subtle" color="neutral" />
+        </div>
     </UDropdownMenu>
 </template>
