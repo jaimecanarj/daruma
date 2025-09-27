@@ -50,7 +50,11 @@ class AdminController extends Controller
         if (isset($models[$tab])) {
             // Cargar el modelo correspondiente
             if ($tab !== 'manga') {
-                $props['item'] = Inertia::defer(fn() => $models[$tab]::find($id));
+                if ($tab === 'user') {
+                    $props['item'] = Inertia::defer(fn() => $models[$tab]::find($id)->load('roles'));
+                } else {
+                    $props['item'] = Inertia::defer(fn() => $models[$tab]::find($id));
+                }
             } else {
                 // En caso de ser manga, cargar modelo y datos extra
                 $props['item'] = Inertia::defer(

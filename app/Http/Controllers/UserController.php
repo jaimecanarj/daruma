@@ -25,6 +25,8 @@ class UserController extends Controller
             'email' => 'required|string|lowercase|email|max:255|unique:users',
             'avatar' => 'nullable|file|mimes:jpg,jpeg,png,jxl',
             'password' => ['required', 'min:8', 'confirmed', Rules\Password::defaults()],
+            'roles' => 'nullable|array',
+            'roles.*' => 'required_with:roles|string',
         ]);
 
         try {
@@ -59,7 +61,12 @@ class UserController extends Controller
             //Almacenar en la base de datos
             $user = User::create($validatedData);
 
-            $user->assignRole('user');
+            //Asignar roles
+            if (isset($validatedData['roles']) && count($validatedData['roles']) > 0) {
+                $user->assignRole($validatedData['roles']);
+            } else {
+                $user->assignRole('user');
+            }
 
             return to_route('admin.create', ['tab' => 'user']);
         } catch (QueryException $e) {
@@ -75,6 +82,9 @@ class UserController extends Controller
             'name' => 'required|string',
             'email' => 'required|email|unique:users,email,' . $user->id,
             'avatar' => 'nullable|file|mimes:jpg,jpeg,png,jxl',
+            'password' => ['nullable', 'min:8', 'confirmed', Rules\Password::defaults()],
+            'roles' => 'nullable|array',
+            'roles.*' => 'required_with:roles|string',
         ]);
 
         try {
@@ -98,7 +108,15 @@ class UserController extends Controller
                 $validatedData['avatar'] = $user->avatar;
             }
 
+            // Solo actualizar la contraseña si se proporciona
+            if (empty($validatedData['password'])) {
+                unset($validatedData['password']);
+            }
+
             $user->update($validatedData);
+
+            //Actualizo los roles
+            $user->syncRoles($validatedData['roles']);
 
             return to_route('admin.index', ['tab' => 'user']);
         } catch (QueryException $e) {

@@ -47,13 +47,54 @@ export const userSchema = z
     .object({
         name: z.string({ required_error: 'Obligatorio' }),
         email: z.string({ required_error: 'Obligatorio' }),
-        password: z.string({ required_error: 'Obligatorio' }).min(8, 'Debe tener al menos 8 caracteres'),
-        passwordConfirmation: z.string({ required_error: 'Obligatorio' }),
+        password: z.string().optional(),
+        passwordConfirmation: z.string().optional(),
+        roles: z.array(z.string()).optional(),
+        purpose: z.enum(['create', 'edit']),
     })
-    .refine((data) => data.password === data.passwordConfirmation, {
-        message: 'Las contraseñas no coinciden',
-        path: ['passwordConfirmation'],
-    });
+    .refine(
+        (data) => {
+            // Si es create, password es obligatorio
+            if (data.purpose === 'create') {
+                return data.password && data.password.length >= 8;
+            }
+            // Si es edit y se proporciona password, debe tener al menos 8 caracteres
+            if (data.purpose === 'edit' && data.password) {
+                return data.password.length >= 8;
+            }
+            return true;
+        },
+        {
+            message: 'La contraseña es obligatoria y debe tener al menos 8 caracteres',
+            path: ['password'],
+        },
+    )
+    .refine(
+        (data) => {
+            // Si es create, passwordConfirmation es obligatorio
+            if (data.purpose === 'create') {
+                return !!data.passwordConfirmation;
+            }
+            return true;
+        },
+        {
+            message: 'La confirmación de contraseña es obligatoria',
+            path: ['passwordConfirmation'],
+        },
+    )
+    .refine(
+        (data) => {
+            // Solo validar coincidencia si ambas contraseñas están presentes
+            if (data.password && data.passwordConfirmation) {
+                return data.password === data.passwordConfirmation;
+            }
+            return true;
+        },
+        {
+            message: 'Las contraseñas no coinciden',
+            path: ['passwordConfirmation'],
+        },
+    );
 
 const volumesSchema = z
     .object({

@@ -7,7 +7,7 @@ import { userSchema } from '@/utils/zodSchemas';
 import { ref } from 'vue';
 
 const props = defineProps<{
-    item?: User;
+    item?: User & { roles: { name: string }[] };
     purpose: 'create' | 'edit';
 }>();
 
@@ -15,9 +15,10 @@ const initialValues: UserForm = {
     name: props.item?.name,
     email: props.item?.email,
     avatar: undefined,
-    password: props.purpose === 'edit' ? 'contraseña' : undefined,
-    passwordConfirmation: props.purpose === 'edit' ? 'contraseña' : undefined,
-    roles: undefined,
+    password: undefined,
+    passwordConfirmation: undefined,
+    roles: props.item?.roles.map((role) => role.name) ?? [],
+    purpose: props.purpose,
 };
 
 const show = ref<boolean>();
@@ -72,5 +73,4 @@ const show = ref<boolean>();
     <!--Hacer que la contraseña no sea obligatoria en edicion, pero si en creacion (revisar cover en mangas) -->
     <!--Al crear, simplemente asignar los roles al final de la creación-->
     <!--Al editar, comprobar los roles del usuario y eliminar o añadir según el caso-->
-    <!--La parte complicada es obtener los roles previos a la edición-->
 </template>

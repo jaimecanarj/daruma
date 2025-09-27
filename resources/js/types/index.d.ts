@@ -161,7 +161,7 @@ export interface UserForm {
     email?: string;
     password?: string;
     passwordConfirmation?: string;
-    roles?: { label: string; value: string }[];
+    roles?: string[];
     [key: string]: any;
 }
 
