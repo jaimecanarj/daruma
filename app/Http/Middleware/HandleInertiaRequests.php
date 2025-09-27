@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Inertia\Middleware;
 use Tighten\Ziggy\Ziggy;
 
@@ -36,7 +37,7 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
-        return [
+        $data = [
             ...parent::share($request),
             'name' => config('app.name'),
             'auth' => [
@@ -46,5 +47,37 @@ class HandleInertiaRequests extends Middleware
             ],
             'ziggy' => [...(new Ziggy())->toArray(), 'location' => $request->path()],
         ];
+
+        return $this->transformKeysToCamelCase($data);
+    }
+
+    /**
+     * Transforma recursivamente las claves de snake_case a camelCase
+     */
+    private function transformKeysToCamelCase($data)
+    {
+        if (is_array($data)) {
+            $result = [];
+            foreach ($data as $key => $value) {
+                $camelKey = Str::camel($key);
+                $result[$camelKey] = $this->transformKeysToCamelCase($value);
+            }
+            return $result;
+        }
+
+        if (is_object($data)) {
+            if (method_exists($data, 'toArray')) {
+                return $this->transformKeysToCamelCase($data->toArray());
+            }
+
+            $result = new \stdClass();
+            foreach (get_object_vars($data) as $key => $value) {
+                $camelKey = Str::camel($key);
+                $result->$camelKey = $this->transformKeysToCamelCase($value);
+            }
+            return $result;
+        }
+
+        return $data;
     }
 }
