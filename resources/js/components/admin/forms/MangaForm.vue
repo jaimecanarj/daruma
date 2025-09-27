@@ -199,10 +199,10 @@ const errors = computed(() => baseForm.value?.errors ?? []);
                             </template>
                             <CleanInputNumber v-model="form.volumes" />
                         </UFormField>
-                        <UFormField label="Tankoubon" name="tankoubon">
+                        <UFormField label="Tankoubon" name="tankoubon" :ui="{ label: 'mt-0.5 mb-0.75' }">
                             <CleanInputNumber v-model="form.tankoubon" />
                         </UFormField>
-                        <UFormField label="Capítulos" name="chapters">
+                        <UFormField label="Capítulos" name="chapters" :ui="{ label: 'mt-0.5 mb-0.75' }">
                             <CleanInputNumber v-model="form.chapters" />
                         </UFormField>
                     </div>
