@@ -33,7 +33,11 @@ class MangaController extends Controller
             $page = $request->input('page', 1);
             $search = $request->input('search');
 
-            $query = Manga::with('tags', 'people', 'magazine');
+            $relations = ['tags', 'people', 'magazine'];
+            if (auth()->check()) {
+                $relations[] = 'currentUserData';
+            }
+            $query = Manga::with($relations);
 
             //Filtro de búsqueda
             if (!empty($search)) {

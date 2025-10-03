@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\MagazineController;
 use App\Http\Controllers\MangaController;
+use App\Http\Controllers\MangaUserController;
 use App\Http\Controllers\PersonController;
 use App\Http\Controllers\TagController;
 use App\Http\Controllers\UserController;
@@ -37,5 +38,10 @@ Route::prefix('api')->group(function () {
         Route::post('/store', [TagController::class, 'store'])->name('tag.store');
         Route::put('/update/{tag}', [TagController::class, 'update'])->name('tag.update');
         Route::delete('/delete', [TagController::class, 'destroy'])->name('tag.destroy');
+    });
+    Route::prefix('manga-user')->group(function () {
+        Route::post('/store', [MangaUserController::class, 'store'])->name('manga-user.store');
+        Route::put('/update', [MangaUserController::class, 'update'])->name('manga-user.update');
+        Route::delete('/delete', [MangaUserController::class, 'destroy'])->name('manga-user.destroy');
     });
 });

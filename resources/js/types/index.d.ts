@@ -42,6 +42,7 @@ export interface Manga {
     })[];
     volumesData?: Volume[];
     chaptersData?: Chapter[];
+    currentUserData?: MangaUserData;
 }
 
 export interface Name {
@@ -101,6 +102,15 @@ export interface Chapter {
     order: number;
     mangaId: number;
     volumeOrder: number;
+}
+
+export interface MangaUserData {
+    mangaId: number;
+    userId: number;
+    status: MangaUserStatus;
+    favorite: boolean;
+    createdAt: string;
+    updatedAt: string;
 }
 
 //Formularios
@@ -202,3 +212,7 @@ export type MultiValues = {
     category?: string;
     color?: string;
 };
+
+//Enums
+
+export type MangaUserStatus = 'reading' | 'completed' | 'on_hold' | 'wishlist';

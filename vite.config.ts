@@ -30,7 +30,6 @@ export default defineConfig({
                     primary: 'orange',
                     secondary: 'blue',
                     info: 'cyan',
-                    warning: 'violet',
                     neutral: 'zinc',
                 },
                 button: {

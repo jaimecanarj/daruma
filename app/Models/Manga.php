@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Manga extends Model
 {
@@ -64,5 +65,10 @@ class Manga extends Model
     public function mangasRelated(): BelongsToMany
     {
         return $this->belongsToMany(Manga::class, 'manga_related', 'manga_id', 'related_manga_id')->withPivot('relation');
+    }
+
+    public function currentUserData(): HasOne
+    {
+        return $this->hasOne(MangaUser::class)->where('user_id', auth()->id());
     }
 }
