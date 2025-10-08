@@ -6,9 +6,10 @@ import MangasCard from '@/components/mangas/MangasCard.vue';
 import MangasFilters from '@/components/mangas/MangasFilters.vue';
 import MangasGrid from '@/components/mangas/MangasGrid.vue';
 import IndexSkeleton from '@/components/skeletons/IndexSkeleton.vue';
-import { Magazine, Manga, MangaFilters, Person, Tag } from '@/types';
+import { useMangaStatus } from '@/composables/useMangaStatus';
+import { Magazine, Manga, MangaFilters, MangaUserData, Person, Tag } from '@/types';
 import { Deferred, Head, router } from '@inertiajs/vue3';
-import { computed, ref } from 'vue';
+import { computed, provide, ref } from 'vue';
 
 const props = defineProps<{
     paginatedResults?: { currentPage: number; lastPage: number; total: number; data: Manga[]; mangasIds: number[] };
@@ -32,6 +33,13 @@ const filters = ref<MangaFilters>({
 });
 
 const mangas = computed(() => props.paginatedResults?.data ?? []);
+
+const { updateMangasList } = useMangaStatus();
+const updateMangas = (id: number, status: MangaUserData) => {
+    updateMangasList(mangas, id, status);
+};
+
+provide('updateMangas', updateMangas);
 
 const handleSearch = () => {
     loading.value = true;

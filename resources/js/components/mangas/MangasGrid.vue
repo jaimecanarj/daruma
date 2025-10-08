@@ -1,7 +1,11 @@
 <script setup lang="ts">
-import { Manga } from '@/types';
+import MangaTrack from '@/components/mangas/MangaTrack.vue';
+import { Auth, Manga } from '@/types';
+import { usePage } from '@inertiajs/vue3';
 
 defineProps<{ mangas?: Manga[] }>();
+
+const page = usePage();
 </script>
 
 <template>
@@ -16,6 +20,8 @@ defineProps<{ mangas?: Manga[] }>();
             >
                 <h3 class="line-clamp-2 text-center text-base font-bold text-white/90 select-none sm:text-lg">{{ manga.name }}</h3>
             </ULink>
+            <!--Botón de seguimiento-->
+            <MangaTrack v-if="(page.props.auth as Auth)?.userPermissions.includes('tracking_mangas')" :manga="manga" type="grid" />
         </div>
     </div>
 </template>

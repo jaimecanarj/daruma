@@ -1,12 +1,14 @@
 <script setup lang="ts">
-import { Manga } from '@/types';
-import { router } from '@inertiajs/vue3';
+import MangaTrack from '@/components/mangas/MangaTrack.vue';
+import { Auth, Manga } from '@/types';
+import { router, usePage } from '@inertiajs/vue3';
 import { breakpointsTailwind, useBreakpoints } from '@vueuse/core';
 
-const activeBreakpoint = useBreakpoints(breakpointsTailwind).active();
 const fullYear = useBreakpoints(breakpointsTailwind).greaterOrEqual('lg');
 
 defineProps<{ mangas?: Manga[] }>();
+
+const page = usePage();
 </script>
 
 <template>
@@ -14,15 +16,18 @@ defineProps<{ mangas?: Manga[] }>();
         <UCard v-for="manga in mangas" :key="manga.id" variant="subtle" class="shadow-md" :ui="{ body: 'p-2 sm:p-3' }">
             <div class="flex gap-2 overflow-hidden">
                 <!--Imagen-->
-                <div class="max-w-[150px] basis-1/4">
-                    <ULink :to="`mangas/${manga.id}`">
-                        <img
-                            :src="`/storage/${manga.cover}`"
-                            class="aspect-[1/1.4142] w-full cursor-pointer rounded-sm"
-                            alt="Portada de manga"
-                            @click="router.visit(route('mangas.show', manga.id))"
-                        />
-                    </ULink>
+                <div class="flex basis-1/4 flex-col gap-1.5">
+                    <div class="max-w-[150px]">
+                        <ULink :to="`mangas/${manga.id}`">
+                            <img
+                                :src="`/storage/${manga.cover}`"
+                                class="aspect-[1/1.4142] w-full cursor-pointer rounded-sm"
+                                alt="Portada de manga"
+                                @click="router.visit(route('mangas.show', manga.id))"
+                            />
+                        </ULink>
+                    </div>
+                    <MangaTrack v-if="(page.props.auth as Auth)?.userPermissions.includes('tracking_mangas')" :manga="manga" type="card" />
                 </div>
                 <!--Datos-->
                 <div class="flex min-w-0 basis-3/4 flex-col gap-1 px-1">
@@ -38,16 +43,18 @@ defineProps<{ mangas?: Manga[] }>();
                     <!--Fechas, tomos, capítulos-->
                     <div class="flex gap-2 text-sm lg:text-base xl:text-sm">
                         <p v-if="manga.startDate">
-                            <UIcon name="lucide:calendar" class="mb-1 inline" /> {{ manga.startDate.slice(fullYear ? 0 : 2, 4) }} -
-                            <span v-if="manga.endDate">{{ manga.endDate.slice(fullYear ? 0 : 2, 4) }}</span>
+                            <UIcon name="lucide:calendar" class="mb-1 inline" />
+                            <span class="text-base font-medium">{{ manga.startDate.slice(fullYear ? 0 : 2, 4) }}</span>
+                            -
+                            <span v-if="manga.endDate" class="text-base font-medium">{{ manga.endDate.slice(fullYear ? 0 : 2, 4) }}</span>
                         </p>
                         <p v-if="manga.tankoubon">
-                            <UIcon name="lucide:library-big" class="mb-1 inline" /> {{ manga.tankoubon }}
-                            {{ activeBreakpoint ? (manga.tankoubon > 1 ? 'tomos' : 'tomo') : '' }}
+                            <UIcon name="lucide:library-big" class="mb-1 inline" /> <span class="text-base font-medium">{{ manga.tankoubon }}</span>
                         </p>
                         <p v-if="manga.chapters">
-                            <UIcon name="lucide:book-open-text" class="mr-1 mb-1 inline" />{{ manga.chapters }}
-                            {{ activeBreakpoint ? (manga.chapters > 1 ? 'caps' : 'cap') : '' }}
+                            <UIcon name="lucide:book-open-text" class="mr-1 mb-1 inline" /><span class="text-base font-medium">{{
+                                manga.chapters
+                            }}</span>
                         </p>
                     </div>
                     <!--Etiquetas y sinopsis-->
