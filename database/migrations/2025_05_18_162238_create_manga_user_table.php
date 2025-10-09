@@ -16,6 +16,8 @@ return new class extends Migration {
             $table->enum('status', ['reading', 'completed', 'on_hold', 'wishlist']);
             $table->boolean('favorite')->default(false);
             $table->primary(['manga_id', 'user_id']);
+            $table->dateTime('started_at')->nullable();
+            $table->dateTime('completed_at')->nullable();
             $table->timestamps();
         });
     }

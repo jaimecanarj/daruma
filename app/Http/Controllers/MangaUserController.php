@@ -22,6 +22,13 @@ class MangaUserController extends Controller
         ]);
 
         try {
+            //Si el estado es reading, añadir el campo started_at, y si es completed añadir también el campo completed_at
+            if ($validatedData['status'] == 'reading') {
+                $validatedData['started_at'] = now();
+            } elseif ($validatedData['status'] == 'completed') {
+                $validatedData['completed_at'] = now();
+            }
+
             // Almacenar en la base de datos
             return MangaUser::create($validatedData);
         } catch (QueryException $e) {
@@ -49,6 +56,20 @@ class MangaUserController extends Controller
         ]);
 
         try {
+            //Si el estado es completed actualizar el campo completed_at, si no borrarlo
+            if ($validatedData['status'] == 'completed') {
+                $validatedData['completed_at'] = now();
+            } else {
+                $validatedData['completed_at'] = null;
+            }
+
+            //Si el estado es wishlist, borrar la fecha de completed_at y started_at
+            if ($validatedData['status'] == 'wishlist') {
+                $validatedData['started_at'] = null;
+            } elseif ($validatedData['status'] == 'reading') {
+                $validatedData['started_at'] = now();
+            }
+
             //Actualizar seguimiento
             MangaUser::where([
                 'manga_id' => $validatedData['manga_id'],

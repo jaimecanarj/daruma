@@ -11,5 +11,5 @@ class MangaUser extends Model
 
     protected $table = 'manga_user';
 
-    protected $fillable = ['manga_id', 'user_id', 'status', 'favorite'];
+    protected $fillable = ['manga_id', 'user_id', 'status', 'favorite', 'started_at', 'completed_at'];
 }
