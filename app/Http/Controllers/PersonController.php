@@ -46,7 +46,7 @@ class PersonController extends Controller
                 $peopleIds = (clone $query)->pluck('id')->toArray();
             }
 
-            $paginatedResults = $query->paginate(24, page: $page)->toArray();
+            $paginatedResults = $query->paginate(28, page: $page)->toArray();
 
             return [...$paginatedResults, 'people_ids' => $peopleIds];
         };

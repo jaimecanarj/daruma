@@ -22,7 +22,7 @@ const reachedEnd = computed(() => {
             preserveUrl: true,
         }"
         always
-        :buffer="500"
+        :buffer="200"
     >
         <template #fallback>
             <div class="my-10 flex items-center justify-center space-x-2">

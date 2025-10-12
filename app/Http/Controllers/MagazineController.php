@@ -79,7 +79,7 @@ class MagazineController extends Controller
                     $query->orderBy('name', 'asc');
             }
 
-            $paginatedResults = $query->paginate(24, page: $page)->toArray();
+            $paginatedResults = $query->paginate(28, page: $page)->toArray();
 
             return [...$paginatedResults, 'magazines_ids' => $magazinesIds];
         };

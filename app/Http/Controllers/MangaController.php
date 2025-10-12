@@ -169,7 +169,7 @@ class MangaController extends Controller
                     $query->orderBy('updated_at', 'desc');
             }
 
-            $paginatedResults = $query->paginate(24, page: $page)->toArray();
+            $paginatedResults = $query->paginate(28, page: $page)->toArray();
 
             return [...$paginatedResults, 'mangas_ids' => $mangasIds];
         };
