@@ -118,6 +118,14 @@ export const magazineSorting = [
     { label: 'Más antiguo', value: 'updateAsc' },
 ];
 
+export const mangaUserStatuses = [
+    { label: 'Sin seguimiento', value: 'none' },
+    { label: 'Por leer', value: 'wishlist' },
+    { label: 'En progreso', value: 'reading' },
+    { label: 'Pausado', value: 'on_hold' },
+    { label: 'Completado', value: 'completed' },
+];
+
 export const mangaFiltersInitialState = {
     search: '',
     volumes: undefined,
@@ -130,6 +138,7 @@ export const mangaFiltersInitialState = {
     demographies: [],
     finished: [],
     readingDirection: [],
+    userStatus: [],
 };
 
 export const magazineFiltersInitialState = {

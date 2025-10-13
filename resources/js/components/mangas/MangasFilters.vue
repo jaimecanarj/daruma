@@ -3,12 +3,23 @@ import BaseFilters from '@/components/BaseFilters.vue';
 import DatePicker from '@/components/formComponents/DatePicker.vue';
 import FilterSelect from '@/components/formComponents/FilterSelect.vue';
 import TagsFilter from '@/components/mangas/TagsFilter.vue';
-import { Magazine, MangaFilters, Person, Tag } from '@/types';
-import { demographies, languages, mangaFiltersInitialState, mangaSorting, readingDirections, sortingIcons } from '@/utils/constants';
+import { Auth, Magazine, MangaFilters, Person, Tag } from '@/types';
+import {
+    demographies,
+    languages,
+    mangaFiltersInitialState,
+    mangaSorting,
+    mangaUserStatuses,
+    readingDirections,
+    sortingIcons,
+} from '@/utils/constants';
+import { usePage } from '@inertiajs/vue3';
 import { computed } from 'vue';
 
 const props = defineProps<{ filterOptions?: { tags: Tag[]; people: Person[]; magazines: Magazine[] } }>();
 const emit = defineEmits(['filter']);
+
+const page = usePage();
 
 const filters = defineModel<MangaFilters>({ default: mangaFiltersInitialState });
 
@@ -91,6 +102,13 @@ const status = [
         <FilterSelect v-model="filters.finished" :items="status" label="estado" icon="lucide:badge-check" />
         <!--Dirección de lectura-->
         <FilterSelect v-model="filters.readingDirection" :items="readingDirections" label="dirección de lectura" icon="lucide:arrow-left-right" />
+        <FilterSelect
+            v-if="(page.props.auth as Auth).user"
+            v-model="filters.userStatus"
+            :items="mangaUserStatuses"
+            label="seguimiento"
+            icon="lucide:bookmark"
+        />
     </BaseFilters>
     <!--etiquetas rehacer entero, con selector de incluir/excluir -->
 </template>

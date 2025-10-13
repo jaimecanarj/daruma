@@ -30,6 +30,7 @@ const filters = ref<MangaFilters>({
     demographies: [],
     finished: [],
     readingDirection: [],
+    userStatus: [],
 });
 
 const mangas = computed(() => props.paginatedResults?.data ?? []);

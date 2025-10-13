@@ -194,6 +194,7 @@ export interface MangaFilters {
     finished: boolean[];
     readingDirection: string[];
     language?: string[];
+    userStatus?: string[];
 }
 
 export interface MagazineFilters {

@@ -10,6 +10,7 @@ use App\Models\Volume;
 use App\Traits\ImageProcessorTrait;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
@@ -131,6 +132,19 @@ class MangaController extends Controller
             //Filtro de dirección de lectura
             if (!empty($request->reading_direction)) {
                 $query->whereIn('reading_direction', $request->reading_direction);
+            }
+
+            //Filtro de seguimiento de usuario
+            if (Auth::user() && !empty($request->user_status)) {
+                $query->where(function ($query) use ($request) {
+                    $query->whereHas('currentUserData', function ($q) use ($request) {
+                        $q->whereIn('status', $request->user_status);
+                    });
+
+                    if (in_array('none', $request->user_status)) {
+                        $query->orWhereDoesntHave('currentUserData');
+                    }
+                });
             }
 
             //Listado completo
