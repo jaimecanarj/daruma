@@ -133,7 +133,7 @@ export const mangaSchema = z
     .object({
         name: z.string({ required_error: 'Obligatorio' }),
         alternativeNames: z.array(multiItemSchema),
-        authors: z.array(multiItemSchema).min(1, 'Selecciona al menos un autor'),
+        authors: z.array(multiItemSchema),
         tags: z.array(multiItemSchema),
         sinopsis: z.string().optional(),
         startDate: z.instanceof(CalendarDate).optional(),
@@ -167,5 +167,14 @@ export const mangaSchema = z
         {
             message: 'Selecciona una imagen válida',
             path: ['cover'],
+        },
+    )
+    .refine(
+        (data) => {
+            return data.authors.length > 0;
+        },
+        {
+            message: 'Selecciona al menos un autor',
+            path: ['authors'],
         },
     );
