@@ -1,0 +1,44 @@
+name: Deploy to Staging
+
+on:
+  push:
+    branches: [dev]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-staging
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: staging
+    env:
+      DEPLOY_HOSTNAME: ${{ secrets.DEPLOY_HOSTNAME }}
+      DEPLOY_REMOTE_USER: ${{ secrets.DEPLOY_REMOTE_USER }}
+      DEPLOY_PORT: ${{ secrets.DEPLOY_PORT }}
+      DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
+      DEPLOY_SERVER_PATH: ${{ secrets.DEPLOY_SERVER_PATH }}
+      DEPLOY_IDENTITY_FILE: /home/runner/.ssh/deploy_key
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          tools: composer:v2
+
+      - name: Install Composer dependencies
+        run: composer install --no-interaction --prefer-dist --optimize-autoloader
+
+      - name: Setup SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.DEPLOY_SSH_KEY }}" > ${{ env.DEPLOY_IDENTITY_FILE }}
+          chmod 600 ${{ env.DEPLOY_IDENTITY_FILE }}
+          ssh-keyscan -p ${{ env.DEPLOY_PORT }} -H ${{ env.DEPLOY_HOSTNAME }} >> ~/.ssh/known_hosts
+
+      - name: Run Deployer
+        run: vendor/bin/dep deploy staging --no-interaction -v
