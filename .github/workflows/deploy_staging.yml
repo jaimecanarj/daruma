@@ -22,7 +22,7 @@ jobs:
       DEPLOY_IDENTITY_FILE: /home/runner/.ssh/deploy_key
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
