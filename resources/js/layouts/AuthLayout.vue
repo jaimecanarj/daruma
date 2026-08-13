@@ -1,14 +1,25 @@
 <script setup lang="ts">
-import AuthLayout from '@/layouts/auth/AuthSimpleLayout.vue';
-
-const { title = '', description = '' } = defineProps<{
-    title?: string;
-    description?: string;
-}>();
+import { es } from '@nuxt/ui/locale';
+import logo from '@/assets/logo.svg';
+import { home } from '@/routes';
 </script>
 
 <template>
-    <AuthLayout :title="title" :description="description">
-        <slot />
-    </AuthLayout>
+    <UApp :locale="es">
+        <UContainer class="flex h-screen items-center justify-center">
+            <UCard variant="subtle" class="w-sm">
+                <div class="flex justify-between">
+                    <div
+                        class="flex cursor-pointer items-center gap-1"
+                        @click="home()"
+                    >
+                        <img :src="logo" class="h-11 w-11" alt="logo" />
+                        <p class="text-2xl font-semibold">Daruma</p>
+                    </div>
+                    <DarkMode />
+                </div>
+                <slot />
+            </UCard>
+        </UContainer>
+    </UApp>
 </template>
