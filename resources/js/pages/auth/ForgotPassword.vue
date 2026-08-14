@@ -1,66 +1,54 @@
 <script setup lang="ts">
-import { Form, Head } from '@inertiajs/vue3';
-import InputError from '@/components/InputError.vue';
-import TextLink from '@/components/TextLink.vue';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Spinner } from '@/components/ui/spinner';
-import { login } from '@/routes';
+import { Head, useForm } from '@inertiajs/vue3';
 import { email } from '@/routes/password';
 
-defineOptions({
-    layout: {
-        title: 'Forgot password',
-        description: 'Enter your email to receive a password reset link',
-    },
+const toast = useToast();
+
+const form = useForm({
+    email: '',
 });
 
-defineProps<{
-    status?: string;
-}>();
+const onSubmit = () => {
+    form.post(email.form().action, {
+        onSuccess: () => {
+            toast.add({
+                title: 'Correo enviado',
+                description:
+                    'Si el correo existe, recibirás un enlace de recuperación.',
+                icon: 'lucide:circle-check',
+                color: 'success',
+            });
+        },
+        onError: () => {
+            toast.add({
+                title: 'Hubo un problema.',
+                description: 'Por favor inténtalo de nuevo.',
+                icon: 'lucide:circle-x',
+                color: 'error',
+            });
+        },
+        onFinish: () => {
+            form.reset('email');
+        },
+    });
+};
 </script>
 
 <template>
-    <Head title="Forgot password" />
-
-    <div
-        v-if="status"
-        class="mb-4 text-center text-sm font-medium text-green-600"
-    >
-        {{ status }}
-    </div>
-
-    <div class="space-y-6">
-        <Form v-bind="email.form()" v-slot="{ errors, processing }">
-            <div class="grid gap-2">
-                <Label for="email">Email address</Label>
-                <Input
-                    id="email"
-                    type="email"
-                    name="email"
-                    autocomplete="off"
-                    autofocus
-                    placeholder="email@example.com"
-                />
-                <InputError :message="errors.email" />
-            </div>
-
-            <div class="my-6 flex items-center justify-start">
-                <Button
-                    class="w-full"
-                    :disabled="processing"
-                    data-test="email-password-reset-link-button"
-                >
-                    <Spinner v-if="processing" />
-                    Email password reset link
-                </Button>
-            </div>
-        </Form>
-
-        <div class="space-x-1 text-center text-sm text-muted-foreground">
-            <span>Or, return to</span>
-            <TextLink :href="login()">log in</TextLink>
-        </div>
-    </div>
+    <Head title="Recuperar contraseña" />
+    <UForm @submit="onSubmit" :state="form" class="mt-10">
+        <UFormField label="Email" name="email" required>
+            <UInput type="email" v-model="form.email" class="w-full" />
+        </UFormField>
+        <UButton
+            type="submit"
+            :loading="form.processing"
+            class="mt-8 w-full justify-center text-base"
+        >
+            {{ form.processing ? 'Enviando' : 'Enviar correo' }}
+        </UButton>
+        <p class="mt-2 text-center text-sm text-muted">
+            <ULink to="/login" class="text-highlighted">Iniciar sesión</ULink>
+        </p>
+    </UForm>
 </template>

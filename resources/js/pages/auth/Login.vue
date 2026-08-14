@@ -1,31 +1,39 @@
 <script setup lang="ts">
-import { Form, Head } from '@inertiajs/vue3';
-import InputError from '@/components/InputError.vue';
-import PasswordInput from '@/components/PasswordInput.vue';
-import TextLink from '@/components/TextLink.vue';
-import { Button } from '@/components/ui/button';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Spinner } from '@/components/ui/spinner';
+import { Head, useForm } from '@inertiajs/vue3';
 import { store } from '@/routes/login';
-import { request } from '@/routes/password';
-
-defineOptions({
-    layout: {
-        title: 'Log in to your account',
-        description: 'Enter your email and password below to log in',
-    },
-});
 
 defineProps<{
     status?: string;
     canResetPassword: boolean;
 }>();
+
+const toast = useToast();
+
+const form = useForm({
+    email: '',
+    password: '',
+    remember: false,
+});
+
+const onSubmit = () => {
+    form.post(store.form().action, {
+        onError: () => {
+            toast.add({
+                title: 'Hubo un problema.',
+                description: 'El usuario o la contraseña son incorrectos',
+                icon: 'lucide:circle-x',
+                color: 'error',
+            });
+        },
+        onFinish: () => {
+            form.reset('password');
+        },
+    });
+};
 </script>
 
 <template>
-    <Head title="Log in" />
+    <Head title="Iniciar sesión" />
 
     <div
         v-if="status"
@@ -34,68 +42,29 @@ defineProps<{
         {{ status }}
     </div>
 
-    <Form
-        v-bind="store.form()"
-        :reset-on-success="['password']"
-        v-slot="{ errors, processing }"
-        class="flex flex-col gap-6"
-    >
-        <div class="grid gap-6">
-            <div class="grid gap-2">
-                <Label for="email">Email address</Label>
-                <Input
-                    id="email"
-                    type="email"
-                    name="email"
-                    required
-                    autofocus
-                    :tabindex="1"
-                    autocomplete="email"
-                    placeholder="email@example.com"
-                />
-                <InputError :message="errors.email" />
-            </div>
-
-            <div class="grid gap-2">
-                <div class="flex items-center justify-between">
-                    <Label for="password">Password</Label>
-                    <TextLink
-                        v-if="canResetPassword"
-                        :href="request()"
-                        class="text-sm"
-                        :tabindex="5"
-                    >
-                        Forgot your password?
-                    </TextLink>
-                </div>
-                <PasswordInput
-                    id="password"
-                    name="password"
-                    required
-                    :tabindex="2"
-                    autocomplete="current-password"
-                    placeholder="Password"
-                />
-                <InputError :message="errors.password" />
-            </div>
-
-            <div class="flex items-center justify-between">
-                <Label for="remember" class="flex items-center space-x-3">
-                    <Checkbox id="remember" name="remember" :tabindex="3" />
-                    <span>Remember me</span>
-                </Label>
-            </div>
-
-            <Button
-                type="submit"
-                class="mt-4 w-full"
-                :tabindex="4"
-                :disabled="processing"
-                data-test="login-button"
-            >
-                <Spinner v-if="processing" />
-                Log in
-            </Button>
-        </div>
-    </Form>
+    <UForm @submit="onSubmit" :state="form" class="mt-10">
+        <UFormField label="Email" name="email">
+            <UInput type="email" v-model="form.email" class="w-full" />
+        </UFormField>
+        <UFormField label="Contraseña" name="password" class="mt-4">
+            <SecretInput v-model="form.password" />
+        </UFormField>
+        <ULink
+            v-if="canResetPassword"
+            to="/forgot-password"
+            class="text-sm text-muted"
+        >
+            ¿Has olvidado tu contraseña?</ULink
+        >
+        <UFormField name="remember" class="mt-4">
+            <UCheckbox label="Recordarme" v-model="form.remember" />
+        </UFormField>
+        <UButton
+            type="submit"
+            :loading="form.processing"
+            class="mt-8 w-full justify-center text-base"
+        >
+            {{ form.processing ? 'Iniciando' : 'Iniciar' }} sesión
+        </UButton>
+    </UForm>
 </template>

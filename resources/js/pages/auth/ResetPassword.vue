@@ -1,90 +1,76 @@
 <script setup lang="ts">
-import { Form, Head } from '@inertiajs/vue3';
+import { Head, useForm } from '@inertiajs/vue3';
 import { ref } from 'vue';
-import InputError from '@/components/InputError.vue';
-import PasswordInput from '@/components/PasswordInput.vue';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Spinner } from '@/components/ui/spinner';
-import { update } from '@/routes/password';
+import { store } from '@/routes/password/confirm';
 
-defineOptions({
-    layout: {
-        title: 'Reset password',
-        description: 'Please enter your new password below',
-    },
+const toast = useToast();
+
+const props = defineProps<{ token: string; email: string }>();
+
+const show = ref<boolean>();
+
+const form = useForm({
+    token: props.token,
+    email: props.email,
+    password: '',
+    passwordConfirmation: '',
 });
 
-const props = defineProps<{
-    token: string;
-    email: string;
-    passwordRules: string;
-}>();
-
-const inputEmail = ref(props.email);
+const onSubmit = () => {
+    form.post(store.form().action, {
+        onSuccess: () => {
+            toast.add({
+                title: 'Contraseña restablecida',
+                description: 'La contraseña se restableció correctamente.',
+                icon: 'lucide:circle-check',
+                color: 'success',
+            });
+        },
+        onError: (e) => {
+            console.log(e);
+            toast.add({
+                title: 'Hubo un problema.',
+                description: 'Es posible que el token haya expirado.',
+                icon: 'lucide:circle-x',
+                color: 'error',
+            });
+        },
+        onFinish: () => {
+            form.reset('email');
+        },
+    });
+};
 </script>
 
 <template>
-    <Head title="Reset password" />
+    <Head title="Restablecer contraseña" />
 
-    <Form
-        v-bind="update.form()"
-        :transform="(data) => ({ ...data, token, email })"
-        :reset-on-success="['password', 'password_confirmation']"
-        v-slot="{ errors, processing }"
-    >
-        <div class="grid gap-6">
-            <div class="grid gap-2">
-                <Label for="email">Email</Label>
-                <Input
-                    id="email"
-                    type="email"
-                    name="email"
-                    autocomplete="email"
-                    v-model="inputEmail"
-                    class="mt-1 block w-full"
-                    readonly
-                />
-                <InputError :message="errors.email" class="mt-2" />
-            </div>
-
-            <div class="grid gap-2">
-                <Label for="password">Password</Label>
-                <PasswordInput
-                    id="password"
-                    name="password"
-                    autocomplete="new-password"
-                    class="mt-1 block w-full"
-                    autofocus
-                    placeholder="Password"
-                    :passwordrules="passwordRules"
-                />
-                <InputError :message="errors.password" />
-            </div>
-
-            <div class="grid gap-2">
-                <Label for="password_confirmation"> Confirm password </Label>
-                <PasswordInput
-                    id="password_confirmation"
-                    name="password_confirmation"
-                    autocomplete="new-password"
-                    class="mt-1 block w-full"
-                    placeholder="Confirm password"
-                    :passwordrules="passwordRules"
-                />
-                <InputError :message="errors.password_confirmation" />
-            </div>
-
-            <Button
-                type="submit"
-                class="mt-4 w-full"
-                :disabled="processing"
-                data-test="reset-password-button"
-            >
-                <Spinner v-if="processing" />
-                Reset password
-            </Button>
-        </div>
-    </Form>
+    <UForm @submit="onSubmit" :state="form" class="mt-10">
+        <UFormField
+            label="Nueva contraseña"
+            name="password"
+            class="mt-4"
+            required
+        >
+            <SecretInput v-model="form.password" v-model:show="show" />
+        </UFormField>
+        <UFormField
+            label="Confirmar nueva contraseña"
+            name="passwordConfirmation"
+            class="mt-4"
+            required
+        >
+            <SecretInput
+                v-model="form.passwordConfirmation"
+                v-model:show="show"
+            />
+        </UFormField>
+        <UButton
+            type="submit"
+            :loading="form.processing"
+            class="mt-8 w-full justify-center text-base"
+        >
+            {{ form.processing ? 'Restableciendo' : 'Restablecer contraseña' }}
+        </UButton>
+    </UForm>
 </template>
