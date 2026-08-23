@@ -4,14 +4,22 @@ namespace App\Models;
 
 use App\Enums\MangaLanguage;
 use App\Enums\ReadingDirection;
+use App\Models\Concerns\HasCover;
 use App\Models\Pivots\AuthorManga;
 use App\Models\Pivots\MangaRelation;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 
-class Manga extends Model
+class Manga extends Model implements HasMedia
 {
+    use HasCover, InteractsWithMedia{
+        HasCover::registerMediaCollections insteadof InteractsWithMedia;
+        HasCover::registerMediaConversions insteadof InteractsWithMedia;
+    }
+
     protected $fillable = [
         'title',
         'slug',

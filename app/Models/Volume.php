@@ -2,11 +2,18 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\HasCover;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Spatie\MediaLibrary\InteractsWithMedia;
 
 class Volume extends Model
 {
+    use HasCover, InteractsWithMedia{
+        HasCover::registerMediaCollections insteadof InteractsWithMedia;
+        HasCover::registerMediaConversions insteadof InteractsWithMedia;
+    }
+
     protected $fillable = [
         'title',
         'number',
