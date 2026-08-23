@@ -3,13 +3,18 @@
 namespace App\Models;
 
 use App\Models\Concerns\HasCover;
+use Database\Factories\VolumeFactory;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
 class Volume extends Model
 {
-    use HasCover, InteractsWithMedia{
+    /**
+     * @use HasFactory<VolumeFactory>
+     */
+    use HasCover, HasFactory, InteractsWithMedia{
         HasCover::registerMediaCollections insteadof InteractsWithMedia;
         HasCover::registerMediaConversions insteadof InteractsWithMedia;
     }
